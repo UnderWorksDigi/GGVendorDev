@@ -1,0 +1,269 @@
+{% assign secSt = section.settings %}
+<div class="content-indent {{ secSt.top-offeset}}{% if secSt.hide_mobile %} small--hide{% endif %}">
+{% capture videoBanner %}
+
+{% unless secSt.fullwidth %}<div class="page-width">{% endunless %}  
+
+<div class="video_bnr pr">
+  {% if secSt.video_url == blank and secSt.mp4url == blank %}     
+      {% capture current %}{% cycle 1,2 %}{% endcapture %}
+      {% capture plClass %}placeholder-svg svgcl{{current}}{% endcapture %}
+      {{ 'lifestyle-' | append: current | placeholder_svg_tag: plClass }}          
+  {% else %}  		                   
+      {% if secSt.video_url != blank and secSt.video_style == "videopp" %}                                                       		
+        <a href="{{ secSt.video_url}}?controls=0&autoplay=1&rel=0&showinfo=0" class="video_pop fl f-jcc f-aic">                           
+          {% if secSt.videposter != blank %}
+          <img src="{{ secSt.videposter | img_url: 'master' }}" class="db">
+          <i class="at at-play-cir" aria-hidden="true"></i>
+          {% else %}
+          <p class="db p30">Please upload video poster</p>
+          {% endif %}
+        
+        </a>                              
+      {% elsif secSt.video_url != blank and secSt.video_style == "bgvideo" %}
+        <div class="vd-wrap">
+          {% if secSt.video_url.type == "youtube" %}
+          <iframe class="lazyload" data-src="//www.youtube.com/embed/{{ secSt.video_url.id }}?controls=0&autoplay=1&rel=0&showinfo=0" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+          {% if secSt.video_url.type == "vimeo" %}
+          <iframe class="lazyload" data-src="//player.vimeo.com/video/{{ secSt.video_url.id }}?background=1&byline=0&portrait=0&badge=0" width="850" height="480" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+          {% endif %}
+        </div>                       
+      {% elsif secSt.video_url == blank and secSt.mp4url != blank %}
+        <video {% if secSt.enable_cntrl %}controls {% endif %}width="100%" {% if secSt.is_autoplay and secSt.enable_sound == true %}autoplay {% elsif secSt.is_autoplay and secSt.enable_sound == false %}autoplay muted {% endif %}{% if secSt.enable_sound == false %}muted {% endif %}loop playsinline>               
+          <source src="{{secSt.mp4url}}" codecs="avc1.4d002a, mp4a.40.2" type="video/mp4">
+          Your browser does not support the video tag.
+          </source>
+        </video>    
+     {% endif %} 
+     {%- if secSt.video_style == "bgvideo" and secSt.title != blank -%}
+          <div class="video_txt {{ secSt.text_align }} p20" style="">             
+            {%- if secSt.title != blank or secSt.btntxt != blank %} 
+                       <div class="{% if secSt.text-align %}tl{% else %}tc{% endif %}">
+                        {%- if secSt.title != blank -%}<span class="tltxt{% if secSt.hide_text %} small--hide{% endif %}" style="--cl:{{secSt.text_cl}};--fs:{{secSt.hd_fs}}px;--ls:0.0{{ secSt.hd_ls}}em;--fsm:{{secSt.hd_fs_m}}px;">{{ secSt.title }}</span>{%- endif -%}      
+                        {%- if secSt.btntxt != blank %}<br/><a href="{{secSt.btnurl}}" class="mt15 btn{% if secSt.hide_btn %} small--hide{% endif %}" >{{ secSt.btntxt}}</a>{%- endif -%}
+                       </div>
+            {% endif %}
+          </div>
+    {%- endif -%}
+ {% endif %}
+</div>
+
+{% unless secSt.fullwidth %}</div>{% endunless %}
+{% endcapture %}
+{{videoBanner | strip_newlines | remove: "  " | remove: "	" }}
+<script type="text/javascript">
+  window.addEventListener('DOMContentLoaded',function(){               
+    $('.video_pop').magnificPopup({ type: 'iframe', mainClass: 'mfp-zoom-in', removalDelay: 160, preloader: false, fixedContentPos: false });                                                                   
+  });
+</script>
+</div>
+
+{% schema %}
+  {
+    "name": "Video",
+    "class": "index-section",
+     "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [
+		 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+			"info":" This leave space above section",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        }, 
+ 		{
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	 
+		{
+          "type": "checkbox",
+          "id": "fullwidth",
+          "label": "Fullwidth",
+          "default": true
+        },
+		{
+          "type": "header",       
+          "content": "YouTube or Vimeo"          
+		},
+		{
+            "type": "select",
+            "id": "video_style",
+            "label": "Select Style",
+            "default": "videopp",			
+            "options": [
+              {
+                "value": "videopp",
+                "label": "Video Popup - Youtube Or Vimeo"
+              },
+              {
+                "value": "bgvideo",
+                "label": "Background Video with Text"
+              }			  
+			]
+        },
+          {
+          "type": "image_picker",
+          "id": "videposter",
+          "label": "Video Popup Poster"
+        },
+        {
+              "type": "video_url",
+              "id": "video_url",
+              "label": "Video link",
+              "accept": ["youtube", "vimeo"],
+			  "info":"[How to copy youtube url?](https://optimal-demos.myshopify.com/pages/video-section)"
+        },		        		
+ 	  {
+        "type": "header",
+          "content": "Or MP4 Video [recommended]"
+      }, 
+	 {
+        "type": "textarea",
+        "id": "mp4url",
+        "label": "Mp4 video link",
+        "info":"[How to get video url?](https://www.adornthemes.com/knowledge-base/how-to-get-mp4-video-link/)"
+      },
+      {
+        "type":"checkbox",
+        "id":"enable_cntrl",
+        "label":"Enable Controls?",
+        "default": false,
+        "info":"Display video play/pause buttons"
+      },
+      {
+        "type":"checkbox",
+        "id":"is_autoplay",
+        "label":"Enable Autoplay?",
+        "default": false,
+        "info":"Autoplay will not work on Mobile with SOUND"
+      },
+        {
+          "type":"checkbox",
+          "id":"enable_sound",
+          "label":"Enable Sound?",
+          "default": false,
+          "info":"Autoplay will not work on Mobile with SOUND"
+        },
+        {
+          "type": "header",
+          "content": "Background Video Caption"
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Video Text",
+		  "default": "<b>VIDEO ENCOURAGE CUSTOMERS TO PURCHASE MORE</b>"
+        },  
+		{	
+           "type": "checkbox",
+           "id": "hide_text",
+           "label": "Hide Text in Mobile?",
+           "default": false		  
+        },
+	{
+        "type": "range",
+        "id": "hd_fs",
+        "label": "Font Size",
+        "default": 20,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+       },
+ 	  {
+            "type": "range",
+            "id": "hd_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+      },
+	 {
+        "type": "range",
+        "id": "hd_fs_m",
+        "label": "Font Size (mobile)",
+        "default": 15,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+       }, 		
+ 		{
+          "type": "color",
+          "id": "text_cl",
+          "label": "Text Color",
+          "default": "#fff"
+        },
+  		{	"type": "checkbox",
+            "id": "text-align",
+            "label": "Text Align Left",
+            "default": false            
+          },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Position",
+            "default": "bcenter",	
+			"info":"For mobile view text will display at bottom",
+            "options": [
+ 			  { "label": "Top Left",      "value": "tleft" },
+  			  { "label": "Top Center",    "value": "tcenter" },
+  			  { "label": "Top Right",     "value": "tright" },             
+			  { "label": "Left",  		  "value": "mleft" },
+ 			  { "label": "Center", 		  "value": "mcenter" },
+			  { "label": "Right",  		  "value": "mright" },
+ 			  { "label": "Bottom Left",   "value": "bleft" },						 
+              { "label": "Bottom Center", "value": "bcenter" }, 						 
+			  { "label": "Bottom Right",  "value": "bright" }
+              
+            ]
+          },
+        {
+        "type": "text",
+        "id": "btntxt",
+        "label": "Button Text",
+		"default":"Shop Now"
+        },
+		{
+        "type": "url",
+        "id": "btnurl",
+        "label": "Button Url",
+		"default":"/"
+       },
+		{
+           "type": "checkbox",
+           "id": "hide_btn",
+           "label": "Hide Button in Mobile?",
+           "default": true,	
+		   "info":"Due to less space on mobile, We advise to hide button or text."
+        }		       
+    ],
+    "presets": [
+      {
+        "name": "Video"      
+      }
+    ]
+  }
+{% endschema %}

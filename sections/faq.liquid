@@ -1,0 +1,316 @@
+{% assign secSt = section.settings %}
+
+<div class="content-indent {{ secSt.top-offeset}}">
+  {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	
+	<div class="{% unless secSt.section_width %}page-width{% else %}fullwidth{% endunless %}" style="--stfs:{{ secSt.stfs }}px;--stfw:{{ secSt.stfw }};--qfs:{{ secSt.qfs }}px;--qfw:{{ secSt.qfw }};--afs:{{ secSt.afs }}px;--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">   	 
+		
+	  {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+	  <div class="sec-ttl {{ settings.title_align}} wow fadeIn">
+		<h3 class="h3">{{ secSt.title }}</h3>     
+		{%- if secSt.subtitle != blank -%}<span>{{ secSt.subtitle }}</span>{%- endif -%}
+	  </div>
+	  {% endif %}  
+		
+	  <div id="faq" class="{% if secSt.enable_acc %}accor{% else %}no-accor{% endif %}{% if secSt.enable_narrow %} narrow m_auto{% endif %}">     
+		  
+		{% for block in section.blocks limit: section.blocks.size%}     
+
+		{% if block.type == 'faqsection' %}                   
+			{% if block.settings.sectiontitle != blank %}
+				<h3 style="--bg:{{secSt.sec-title-bg}};--cl:{{secSt.sec-title}};">{{block.settings.sectiontitle}}</h3>
+			{% endif %}         
+		{% endif %}    
+
+		{% if block.type == 'faqs' %} 
+		<div class="faq-body">
+		  <h4 class="p_ttl {{secSt.acc_style}} m0" style="--cl:{{secSt.questions}};--clicon:{{secSt.icons}};--bdr:{{secSt.borders}};">{{ block.settings.question}} </h4>
+		  <div id="{{ block.id }}" class="p_con" style="--cla:{{secSt.answers}};">
+			{{ block.settings.answer}}
+		  </div>
+		</div>
+		{% endif %}
+		{% endfor %}
+	  </div>
+</div>
+{% if secSt.section_cov %}</div> {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "FAQ",
+    "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [
+	 {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Heading"		
+      },
+ 	  {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sub Heading",
+        "default": "Describe your products, collection, content etc..."
+      },
+	 {
+		 "type": "paragraph",
+		 "content":"Section==="
+      },
+	 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+		 {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },
+	 {
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },    
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 15,
+        "min": 0,
+        "max": 15,
+        "step": 1
+      },
+	 {
+        "type": "checkbox",
+        "id": "section_cov",
+     	"label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",	
+		"info":"select light color"
+	  },
+ 	 {	
+        "type": "checkbox",
+        "id": "enable_acc",
+        "label": "Enable Accordion?",
+        "default": false
+      },
+		{
+            "type": "select",
+            "id": "acc_style",
+            "label": "Accordion icons",
+            "default": "icons_1",
+            "options": [
+              {
+                "value": "icons_1",
+                "label": "Plus/Minus"
+              },
+              {
+                "value": "icons_2",
+                "label": "Up/Down Arrows"
+              }
+            ]
+       },	
+       {	
+        "type": "checkbox",
+        "id": "enable_narrow",
+        "label": "Narrow width?",
+        "default": false
+      },
+        {
+        "type": "range",
+        "id": "stfs",
+        "label": "Section Title Font Size",
+        "default": 16,
+        "min": 10,
+        "max": 25,
+        "step": 1
+      },
+      {
+        "type": "select",
+        "id": "stfw",
+        "label": "Section Title Font Weight",
+        "default": "600",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+	  {
+        "type": "color",
+        "id": "sec-title-bg",
+        "label": "Section Title Background",
+        "default": "#333"
+      },
+      {
+        "type": "color",
+        "id": "sec-title",
+        "label": "Section Title",
+        "default": "#eee"
+      },  
+       {
+        "type": "range",
+        "id": "qfs",
+        "label": "Questions Font Size",
+        "default": 14,
+        "min": 10,
+        "max": 25,
+        "step": 1
+      },
+      {
+        "type": "select",
+        "id": "qfw",
+        "label": "Questions Font Weight",
+        "default": "500",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+ 		{
+        "type": "color",
+        "id": "questions",
+        "label": "Questions",
+        "default": "#444"
+      },
+       {
+        "type": "range",
+        "id": "afs",
+        "label": "Answers Font Size",
+        "default": 14,
+        "min": 10,
+        "max": 25,
+        "step": 1
+      },      
+	 {
+        "type": "color",
+        "id": "answers",
+        "label": "Answers",
+        "default": "#444"
+      },
+		{
+        "type": "color",
+        "id": "icons",
+        "label": "Icons",
+        "default": "#333"
+      },
+	 {
+        "type": "color",
+        "id": "borders",
+        "label": "Borders",
+        "default": "#eee"
+      }
+	],
+   "blocks":[
+     {
+        "type": "faqsection",
+        "name": "Section Title",
+		"settings": [
+          {
+            "type": "text",
+            "id": "sectiontitle",
+            "label": "Section Title"
+          }
+		]
+      },
+	  {
+	    "type":"faqs",
+		"name":"FAQs",
+		"settings":[			
+			{
+			"type":"text",
+			"id":"question",
+			"label":"Question",
+			"default":"Is Optimal compatible with Shopify Online Store 2.0?"
+			},
+			{
+			"type":"richtext",
+			"id":"answer",
+			"label":"Answer",
+			"default":"<p>Yes, our theme is fully compatible and supports Sections on every page.</p>"		
+			}
+		 ]
+      }
+	],
+   "presets": [
+      {
+        "name": "FAQs",            
+        "blocks": [
+          {
+            "type": "faqs"
+          },
+          {
+            "type": "faqs"
+          }          	  
+        ]
+      }
+    ]
+ }
+{% endschema %} 

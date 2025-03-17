@@ -1,0 +1,198 @@
+{%- assign secSt = section.settings -%}
+<div class="content-indent {{ secSt.top-offeset}}">
+{% assign secSt = section.settings %}
+  {% if template == "cart" %}
+      {%- for item in cart.items -%}
+          {%- assign product_rec = item.product -%}
+      {%- endfor -%}
+  {%- else -%}
+      {%- assign product_rec = product -%}
+  {%- endif -%}
+	
+  {%- if recommendations.performed -%}
+    {%- if recommendations.products_count > 0 -%}
+      {%- case secSt.grid -%}
+          {%- when 2 -%}{%- assign grid_ds = 'large-up--one-half' -%}{%- assign image_size = '150,350,550,750,950' -%}
+          {%- when 3 -%}{%- assign grid_ds = 'large-up--one-third' -%}{%- assign image_size = '150,350,550,750' -%}
+          {%- when 4 -%}{%- assign grid_ds = 'large-up--one-quarter' -%}{%- assign image_size = '150,350,550,750' -%}
+          {%- when 5 -%}{%- assign grid_ds = 'large-up--one-fifth' -%}{%- assign image_size = '150,350,550' -%}
+          {%- when 6 -%}{%- assign grid_ds = 'large-up--one-sixth' -%}{%- assign image_size = '130,300,500' -%}
+          {%- when 7 -%}{%- assign grid_ds = 'large-up--one-seventh' -%}{%- assign image_size = '130,280,400' -%}
+      {%- endcase -%}
+
+      {% case secSt.tablet-grid %}
+      {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+      {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+      {% when 4 %}{%- assign grid_tb = 'medium--one-quarter' -%}
+      {% when 5 %}{%- assign grid_tb = 'medium--one-fifth' -%}
+      {% endcase %}
+
+      {% case secSt.mobile-grid %}
+      {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+      {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+      {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+      {% endcase %}
+      
+        <div class="product-recommendations" id="{{ section.id }}">
+          <div class="{% if secSt.section_width %}fullwidth{% else %}page-width{% endif %}" style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">
+
+            {%- if secSt.recommanded_title != blank -%}
+            <div class="sec-ttl {{ settings.title_align}}">
+              <h3 class="h3">{{ secSt.recommanded_title | escape }}</h3>
+              {%- if secSt.recommanded_sub_title != blank -%}<span>{{secSt.recommanded_sub_title}}</span>{%- endif -%}        
+            </div> 
+            {%- endif -%}
+
+            {% assign number_of_rows = secSt.recommanded_total_product_to_show %}	
+
+            
+            <div id="productSlider-{{ section.id }}" class="clearfix grid-products carousel arwOut" data-slick='{"slidesToShow": {{ secSt.grid }},"slidesToScroll": 1, {%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "autoplay":{{secSt.recommanded_products_autoplay}}, "autoplaySpeed": {{secSt.autoplay_speed}},"responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": {{ secSt.tablet-grid }} }},{"breakpoint": 767,"settings":{"slidesToShow":{{ secSt.mobile-grid }} }} ]}'>
+              {%- for product in recommendations.products limit : number_of_rows -%}
+              <div class="grid__item {{ grid_mb }} {{ grid_tb }} {{grid_ds}}">{% include 'product-card-grid', sizes: image_size %}</div>
+              {%- endfor -%}
+            </div>           
+          
+
+          </div>
+        </div>
+    {%- endif -%}
+
+    {%- else  -%}
+      <div class="page-width recommended" id="{{section.id}}" data-base-url="{{ routes.product_recommendations_url }}" data-product-id="{{ product_rec.id }}" data-section-id="{{ section.id }}" data-section-type="carousel" data-limit="{{ secSt.recommanded_total_product_to_show }}"></div>
+    {%- endif -%}
+</div>
+{% schema %}
+  {
+    "name": "Recommended Products",    
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Dynamic recommendations change and improve with time. [Learn more](https://help.shopify.com/en/themes/development/recommended-products)"
+      },  
+	 {
+        "type": "checkbox",
+        "id": "recommanded_products_autoplay",
+        "label": "Carousel Autoplay",
+        "default": false
+      },
+ 	 {
+        "type": "select",
+        "id": "autoplay_speed",
+        "label": "Carousel Autoplay Speed",
+        "options": [
+          { "value": "3000", "label": "3 seconds" },
+          { "value": "4000", "label": "4 seconds" },
+          { "value": "5000", "label": "5 seconds" },
+          { "value": "6000", "label": "6 seconds" },
+          { "value": "7000", "label": "7 seconds" },
+          { "value": "8000", "label": "8 seconds" },
+          { "value": "9000", "label": "9 seconds" },
+          { "value": "10000", "label": "10 seconds" },
+		  { "value": "12000", "label": "12 seconds" },
+		  { "value": "15000", "label": "15 seconds" }
+        ],
+        "default": "3000"
+      },
+     {
+        "id": "recommanded_title",
+        "type": "text",
+        "label": "Section Title",
+        "default": "Recommended Products"
+      },
+ 	  {
+        "id": "recommanded_sub_title",
+        "type": "text",
+        "label": "Section Sub title"       
+      },
+	  {
+        "type": "paragraph",
+        "content": "Products Per Row"
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Desktop",
+        "default": 4,
+        "min": 2,
+        "max": 7,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "tablet-grid",
+        "label": "Tablet",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "mobile-grid",
+        "label": "Mobile",
+        "default": 2,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+      {
+        "type": "text",
+        "id": "recommanded_total_product_to_show",
+        "label": "Number of Product to Show",
+        "default": "6"        
+      },
+      {
+        "type": "header",
+        "content": "Section ==="
+      },
+	 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 
+	 {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	   },
+	  {
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 10,
+        "min": 0,
+        "max": 20,
+        "step": 1
+      }
+	]
+}
+{% endschema %}

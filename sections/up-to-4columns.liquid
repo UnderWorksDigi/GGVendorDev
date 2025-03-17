@@ -1,0 +1,356 @@
+{%- capture ColumnsTopImage -%}
+{% assign secSt = section.settings %}
+
+{%- capture style -%}
+	--bg:{{ secSt.text_bg}};
+	--cl:{{ secSt.text_c}};
+	--ls:0.0{{ secSt.hd_ls}}em;
+	--fs:{{secSt.hd_fs}}px;
+	--fsm:{{secSt.hd_fs_m}}px;
+	--tfs:{{secSt.txt_fs}}px;
+	--tfsm:{{secSt.txt_fs_m}}px;
+{%- endcapture -%}
+
+<div class="content-indent {{ secSt.top-offeset}}{% if secSt.hide_mobile %} small--hide{% endif %}">
+  
+	{% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	
+  	 <div class="page-width fadeIn" data-wow-delay="100ms">
+
+       {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+       <div class="sec-ttl {{ settings.title_align}} fadeIn">
+         <h3 class="h3">{{ secSt.title }}</h3>
+         {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%}                 
+       </div>
+       {% endif %}          
+
+    <div class="grid{% unless section.blocks.size == 5 %} grid--uniform{% endunless %}" style="{{style}}">
+      {%- assign grid_item_width = 'medium-up--one-third' -%}
+      {%- assign image_size = '500x' -%}
+      {% case section.blocks.size %}
+      {% when 1 %}
+      {%- assign grid_item_width = 'medium-up--one-half' -%}
+      {%- assign image_size = '530x' -%}
+      {% when 2 %}
+      {%- assign grid_item_width = 'medium-up--one-half' -%}
+      {%- assign image_size = '530x' -%}
+      {% when 4 %}
+      {%- assign grid_item_width = 'medium-up--one-quarter' -%}
+      {%- assign image_size = '530x' -%}
+      {% when 8 %}
+      {%- assign grid_item_width = 'medium-up--one-quarter' -%}
+      {%- assign image_size = '300x' -%}
+      {% endcase %}
+      {% for block in section.blocks %}
+      {% if section.blocks.size == 5 and forloop.index < 3 %}
+      {%- assign column_width = 'medium-up--one-half' -%}
+      {% else %}
+      {%- assign column_width = grid_item_width -%}
+      {% endif %}
+
+      {%- assign collection_col = forloop.index | minus:1 -%}
+      {%- assign delay_time = 100 | times : collection_col -%}
+
+      <div class="grid__item {{ column_width }} {{ secSt.align_text }} wow fadeIn" data-wow-delay="{{delay_time}}ms" {{ block.shopify_attributes }}>
+        {% if block.settings.enable_image %}
+          {% if block.settings.image != blank %}       
+            {% if block.settings.button_link != blank %}<a href="{{ block.settings.button_link }}" class="top-img db">{% endif %}
+        	<div class="imgWrapper" style="max-width:{{ block.settings.image.width }}px;">
+            	<div class="bgImg lazyload" data-bgset="{% render 'prgrid-img', image: block.settings.image, sizes: '200,380,550,750,980,1200' %}" data-sizes="auto" data-parent-fit="contain" style="padding-bottom:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100}}%;"></div>
+          	</div>
+            {% if block.settings.button_link != blank %}</a>{% endif %}      
+          {% else %}        
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}        
+          {% endif %}        
+        {% endif %}
+        <div class="wrap-txt{% if secSt.set_text_bg %} pd30{% endif %}">
+            {% if block.settings.title != blank %}
+              <h3 class="mb5">
+                {% if block.settings.button_link != blank %}<a href="{{ block.settings.button_link }}">{% endif %}
+                {{ block.settings.title }}
+                {% if block.settings.button_link != blank %}</a>{% endif %}
+              </h3>
+            {% endif %}
+          {% if block.settings.text != blank %}<div class="mb10">{{ block.settings.text }}</div>{% endif %}
+            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+            <a href="{{ block.settings.button_link }}" class="btn {{secSt.btn-size}} {{secSt.btn-style}}">{{ block.settings.button_label }}</a>
+            {% endif %}
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size == 0 %}{% include 'no-blocks' %}{% endif %}
+  </div>
+   {% if secSt.section_cov %}</div>{% endif%}
+</div>
+
+{%- endcapture -%}
+{{ColumnsTopImage | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Text Columns & Top Images",
+	"disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "class": "index-section",
+    "settings": [	
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Columns with Top Banners"
+      },
+	  {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sub Heading",
+        "default": "Describe your products,collection, content etc..."
+      },  
+	 {
+        "type": "header",
+        "content": "Appearance Section ==="
+      },
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+			"info":" This leave space above section",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        }, 
+ 		{
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	 
+	  {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },	
+ 	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  }, 
+ 	 {
+        "type": "header",
+        "content": "Appearance Text ==="
+      },
+ 	{
+        "type": "select",
+        "id": "align_text",
+        "label": "Text Alignment",
+        "default": "tl",
+        "options": [
+          {
+            "value": "tl",
+            "label": "Left"
+          },
+          {
+            "value": "tc",
+            "label": "Centered"
+          },
+		 {
+            "value": "tr",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "hd_fs",
+        "label": "Heading Font Size",
+        "default": 16,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+       },
+ 	  {
+        "type": "range",
+        "id": "hd_ls",
+        "label": "Heading Letter Spacing",
+        "default": 2,
+        "min": 0,
+        "max": 9,
+        "step": 1,
+        "unit": "em"
+      },
+	 {
+        "type": "range",
+        "id": "hd_fs_m",
+        "label": "Heading Font Size (mobile)",
+        "default": 15,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+       }, 		
+	  {
+        "type": "range",
+        "id": "txt_fs",
+        "label": "Text Font Size",
+        "default": 13,
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+       }, 		
+	  {
+        "type": "range",
+        "id": "txt_fs_m",
+        "label": "Text Font Size (mobile)",
+        "default": 12,
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+       }, 	 
+	 {
+        "type": "checkbox",
+        "id": "set_text_bg",
+        "label": "Add Text Background?",
+		"default":false	
+	  },
+		{
+        "type": "color",
+        "id": "text_bg",
+        "label": "Background",
+		"default":"#fff"	
+	  },
+    {
+        "type": "color",
+        "id": "text_c",
+        "label": "Text",
+		"default":"#212121"	
+	  },
+	  {
+        "type": "select",
+        "id": "btn-style",
+        "label": "Select Button",
+        "default": "btn1",
+        "options": [
+          {
+            "label": "Solid Button 1",
+            "value": "btn1"
+          },
+          {
+            "label": "Solid Button 2",
+            "value": "btn2"
+          },
+		  {
+            "label": "Solid Button 3",
+            "value": "btn3"
+          },
+ 		  {
+            "label": "Border Button 1",
+            "value": "bdr-btn1"
+          },
+ 		{
+            "label": "Border Button 2",
+            "value": "bdr-btn2"
+          } 
+        ]
+        },
+          {
+            "type": "select",
+            "id": "btn-size",
+            "label": "Button Size",
+            "default": "btn-med",
+            "options": [
+                {
+                "label": "Small",
+                "value": "btn-small"
+                },
+                {
+                "label": "Medium",
+                "value": "btn-med"
+                },
+                {
+                "label": "Large",
+                "value": "btn-large"
+                } 		  
+         	 ]
+          }
+    ],
+    "blocks": [
+      {
+        "type": "text_block",
+        "name": "Column",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "enable_image",
+            "label": "Show image",
+            "default": true
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Heading",
+			"default": "<span class='fwsb'>Add a title or tagline</span>"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Share blog posts, products, or promotions with your customers. Use this text to describe products, share details on availability and style, or as a space to display recent reviews or FAQs.</p>"				
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button Text",
+			"default":"View Collection"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link",
+			"default":"/"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Text Columns & Top Images",       
+        "blocks": [
+          {
+            "type": "text_block"
+          },
+          {
+            "type": "text_block"
+          },
+          {
+            "type": "text_block"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,500 @@
+{% capture productslider %}
+{% assign secSt = section.settings %}
+<div class="content-indent {{ secSt.top-offeset}}">
+ {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+  <div class="page-width" id="{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="carousel">
+    {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+    <div class="sec-ttl {{ settings.title_align}} wow fadeIn">
+      <h3 class="h3">{{ secSt.title }}</h3>     
+      {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%}
+    </div>
+    {%- endif -%}
+
+    <div class="fl f-jcsb f-col f-row-md gridcb">
+       <div class="bnrcol cb{{section.id}}{% if secSt.cb_pos %} order2{% endif %}{% if secSt.bnrhide %} small--hide{% endif %}" style="width:{{secSt.b_width}}%;">
+        <a href="{{ secSt.button_link }}" class="custom-banner pr db">
+          <div class="img bgImg banner_img lazyload" {% if secSt.image != blank %}data-bgset="{% include 'prgrid-img', image: secSt.image, sizes: sizes %}" data-sizes="auto" data-parent-fit="contain" style="padding-bottom:{{ 1 | divided_by: secSt.image.aspect_ratio | times: 100}}%;"{% endif %}>
+              {% if secSt.image == blank %}
+                  {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                  {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg svgcl1' }}
+              {% endif %}
+          </div>
+          
+          {% if secSt.text1 != blank or secSt.text2 != blank %}
+          <div class="ct-bnr-txt fl f-col {{ secSt.textalign}} {{secSt.vttextalign}} tc" style="--mb:10px;--mbm:10px;--fs:{{secSt.fs}}px;--fsm:{{secSt.fsm}}px;--cl:{{secSt.text1clr}};--dfs:{{secSt.dfs}}px;--dfsm:{{secSt.dfsm}}px;--flh:{{secSt.hd1_lh}};">
+            {% if secSt.text1 != blank %}<div class="tltxt">{{ secSt.text1 }}</div>{% endif %}
+            {% if secSt.text2 != blank %}<div class="dtxt{% if secSt.text2hide %} small--hide{% endif %}" style="--cl:{{secSt.text2clr}};--mb:25px;--mbm:25px;--flh:{{secSt.hd2_lh}};">{{ secSt.text2 }}</div>{% endif %}
+            {% if  secSt.button_label != blank %} 
+            <span class="btn {{secSt.btn-size-mob}} {{secSt.btn-size-desk}}" type="button">{{secSt.button_label}}</span>
+            {% endif %}
+          </div>
+          {% endif %}     
+  		</a>
+      </div>
+      <div class="bPrcall" style="width:calc({{ 100 | minus: secSt.b_width}}% - 30px);">
+        {%- liquid
+            case secSt.grid
+                when 2
+                    assign grid_ds = 'large-up--one-half'
+                    assign image_size = '150,350,550,750,950'
+                when 3 
+                    assign grid_ds = 'large-up--one-third'
+                    assign image_size = '150,350,550,750'
+                when 4 
+                    assign grid_ds = 'large-up--one-quarter'
+                    assign image_size = '150,350,550,750'
+                when 5 
+                    assign grid_ds = 'large-up--one-fifth'
+                    assign image_size = '150,350,550'
+                when 6 
+                    assign grid_ds = 'large-up--one-sixth'
+                    assign image_size = '130,300,500'
+                when 7
+                    assign grid_ds = 'large-up--one-seventh'
+                    assign image_size = '130,280,400'
+            endcase
+        -%}
+        {% case secSt.tablet-grid %}
+          {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+          {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+          {% when 4 %}{%- assign grid_tb = 'medium--one-quarter' -%}
+          {% when 5 %}{%- assign grid_tb = 'medium--one-fifth' -%}
+        {% endcase %}
+        {% case secSt.mobile-grid %}
+          {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+          {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+          {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+        {% endcase %}
+
+         {%- assign product_limit = secSt.rows -%}
+        
+        <div id="productSlider-{{ section.id }}" class="cb_pr grid grid-products{%  if secSt.ena_slider %} carousel{% endif %}" data-slick='{"slidesToShow": {{ secSt.grid }},"slidesToScroll": 1, "autoplay":{{ secSt.autoplay }}, "autoplaySpeed":{{secSt.autoplay_speed | times: 1000}}, {%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": {{ secSt.tablet-grid }} }},{"breakpoint": 767,"settings":{"slidesToShow":{{ secSt.mobile-grid }} }} ]}'>
+          {% if secSt.collection != blank %}
+                {%- assign collection = collections[secSt.collection] -%}
+                {% for product in collection.products limit: secSt.rows %}
+                <div class="grid__item item {{grid_mb}} {{grid_tb}} {{grid_ds}}">{% include 'product-card-grid', sizes: image_size %}</div>        
+                {% endfor %}
+          {% else %}
+                {% for i in (1..product_limit) %}
+                  {%  include 'no-products' %}
+          		{% endfor %}
+          {% endif %}
+          
+        </div>       
+      </div>         
+ 	 </div>    
+  </div>  
+  {% if secSt.section_cov %}</div> {% endif%}  
+</div>
+{% endcapture %}
+{{ productslider | strip_newlines | remove: "  " | remove: "	" }}
+
+{% schema %}
+  {
+    "name": "Products + Banner",
+    "class": "index-section",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [	  		
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Our Collection"		
+      },	  
+	  {
+         "type": "textarea",
+         "id": "subtitle",
+         "label": "Sub Heading",
+         "default": "Describe your products, collection etc..."		
+      },
+       {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 		     
+       {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Use Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },
+	  {
+        "type":"header",
+        "content":"Banner"        
+      },
+	  {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Upload Banner",
+  		"info":"Image dimensions are flexible. It depends products column width and product image dimensions. You can upload vertical or landscape image with free size which suit better with products"
+     },
+     {
+        "type": "range",
+        "id": "b_width",
+        "min": 20,
+        "max": 70,
+        "step": 1,
+        "label": "Banner Column width",
+        "default": 30,
+		"unit": "%"
+     },
+   	 {
+        "type": "checkbox",
+        "id": "cb_pos",
+        "label": "Display banner on right",
+  		"default":false
+     },
+  	 {
+        "type": "checkbox",
+        "id": "bnrhide",
+        "label": "Hide Banner in mobile?",
+        "default": false		
+     },	 
+	 {
+        "type": "textarea",
+        "id": "text1",
+        "label": "Heading",
+        "default": "SPRING SUMMER"		
+      },
+	 {
+        "type": "range",
+        "id": "fs",
+        "label": "Font Size",
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "default": 18
+      },
+      {
+        "type": "range",
+        "id": "hd1_lh",
+        "label": "Line Height",
+        "default": 1.2,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Space between text lines. Default is set to 1.3"
+      }, 	
+ 	  {
+        "type": "range",
+        "id": "fsm",
+        "label": "Font Size(mobile)",
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "default": 18
+      },     
+  		{
+        "type": "color",
+        "id": "text1clr",
+        "label": "Color",
+        "default": "#000"		
+      },  		
+      {
+        "type": "textarea",
+        "id": "text2",
+        "label": "Sub Heading",
+        "default": "Get flat 50% on entire women collectin"		
+      },
+	  {
+        "type": "range",
+        "id": "dfs",
+        "label": "Font Size",
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "default": 13
+      },
+       {
+        "type": "range",
+        "id": "hd2_lh",
+        "label": "Line Height",
+        "default": 1.2,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Space between text lines. Default is set to 1.3"
+      }, 	
+	   {
+        "type": "range",
+        "id": "dfsm",
+        "label": "Font Size(mobile)",
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px",
+        "default": 13
+      },     
+      {
+        "type": "color",
+        "id": "text2clr",
+        "label": "Color",
+        "default": "#000"		
+      },
+  {
+        "type": "checkbox",
+        "id": "text2hide",
+        "label": "Hide in mobile?",
+        "default": false		
+      },  	
+	 {
+            "type": "select",
+            "id": "textalign",
+            "label": "Position Vertical",
+            "default": "f-jce",
+            "options": [
+              { "value":"f-jcs", "label":"Top" },
+              { "value":"f-jcc", "label":"Middle" },
+              { "value":"f-jce", "label":"Bottom" }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "vttextalign",
+            "label": "Position Horizontal",
+            "default": "f-aic",
+            "options": [
+              { "value":"f-ais", "label":"Left" },
+              { "value":"f-aic", "label":"Center" },
+              { "value":"f-aie", "label":"Right" }
+            ]
+          }, 		
+	  {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button Label",
+ 		"default": "SHOP NOW"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button Link",
+ 		"default": "/"
+      },
+ 	  {
+         "type": "header",         
+         "content": "Products"         
+      },
+      {
+         "id": "collection",
+         "type": "collection",
+         "label": "Select Collection"
+      },
+      {
+        "type": "paragraph",
+        "content": "Products Per Row ==="
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Desktop",
+        "default": 3,
+        "min": 1,
+        "max": 6,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "tablet-grid",
+        "label": "Tablet",
+        "default": 3,
+        "min": 1,
+        "max": 5,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "mobile-grid",
+        "label": "Mobile",
+        "default": 2,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+      {
+        "type": "text",
+        "id": "rows",
+        "label": "Number of Product to show",
+        "default": "5"
+      }, 	
+      	  {
+        "type": "select",
+        "id": "prbox_style",
+        "label": "Grid Style",
+        "default": "grid_1",
+        "options": [
+          {
+            "value": "grid_1",
+            "label": "Style 1 - Default Info Center"
+          },
+          {
+            "value": "grid_2",
+            "label": "Style 2 - Info Hover Image"
+          },
+          {
+            "value": "grid_3",
+            "label": "Style 3 - Info Below Image"
+          },
+          {
+            "value": "grid_4",
+            "label": "Style 4 - Default Info Left"
+          },
+		   {
+            "value": "grid_5",
+            "label": "Style 5 - Top Right Icons"
+          },
+		 {
+            "value": "grid_6",
+            "label": "Style 6 - Top Right Wishlist"
+          }
+        ]		
+      }, 
+      {
+        "type": "checkbox",
+        "id": "ena_slider",
+        "label": "Enable Carousel",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Auto-rotate Product",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "autoplay_speed",
+        "label": "Change Product Every",
+        "default": 5,
+        "min": 1,
+        "max": 30,
+        "step": 1,
+		"unit": "Sec"
+      },
+      {
+        "type": "checkbox",
+        "id": "secondary_image",
+        "label": "Show Second Image on hover?",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show Vendor Name?",
+        "default": false
+      },         
+      {
+        "type": "checkbox",
+        "id": "prlist_btn_show",
+        "label": "Hide Buttons?",
+        "default": false,
+        "info": "add to cart,wishlist,quickview"
+      },
+      {
+        "type": "checkbox",
+        "id": "btn_mobiles",
+        "label": "Hide Buttons on Mobile?",
+        "default": false
+      }, 	
+      {
+        "type": "header",
+        "content": "Color Swatches"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_color_swatch",
+        "label": "Show ?",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "color_type",
+        "label": "Swatch Type",
+        "default": "color",
+        "info": "Custom color name should be predefined in 'Custom Colors' section.",
+        "options": [
+          {
+            "value": "color",
+            "label": "Color Swatch"
+          },
+          {
+            "value": "vrimage",
+            "label": "Variant Image"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "vr_bg_position",
+        "label": "Variant Image Position",
+        "default": "50% 0",
+        "options": [
+          {
+            "value": "50% 0",
+            "label": "Center Top"
+          },
+          {
+            "value": "50% 50%",
+            "label": "Center Center"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "color_size",
+        "label": "Swatch Size",
+        "default": "small",
+        "options": [
+		  {
+            "value": "xsmall",
+            "label": "Extra Small"
+          },
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ]
+      }    
+	 ],
+    "presets": [
+      {
+        "name": "Products + Banner"        
+      }
+    ]
+  }
+{% endschema %}

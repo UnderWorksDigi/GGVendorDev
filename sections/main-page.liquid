@@ -1,0 +1,31 @@
+<style>
+ {%- if section.settings.hide_hdft -%}#header, .top-header-wrapper, .shopify-section-group-footer-group { display:none; }{%- endif -%}
+</style>
+{%- if settings.breadcrumb_pg -%}{%- render 'breadcrumb' -%}{%- else -%}<div class="topSpace"></div>{%- endif -%}
+<div class="page-width">
+  {% unless section.settings.hide_ttl %} <h1 class="page-title {{settings.title_align}}">{{page.title}}</h1> {% endunless %}
+  <div class="rte">{{ page.content }}</div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [   
+	{
+            "type": "checkbox",
+            "id": "hide_ttl",
+            "label": "Hide Page Title?",
+            "default": false            
+    },
+	{
+      	"type": "checkbox",
+        "id": "hide_hdft",
+        "label": "Hide Header and Footer?",
+        "default": false,
+		"info": "You can use this option when creating a landing page without a header or footer."
+    }
+  ] 
+}
+{% endschema %}

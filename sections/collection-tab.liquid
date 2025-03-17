@@ -1,0 +1,495 @@
+{%- capture collectionTabs -%}
+{% assign secSt = section.settings %}
+{% capture style %}
+    --tab_fs:{{ secSt.tab_fs }}px;
+    --tab_fsm:{{ secSt.tab_fsm }}px;
+    --tab_cl:{{ secSt.tab_cl }};
+    --tab_cla:{{ secSt.tab_cla }};
+    --tab_bdr:{{ secSt.tab_bdr }};
+    --tab_bdra:{{ secSt.tab_bdra }};
+    --tab_bg:{{ secSt.tab_bg }};
+    --tab_bga:{{ secSt.tab_bga }};
+    --mtab_cl:{{ secSt.mtab_cl }}; 
+    --mtab_bg:{{ secSt.mtab_bg }}; 
+    --mtab_cla:{{ secSt.mtab_cla }}; 
+    --mtab_bga:{{ secSt.mtab_bga }};
+    --tab_bdrr:{{ secSt.tab_bdrr }}px;
+{% endcapture style %}
+
+<div class="content-indent{% if secSt.hide_mobile %} small--hide{% endif %} {{ secSt.top-offeset}}"> 
+
+{% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	  
+    <div class="page-width" id="{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="carousel"> 
+	 
+	{%- if secSt.title != blank  or secSt.subtitle != blank -%}
+      <div class="sec-ttl {{ settings.title_align}} wow fadeIn">
+        <h3 class="h3">{{ secSt.title }}</h3>
+        {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%} </div>
+    {% endif %}
+		
+      <div class="tbs_lst wow fadeIn" style="{{style}}">
+        <ul class="cl_tbs fl f-jcc small--hide {{ settings.title_align}}">
+          {%- for block in section.blocks limit: section.blocks.size -%}
+          {%- if block.settings.title != blank -%}
+          <li class="{{ section.settings.tab-style}}"><a class="tablink db pr" href="#collection-{{ block.id }}">{{ block.settings.title }}</a></li>
+          {%- endif -%}
+          {%- endfor -%}
+        </ul>
+        <div class="tbs_wrp">
+            {% case section.settings.grid %}
+              {% when 2 %}{%- assign grid_ds = 'large-up--one-half' -%}
+              {% when 3 %}{%- assign grid_ds = 'large-up--one-third' -%}
+              {% when 4 %}{%- assign grid_ds = 'large-up--one-quarter' -%}
+              {% when 5 %}{%- assign grid_ds = 'large-up--one-fifth' -%}
+            {% when 6 %}{%- assign grid_ds = 'large-up--one-sixth' -%}
+            {% when 7 %}{%- assign grid_ds = 'large-up--one-seventh' -%}
+          {% endcase %}
+          
+          {% case section.settings.tablet-grid %}
+          {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+          {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+          {% when 4 %}{%- assign grid_tb = 'medium--one-quarter' -%}
+          {% when 5 %}{%- assign grid_tb = 'medium--one-fifth' -%}
+          {% endcase %}
+          
+          {% case section.settings.mobile-grid %}
+          {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+          {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+          {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+          {% endcase %}
+          
+          {% for block in section.blocks limit: section.blocks.size %}          
+                {%- assign collection = collections[block.settings.collection] -%}
+                <h3 class="acor-ttl medium-up--hide {{ settings.title_align}} {{ section.settings.tab-style}}"><a class="tablink" href="#collection-{{ block.id }}">{{ block.settings.title }}<i class="at at-angle-down-r" aria-hidden="true"></i></a></h3>
+                <div id="collection-{{ block.id }}" class="tb_cnt">
+                    <div id="pr_slider-{{ block.id }}">
+                  <div class="grid grid-products arwOut{% if section.settings.pr_carousel %} carousel{% else %} grid--uniform{% endif %}" data-slick='{"slidesToShow": {{ section.settings.grid }},"slidesToScroll": 1, {%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": {{ section.settings.tablet-grid }} }},{"breakpoint": 767,"settings":{"slidesToShow":{{ section.settings.mobile-grid }} }} ]}'>
+                      {% if block.settings.collection != blank %}
+                          {% for product in collection.products limit: section.settings.rows %}
+                          <div class="grid__item item {{grid_mb}} {{grid_tb}} {{grid_ds}}">{% render 'product-card-grid', product:product, secSt:secSt %}</div>
+                          {% endfor %}                                
+                    {% else %}
+                            {% for i in (1..section.settings.rows) %}
+                            {%  render 'no-products' %}    
+                            {% endfor %}          
+                    {% endif %} 
+                    </div>
+                    {% if block.settings.btntext != blank %}
+                    <p class="tc"><a href="{{block.settings.collection.url}}" title="{{ block.settings.btntext}}" class="btn btn-med dib mb20">{{ block.settings.btntext}}</a></p>
+                    {% endif %}
+                    </div>
+                </div>
+          {% endfor %} 
+          </div>
+      </div>
+    </div>
+   {% if secSt.section_cov %}</div>{% endif %}
+ </div>
+{%- endcapture -%}
+{{collectionTabs | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+{
+"name": "Tabs + Products",
+"class": "index-section",
+"disabled_on": {
+    "groups": ["header", "footer"]
+    },
+"max_blocks": 8,
+"settings": [	  
+  {
+	"type": "textarea",
+	"id": "title",
+	"label": "Heading",
+	"default": "Our Collection"	
+  },	  
+ {
+	"type": "textarea",
+	"id": "subtitle",
+	"label": "Sub Heading",
+	"default": "Describe your products, collection etc..."
+  },
+{
+	"type": "header",
+	"content": "Appearance Section ==="
+  },	 
+  {
+		"type": "select",
+		"id": "top-offeset",
+		"label": "Top OffSet",
+		"default": "default",
+		"options": [
+		  {
+			"value": "default",
+			"label": "Default"
+		  },
+		  {
+			"value": "small",
+			"label": "Small"
+		  },
+		  {
+			"value": "none",
+			"label": "None"
+		  }
+		]
+  }, 
+   {
+	   "type": "checkbox",
+	   "id": "hide_mobile",
+	   "label": "Hide Section in Mobile?",
+	   "default": false
+	},	 
+  {
+	"type": "checkbox",
+	"id": "section_cov",
+	"label": "Add Background?",
+	"default": false
+  },
+  {
+	"type": "color",
+	"id": "sec_bg_clr",
+	"label": "Background",
+	"default":"#fafafa",
+	"info":"select light color"
+  }, 
+  {
+	"type": "header",
+	"content": "Appearance Tabs ==="
+  },		 	 		 
+  {
+	"type": "select",
+	"id": "tab-style",
+	"label": "Tab Style",
+	"default": "stl1",
+	"info":"[preview tab style](https://www.adornthemes.com/different-tab-styles/)",
+	"options": [
+		  {
+			"value": "stl1",
+			"label": "Bottom Border or Simple Text"
+		  },            			 
+		  {
+			"value": "stl2",
+			"label": "Solid or Border"
+		  }		
+	  ]
+     },	
+ 	 {
+        "type": "range",
+        "id": "tab_bdrr",
+        "label": "Border Radius",
+        "default": 0,
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "tab_fs",
+        "label": "Tab Font Size",
+        "default": 14,
+        "min": 10,
+        "max": 25,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "color",
+        "id": "tab_cl",
+        "label": "Tabs Text",
+        "default": "#555"
+      },
+      {
+        "type": "color",
+        "id": "tab_cla",
+        "label": "Active Tabs Text",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "tab_bdr",
+        "label": "Tabs Border",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "tab_bdra",
+        "label": "Active Tabs Border",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "tab_bg",
+        "label": "Tabs Background",
+        "default": "#fff",
+        "info": "Use only for solid style tabs"
+      },
+      {
+        "type": "color",
+        "id": "tab_bga",
+        "label": "Active Tabs Background",
+        "default": "#fff",
+        "info": "Use only for solid style tabs"
+      },
+      {
+        "type": "paragraph",
+        "content": "Tabs Mobile ====="
+      },
+ 	   {
+        "type": "range",
+        "id": "tab_fsm",
+        "label": "Font Size",
+        "default": 14,
+        "min": 10,
+        "max": 25,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "color",
+        "id": "mtab_cl",
+        "label": "Tabs Text",
+        "default": "#222"
+      },
+      {
+        "type": "color",
+        "id": "mtab_bg",
+        "label": "Tabs Background",
+        "default": "#eee"
+      },
+      {
+        "type": "color",
+        "id": "mtab_cla",
+        "label": "Active Tabs Text",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "mtab_bga",
+        "label": "Active Tabs Background",
+        "default": "#111"
+      }, 	
+   {
+	"type": "header",
+	"content": "Appearance Grid ==="
+   },
+   {
+	"type": "checkbox",
+	"id": "pr_carousel",
+	"label": "Enable Products carousel ",
+	"default": true
+   },
+   {
+	"type": "select",
+	"id": "prbox_style",
+	"label": "Grid Style",
+	"default": "grid_1",
+	"info": "[preview grid style](https:\/\/optimal-demos.myshopify.com\/pages\/grid-style)",
+	"options": [
+	  {
+		"value": "grid_1",
+		"label": "Style 1 - Default Info Center"
+	  },
+	  {
+		"value": "grid_2",
+		"label": "Style 2 - Info Hover Image"
+	  },
+	  {
+		"value": "grid_3",
+		"label": "Style 3 - Info Below Image"
+	  },
+	  {
+		"value": "grid_4",
+		"label": "Style 4 - Default Info Left"
+	  },
+	   {
+		"value": "grid_5",
+		"label": "Style 5 - Top Right Icons"
+	  },
+	 {
+		"value": "grid_6",
+		"label": "Style 6 - Top Right Wishlist"
+	  }
+	]
+  },
+{
+	"type": "checkbox",
+	"id": "secondary_image",
+	"label": "Show Second Image on hover?",
+	"default": true
+  },
+  {
+	"type": "checkbox",
+	"id": "show_vendor",
+	"label": "Show Vendor Name?",
+	"default": false
+  },
+  {
+	"type": "checkbox",
+	"id": "show_product_review",
+	"label": "Show Product Reviews?",
+	"default": true
+  },    
+  {
+	"type": "checkbox",
+	"id": "prlist_btn_show",
+	"label": "Hide Buttons?",
+	"default": false,
+	"info": "add to cart,wishlist,quickview"
+  },
+  {
+	"type": "checkbox",
+	"id": "btn_mobiles",
+	"label": "Hide Buttons on Mobile?",
+	"default": true
+  }, 
+  {
+	"type": "paragraph",
+	"content": "Color Swatches ==="
+  },
+  {
+	"type": "checkbox",
+	"id": "show_color_swatch",
+	"label": "Show ?",
+	"default": true
+  },
+  {
+	"type": "select",
+	"id": "color_type",
+	"label": "Swatch Type",
+	"default": "color",
+	"info": "Some colors appear white? Add custom colors from 'Custom Colors' section which appear below footer section",
+	"options": [
+	  {
+		"value": "color",
+		"label": "Color Swatch"
+	  },
+	  {
+		"value": "vrimage",
+		"label": "Variant Image"
+	  }
+	]
+  },
+  {
+	"type": "select",
+	"id": "v_f_bg_position",
+	"label": "Variant Image Position",
+	"default": "50% 0",
+	"options": [
+	  {
+		"value": "50% 0",
+		"label": "Center Top"
+	  },
+	  {
+		"value": "50% 50%",
+		"label": "Center Center"
+	  }
+	]
+  },
+  {
+	"type": "select",
+	"id": "color_size",
+	"label": "Swatch Size",
+	"default": "small",
+	"options": [
+	  {
+		"value": "small",
+		"label": "Small"
+	  },
+	  {
+		"value": "medium",
+		"label": "Medium"
+	  },
+	  {
+		"value": "large",
+		"label": "Large"
+	  }
+	]
+  }, 
+  {
+	"type": "paragraph",
+	"content": "Products Per Row ==="
+  },
+  {
+	"type": "range",
+	"id": "grid",
+	"label": "Desktop",
+	"default": 4,
+	"min": 2,
+	"max": 7,
+	"step": 1
+  },
+  {
+	"type": "range",
+	"id": "tablet-grid",
+	"label": "Tablet",
+	"default": 3,
+	"min": 1,
+	"max": 5,
+	"step": 1
+  },
+  {
+	"type": "range",
+	"id": "mobile-grid",
+	"label": "Mobile",
+	"default": 2,
+	"min": 1,
+	"max": 3,
+	"step": 1
+  },
+  {
+	"type": "text",
+	"id": "rows",
+	"label": "Number of products to show",
+	"default": "5"
+  },
+   {
+	"type":"paragraph",
+	"content":"Set other Products grid option from Theme Settings --> Products Grid"
+ }
+ ],
+"blocks": [
+  {
+	"type": "featured_collection_tabs",
+	"name": "Collection",
+	"settings": [
+	{
+	  "type": "text",
+	  "id": "title",
+	  "label": "Collection Tab Name",
+	  "default": "Tab Name",
+	  "info":"Use <strong>text here</strong> to make headings bold"
+	},
+	 {
+	  "id": "collection",
+	  "type": "collection",
+	  "label": "Select Collection"
+	  },
+	 {
+	  "id": "btntext",
+	  "type": "text",
+	  "label": "View all button text",
+	  "info":"Keep empty to hide button",
+	  "default":"VIEW ALL"
+	  }   
+	]
+ }
+],
+"presets": [
+  {
+	"name": "Tabs + Products",             
+	"blocks": [
+	  {
+		"type": "featured_collection_tabs"
+	  },
+	  {
+		"type": "featured_collection_tabs"
+	  },
+	  {
+		"type": "featured_collection_tabs"
+	  }
+	]
+  }
+]
+}
+{% endschema %} 

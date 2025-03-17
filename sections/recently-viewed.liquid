@@ -1,0 +1,176 @@
+{%- assign secSt = section.settings -%}
+<div class="content-indent {{ secSt.top-offeset}}">
+<div class="recent-product" id="{{ section.id }}" data-pr="{{ product.handle | handleize }}" data-section-id="{{ section.id }}" data-section-type="carousel">
+  <div class="{% if secSt.section_width or settings.product_latyout == "style6" %}fullwidth{% else %}page-width{% endif %}" style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;"> 
+    {%- if section.settings.recently_title != blank  or section.settings.recently_sub_title != blank -%}
+    <div class="sec-ttl {{ settings.title_align}}">
+      <h3 class="h3">{{ section.settings.recently_title | escape }}</h3>     
+      {%- if section.settings.recently_sub_title != blank -%}<span>{{section.settings.recently_sub_title}}</span>{%- endif -%}           
+    </div>
+    {%- endif -%}
+    <div id="products-{{ section.id }}">
+      {%- if settings.product_latyout == "style6" -%}
+      <div id="pr_slider-{{ section.id }}" class="grid cl_clm"></div>
+      {%- else -%}
+      <div id="pr_slider-{{ section.id }}" class="grid-products carousel arwOut" data-slick='{"slidesToShow": {{ section.settings.grid }},"slidesToScroll": 1, {%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": {{ section.settings.tablet-grid }} }},{"breakpoint": 767,"settings":{"slidesToShow":{{ section.settings.mobile-grid }} }} ]}'></div>
+      {%- endif -%}
+    </div>
+  </div>
+ </div>
+</div>
+<script>
+	window.addEventListener('DOMContentLoaded',function(){
+    	var rcCookie = "recentproducts",
+      		pr = "{{ product.handle | handleize }}";
+        if($.cookie(rcCookie) == null){
+			var str = pr;
+        } else {
+          	var ctrItems = String($.cookie(rcCookie)).split("+");
+	        if(ctrItems.length < {{section.settings.recently_pr_limit | plus: 1}}){
+            	if($.cookie(rcCookie).indexOf(pr) == -1) {
+    	        	var str = pr + '+' + $.cookie(rcCookie);
+        		}
+        	} else {
+              	if($.cookie(rcCookie).indexOf(pr) == -1) {
+    	        	var str = pr + '+' + ctrItems.slice(0, -1).join("+");
+        		}
+        	}
+		}
+		$.cookie(rcCookie, str, {expires:1, path:"/;SameSite=None", secure: true});
+  
+  		var crproduct = {{ product.handle | json }};
+		$.ajax({
+        	url: '{{ routes.collections_url}}/all?type='+$.cookie(rcCookie)+'__pr='+crproduct+'&view=prlist',
+            dataType: 'html',
+            type: 'GET',
+            success: function(data) {
+            	if($(data).find('.grid_bx').length){
+                	$('#pr_slider-{{ section.id }}').html(data);
+                } else {
+					$('.recent-product').hide();
+                }
+            },
+            error: function(data) {
+				console.log('ajax error');
+            },
+            complete: function() {
+            	$('#pr_slider-{{ section.id }}').slick('refresh');
+                $(theme.init);
+            }
+        });
+	});
+</script>
+
+{% schema %}
+  {
+    "name": "Recently Viewed Products",
+    "settings": [	      
+	 {
+        "type": "checkbox",
+        "id": "recently_autoplay",
+        "label": "Carousel Autoplay",
+        "default": true
+      },
+ 	 {
+        "id": "recently_title",
+        "type": "text",
+        "label": "Section Title",
+        "default": "Recently Viewed Products"
+      },
+ 	  {
+        "id": "recently_sub_title",
+        "type": "text",
+        "label": "Section Sub title"      
+      },
+      {
+        "type": "paragraph",
+        "content": "Products Per Row"
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Desktop",
+        "default": 4,
+        "min": 2,
+        "max": 7,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "tablet-grid",
+        "label": "Tablet",
+        "default": 3,
+        "min": 1,
+        "max": 5,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "mobile-grid",
+        "label": "Mobile",
+        "default": 2,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+      {
+        "type": "text",
+        "id": "recently_pr_limit",
+        "label": "Number of Product to Show",
+        "default": "6"
+      },
+      {
+        "type": "header",
+        "content": "Section ==="
+      },
+	 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 
+	 {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	   },
+	  {
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 10,
+        "min": 0,
+        "max": 20,
+        "step": 1
+      }
+	]
+  }
+{% endschema %}

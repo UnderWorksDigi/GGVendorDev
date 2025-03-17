@@ -1,0 +1,397 @@
+{%- capture infoBanner -%}
+{% assign secSt = section.settings %}
+
+<div class="content-indent wr{{ section.id }} {{ secSt.top-offeset}}" id="carousel-{{section.id}}" data-section-id="{{section.id}}" data-section-type="quotes" style="--sarr:{{ secSt.q_arrow}};">
+	
+	{% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	
+		{% unless secSt.section_width %}<div class="page-width">{% endunless %}
+
+			{% if secSt.enable_carousel %}<div id="Quotes-{{section.id}}" data-slick='{"slidesToShow":1,"slidesToScroll":1,"arrows":{{secSt.arrow}},{%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "autoplay":{{secSt.autoplay}}, "autoplaySpeed":{{secSt.autoplay_speed | times: 1000}} }'>{% endif %}
+
+			{% for block in section.blocks limit: section.blocks.size %}
+				{% assign box-delay = forloop.index | minus:1 %}
+				{% assign delay_time = 50 | times : box-delay %}
+			{% if secSt.enable_carousel %}<div class="slide quotes_sl-{{block.id}}{% unless forloop.first %} slick-slide{% endunless %}" {{ block.shopify_attributes }}>{% endif %}
+		  <div class="ft_row fl f-aist f-jcsb w_100 row-{{ block.id }}" data-wow-delay="{{delay_time}}ms" {{ block.shopify_attributes }} style="--bg:{{block.settings.text_bg_clr}};--mw:{{ block.settings.image.width }}px;--cl:{{block.settings.text_clr}};--img_br:{{ block.settings.img_br }}px">
+			<div class="row_item of_hidden fl fl1 w_100 f-aic jcc row_img{% if block.settings.layout == 'right' %} order1{% endif %}">
+			  {% if block.settings.image != blank %}
+				{% if block.settings.button_link != blank %}<a class="db w_100" href="{{ block.settings.button_link}}">{% endif %}
+					<div class="imgWrapper w_100" style="max-width:{{ block.settings.image.width }}px;">
+					  <img loading="lazy" class="img_fl lazyload{% if secSt.img_zoom %} zoom{% endif %}" src="{{ block.settings.image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" alt="{{ block.settings.image.alt | escape }}" />
+					</div>
+				{% if block.settings.button_link != blank %} </a> {% endif %}
+			  {% else %}
+				 {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+			  {% endif %}
+			</div>
+			<div class="row_item of_hidden fl fl1 w_100 f-aic row_text">
+			  <div class="row-text {{block.settings.text_align}}">
+				{% if block.settings.title != blank %}<h3 class="mb15 tltxt" style="--mb:15px;--mbm:10px;--ffm:var(--{{secSt.bb1_font}});--fs:{{secSt.ttl_font}}px;--fw:{{secSt.bb1_fweight}};--flh:{{secSt.ttl_font_l}};--fsm:{{secSt.ttl_font_m}}px;">{{ block.settings.title }}</h3>{% endif %}
+				{% if block.settings.text != blank %}<div class="rte rte-setting dtxt" style="--dfs:{{secSt.detail_font}}px; --dflh:{{secSt.detail_font_l}}; --dfsm:{{secSt.detail_font_m}}px;">{{ block.settings.text }}</div>{% endif %}
+
+				{% if block.settings.button_label != blank and block.settings.button_link != blank %}
+					<a href="{{ block.settings.button_link }}" class="btn {{secSt.btn-size}} {{block.settings.btn-style }}" style=" --mt:{{secSt.btn-mr}}px;--mtm:{{secSt.btn-mrm}}px">{{ block.settings.button_label }}</a>
+				{% endif %}
+			  </div>
+			</div>
+		  </div>    
+	 	  {% if secSt.enable_carousel %}</div>{% endif %}
+		  {% endfor %}  
+	     {% if secSt.enable_carousel %}</div>{% endif %}
+	  {% unless secSt.section_width %} </div>{% endunless %}	
+  {% if secSt.section_cov %}</div> {% endif%}
+</div>
+{%- endcapture -%}
+{{infoBanner | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+{
+	"name": "Image & Text(2 Columns)",
+	"class": "index-section image-with-text",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+	"settings":[	  	 
+		{
+			"type": "select",
+			"id": "top-offeset",
+			"label": "Top OffSet",
+			"default": "default",
+			"options": [
+				{ "value": "default", "label": "Default" },
+				{ "value": "small", "label": "Small" },
+				{ "value": "none", "label": "None" }
+			]
+		},
+	{
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	},
+	{
+		"type": "checkbox",
+		"id": "section_cov",
+		"label": "Add Background?",
+		"default": false
+	},
+	{
+		"type": "color",
+		"id": "sec_bg_clr",
+		"label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	},		
+      {
+        "type": "select",
+        "id": "bb1_font",
+        "label": "Title Font",
+        "default": "ft1",
+        "options": [
+          {
+            "value": "ft1",
+            "label": "Font 1"
+          },
+          {
+            "value": "ft2",
+            "label": "Font 2"
+          },
+          {
+            "value": "ft3",
+            "label": "Font 3"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bb1_fweight",
+        "label": "Font Weight",
+        "default": "600",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "ttl_font",
+        "label": "Title Font Size",
+        "default": 22,
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "ttl_font_l",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Default is set to 1.6"
+      },
+      {
+        "type": "range",
+        "id": "ttl_font_m",
+        "label": "Title Font (mobile)",
+        "default": 18,
+        "min": 12,
+        "max": 40,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "detail_font",
+        "label": "Detail Font Size",
+        "default": 14,
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "detail_font_l",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Default is set to 1.6"
+      },
+      {
+        "type": "range",
+        "id": "detail_font_m",
+        "label": "Detail Font (mobile)",
+        "default": 13,
+        "min": 12,
+        "max": 40,
+        "step": 1,
+        "unit": "px"
+      },
+	 {
+		"type": "select",
+		"id": "btn-size",
+		"label": "Button Size",
+		"default": "btn-med",
+		"options": [
+			{ "label": "Small", "value": "btn-small" },
+			{ "label": "Medium", "value": "btn-med" },
+			{ "label": "Large", "value": "btn-large" } 		  
+		]
+	},
+	{
+		"type": "range",
+		"id": "btn-mr",
+		"label": "Buttons top offset",
+		"default": 20,
+		"min": 0,
+		"max": 50,
+		"step": 1,
+		"unit":"px"
+	},
+	{
+		"type": "range",
+		"id": "btn-mrm",
+		"label": "Buttons top offset (mobile)",
+		"default": 15,
+		"min": 0,
+		"max": 50,
+		"step": 1,
+		"unit":"px"
+	},	
+   {
+		"type":"checkbox",
+		"id":"img_zoom",
+		"label":"Enable Image Zoom On Hover?",
+		"default": true
+	 },
+	{
+		"type":"header",
+		"content":"Slider Settings ==="	
+	},  
+	{
+		"type":"checkbox",
+		"id":"enable_carousel",
+		"label":"Enable Slider",
+		"default": false
+	},
+	{
+		"type": "checkbox",
+		"id": "autoplay",
+		"label": "Auto-rotate slides",
+		"default": false
+	},
+	{
+		"type": "range",
+		"id": "autoplay_speed",
+		"label": "Autoplay Speed in Seconds",
+		"default": 5,
+		"min": 1,
+		"max": 30,
+		"step": 1
+	},
+	{
+		"type": "checkbox",
+		"id": "arrow",
+		"label": "Show Next/Previous Arrows?",
+		"default": true
+	},
+	{
+		"type": "checkbox",
+		"id": "arrow_m",
+		"label": "Hide on mobile?",
+		"default": true
+	},
+	{
+		"type": "color",
+		"id": "q_arrow",
+		"label": "Arrows Color",
+		"default": "#eee"
+	}	
+	],
+	"blocks":[
+		{
+		"type": "image_with_text",
+		"name": "Block",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "image",
+				"label": "Image"
+			},  
+			{
+				"type": "select",
+				"id": "layout",
+				"label":"Image alignment",
+				"default": "left",
+				"options": [
+					{ "value": "left","label":"Left"},
+					{ "value": "right","label":"Right"}
+				]
+			},	  
+			{
+				"type": "textarea",
+				"id": "title",
+				"label": "Heading",
+				"default": "Spring Summer New Arrival"				
+			},
+			{
+				"type": "richtext",
+				"id": "text",
+				"label": "Text",
+				"default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+			},
+			{
+				"type": "text",
+				"id": "button_label",
+				"label": "Button Label",
+				"default":"Shop Collection"
+			},
+			{
+				"type": "url",
+				"id": "button_link",
+				"label": "Button Link",
+				"default":"/"
+			},
+			{
+				"type": "select",
+				"id": "text_align",
+				"label": "Text Align",
+				"default": "tl",
+				"options": [
+					{ "value": "tl", "label": "Left" },
+					{ "value": "tc", "label": "Center" },
+					{ "value": "tr", "label": "Right" }
+				]
+			},
+			{
+				"type": "header",
+				"content": "Appearance Text ==="
+			},
+			{
+				"type": "color",
+				"id": "text_clr",
+				"label": "Text Color",
+				"default": "#000"
+			},
+			{
+				"type": "color",
+				"id": "text_bg_clr",
+				"label": "Background Color",
+				"default": "#eee"
+			},
+           {
+              "type": "range",
+              "id": "img_br",
+              "label": "Image Border Radius",
+              "default": 0,
+              "min": 0,
+              "max": 20,
+              "step": 1,
+              "unit": "px"
+            },
+           {
+            "type": "select",
+            "id": "btn-style",
+            "label": "Select Button",
+            "default": "bdr-btn1",
+            "options": [
+              {
+                "label": "Solid Button 1",
+                "value": "btn1"
+              },
+              {
+                "label": "Solid Button 2",
+                "value": "btn2"
+              },
+              {
+                "label": "Solid Button 3",
+                "value": "btn3"
+              },
+              {
+                "label": "Border Button 1",
+                "value": "bdr-btn1"
+              },
+              {
+                "label": "Border Button 2",
+                "value": "bdr-btn2"
+              }
+            ]
+          }			
+		 ] 
+		}
+	],
+	"presets": [
+		{
+			"name": "Image & Text (2 Columns)",		
+			"blocks":[
+				{
+					"type": "image_with_text"
+				}          
+			]
+		}
+	]
+}
+{% endschema %}

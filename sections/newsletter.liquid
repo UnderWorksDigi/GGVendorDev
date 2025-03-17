@@ -1,0 +1,205 @@
+{%- capture newsletter -%}
+{% assign secSt = section.settings %}
+<div id="{{ section.id }}" class="content-indent {{ secSt.top-offeset}} wow fadeIn news-{{section.id}}">
+    
+	<div class="section-cover bgImg nwsec lazyload {{secSt.style}} {% unless secSt.section_width %}page-width{% endunless %}"
+        {% if secSt.image != blank and secSt.style != "style3" %}data-bgset="{% include 'bgset', image: secSt.image %}" data-sizes="auto" data-parent-fit="contain"{% endif %}
+		style="background-position:center;background-color:{{secSt.sec_bg_clr}};background-size: cover;background-repeat: no-repeat;">
+		
+      {% if secSt.section_width and secSt.style != "style3" %}<div class="page-width">{% endif %}  
+     
+		{% if secSt.style == "style3" %}
+      	<div class="fl f-aic f-col f-row-md">
+          <div class="fl1">
+          	<div class="imgWrapper" style="max-width:{{ secSt.image.width }}px;">
+              <div class="bgImg lazyload" data-bgset="{% render 'prgrid-img', image: secSt.image, sizes: '380,550,750,980,1200' %}" data-sizes="auto" data-parent-fit="contain" style="padding-bottom:{{ 1 | divided_by: secSt.image.aspect_ratio | times: 100}}%;"></div>
+            </div>
+          </div>
+          <div class="fl1">
+       {% endif %}
+			  
+      <div class="newsl">
+      	 {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+        <div class="sec-ttl {{ settings.title_align}}">
+          <h3 class="h3">{{ secSt.title }}</h3>     
+          {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%}
+        </div>
+        {% endif %}
+        {% include 'newsletter-form' %}      
+      </div>
+      {% if secSt.style == "style3" %}</div></div>{% endif %}
+       {% if secSt.section_width and secSt.style != "style3" %}</div>{% endif %}
+    </div>     
+</div>
+
+<style>
+  .news-{{section.id}} .newsl h3 { color:{{secSt.text_clr}}; font-size:{{secSt.hd_fs_m}}px; letter-spacing:0.0{{ secSt.hd_ls}}em;}
+  .news-{{section.id}} .newsl span { color:{{secSt.text_clr}};font-size:{{secSt.txt_fs_m}}px;}
+  .news-{{section.id}} .newstxt { background-color:{{secSt.input_bg}}; color:{{secSt.input_text}}; }
+  .news-{{section.id}} .newsl_btn { background-color:{{secSt.input_btn}}; color:{{secSt.input_btn_text}}; }
+  .news-{{section.id}} .newsl_btn:hover {opacity:0.8  }	
+  @media only screen and (min-width: 767px) {
+    .news-{{section.id}} .newsl h3 { font-size:{{secSt.hd_fs}}px; }
+    .news-{{section.id}} .newsl span { font-size:{{secSt.txt_fs}}px;}        
+  }
+</style>
+
+{%- endcapture -%}
+{{newsletter | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+{
+  "name": "Newsletter",
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default":"Newsletter"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label":"Subheading",
+      "default":"Sign up to stay in the loop. Receive updates, access to exclusive deals, and more."
+    },   
+    {
+      "type": "paragraph",
+      "content":"Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"       
+    },
+	{
+      "type": "header",
+      "content": "Appearance Section ==="
+    },
+    {
+      "type": "select",
+      "id": "top-offeset",
+      "label": "Top OffSet",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "small", "label": "Small" },
+        { "value": "none", "label": "None" }
+      ]
+    }, 	
+	{
+      "type":"checkbox",
+      "id":"section_width",
+      "label":"Fullwidth?",
+      "default": true
+	}, 
+	{
+      "type": "color",
+      "id": "sec_bg_clr",
+      "label": "Background",
+      "default":"#fafafa"	
+    },
+	{
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image",
+	  "info": "Recommended image width : 1920px for style 1 and style 2, 960px for style 3"
+    },			
+	{  
+	  "type": "select",
+      "id": "style",
+      "label": "Select Style",
+      "default": "style1",
+      "options": [
+      	{ "value": "style1", "label": "Style 1" },
+        { "value": "style2", "label": "Style 2" },
+        { "value": "style3", "label": "Style 3" }
+      ]
+    }, 	
+	{
+          "type": "header",
+          "content": "Appearance Text ==="
+    },
+ 	{
+        "type": "range",
+        "id": "hd_fs",
+        "label": "Heading Font Size",
+        "default": 18,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+    },
+ 	{
+            "type": "range",
+            "id": "hd_ls",
+            "label": "Heading Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em"
+     },
+	 {
+        "type": "range",
+        "id": "hd_fs_m",
+        "label": "Heading Font Size (mobile)",
+        "default": 15,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+     }, 		
+	 {
+        "type": "range",
+        "id": "txt_fs",
+        "label": "Sub Heading Font Size",
+        "default": 13,
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+     }, 		
+	 {
+        "type": "range",
+        "id": "txt_fs_m",
+        "label": "Sub Heading Font Size (mobile)",
+        "default": 12,
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+     }, 	 
+     {
+        "type": "color",
+        "id": "text_clr",
+        "label": "Text",
+        "default": "#000"
+     },
+	 {
+        "type": "color",
+        "id": "input_bg",
+        "label": "Input Background",
+        "default": "#fff"
+     },
+	 {
+        "type": "color",
+        "id": "input_text",
+        "label": "Input Text",
+        "default": "#000"
+     },
+	 {
+        "type": "color",
+        "id": "input_btn",
+        "label": "Button Background",
+        "default": "#000"
+      },
+	  {
+        "type": "color",
+        "id": "input_btn_text",
+        "label": "Button Text",
+        "default": "#fff"
+      }
+  ],
+  "presets": [
+    {
+      "name":"Newsletter"     
+    }
+  ]
+}
+{% endschema %}

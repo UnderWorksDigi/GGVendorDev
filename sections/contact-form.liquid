@@ -1,0 +1,146 @@
+{% assign secSt = section.settings %}
+<div class="content-indent {{ secSt.top-offeset}}">
+ {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}	
+<div class="contact-page" style="--cl:{{ secSt.cl }};--page_wid:{{ secSt.page_Width }}px;">  	
+  <div class="page-width">        
+      {% if page.content.size > 0 %}{{ page.content }}{% endif %}    
+          <div class="contact-frm form-vertical">
+            <div class="section-header">
+              {% if secSt.title != blank %}<h2 class="mb10 tc">{{ secSt.title }}</h2>{% endif %}
+            </div>
+            {% if secSt.details %}<div class="rte mb25 tc">{{ secSt.details }}</div>{% endif %}
+            {% form 'contact' %}
+            {% if form.posted_successfully? %}<p class="note form-success">{{ 'contact.form.post_success' | t }}</p>{% endif %}
+
+            {{ form.errors | default_errors }} 
+            <div class="grid">
+              <div class="gitem wd50-md">
+                <input type="text" id="ContactFormName" name="contact[name]" placeholder="{{ 'contact.form.name' | t }}" value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+              </div>       
+              <div class="gitem wd50-md">
+                <input type="email" id="ContactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" class="{% if form.errors contains 'email' %}input--error{% endif %}">
+              </div>              
+            </div>
+            {% unless secSt.show_phone %}
+            <input type="tel" id="ContactFormPhone" name="contact[phone]" pattern="[0-9\-]*" placeholder="{{ 'contact.form.phone' | t }}" value="{% if form[phone] %}{{ form[phone] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+            {% endunless %} 
+            {% unless secSt.show_subject %}
+            <input type="text" id="ContactFormSubject" name="contact[email subject]" placeholder="{{ 'contact.form.subject' | t }}" value="{% if form[subject] %}{{ form[subject] }}{% endif %}">
+            {% endunless %}
+            <textarea rows="10" id="ContactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+            <input type="submit" class="btn {{secSt.btn-style}}" value="{{ 'contact.form.submit' | t }}">
+            {% endform %}
+          </div>                    
+  </div>
+</div>
+{% if secSt.section_cov %}</div>{% endif %}
+</div>
+{% schema %}
+{
+    "name": "Contact Form",
+    "class":"contact-form",
+    "settings": [
+	 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "none",
+			"info":" This leave space above section",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+	  {
+            "type": "range",
+            "id": "page_Width",
+            "label": "Container Width",
+            "default": 1000,
+            "min": 700,
+            "max": 1600,
+            "step": 100,
+            "unit": "px"
+       },  
+	  {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Use Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },   
+	 {
+        "type": "color",
+        "id": "cl",
+        "label": "Text",
+        "default":"#000"		
+     },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Drop Us A Line"
+      },
+      {
+        "type": "textarea",
+        "id": "details",
+        "label": "Text"
+      },
+      {
+          "type": "checkbox",
+          "id": "show_phone",
+          "label": "Hide Phone?",
+          "default":false
+      },
+      {
+          "type": "checkbox",
+          "id": "show_subject",
+          "label": "Hide Subject?",
+          "default":false
+      },
+	 {
+        "type": "select",
+        "id": "btn-style",
+        "label": "Select Button",
+        "default": "btn1",
+        "options": [
+          {
+            "label": "Solid Button 1",
+            "value": "btn1"
+          },
+          {
+            "label": "Solid Button 2",
+            "value": "btn2"
+          },
+		  {
+            "label": "Solid Button 3",
+            "value": "btn3"
+          },
+ 		  {
+            "label": "Border Button 1",
+            "value": "bdr-btn1"
+          },
+ 		{
+            "label": "Border Button 2",
+            "value": "bdr-btn2"
+          } 
+        ]
+      }
+   ]
+}
+{% endschema %}

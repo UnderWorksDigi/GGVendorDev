@@ -1,0 +1,221 @@
+{%- capture richText -%}
+{% assign secSt = section.settings %}
+<div class="content-indent {{ secSt.top-offeset}}">          
+  
+ <div class="section-cover wow fadeIn" style="--sbg:{{secSt.sec_bg_clr}};">
+    <div class="{% if secSt.fullwidth %}fullwidth{% else %}page-width{% endif %}" style="--cl:{{ secSt.text_clr}};--mw:{{secSt.max-width}}%">
+     
+		{% if secSt.image != blank %}        
+          <p class="tc">
+              <span class="imgWrapper" style="max-width:{{secSt.image.width}}px;">
+                <img loading="lazy" class="img_fl lazyload" src="{{ secSt.image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: secSt.image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ secSt.image.width }}" height="{{ secSt.image.height }}" alt="{{ secSt.image.alt }}" />
+              </span>
+            </p>
+      {%- endif -%}
+		
+      <div class="richtext m_auto db{% unless secSt.align_left %} tc{% endunless %}">                          
+		  
+          {% if secSt.title != blank %}<span class="tltxt db mb20" style="--fs:{{secSt.fs}}px;--fsm:{{ secSt.fsm}}px;--flh:{{secSt.lh}};--mb:20px;--mbm:15px;">{{secSt.title}}</span>{% endif %}			
+          {% if secSt.richtxt != blank %}<div class="mb30">{{secSt.richtxt }}</div>{% endif %} 
+		  
+          {% if secSt.btntxt != blank and secSt.btnurl != blank %}                             
+	          <a class="btn {{secSt.btn-size}} {{secSt.btn-style}}" href="{{secSt.btnurl}}">{{ secSt.btntxt }}</a>
+          {% endif %}  
+        
+          {% if secSt.btntxt1 != blank and secSt.btnurl1 != blank %}                             
+	          <a class="btn {{secSt.btn-size}} {{secSt.btn-style}}" href="{{secSt.btnurl1}}">{{ secSt.btntxt1 }}</a>
+          {% endif %}  
+        
+      </div>
+    </div> 
+  </div>
+</div>   
+{%- endcapture -%}
+{{richText | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Rich Text",
+    "class": "index-section",   	
+	"settings":[
+	 {
+         "type": "checkbox",
+		 "id": "fullwidth",
+		 "label": "Fullwidth?",
+		 "default": false
+      },
+	 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+ 	    {
+            "type": "checkbox",
+            "id": "align_left",
+            "label": "Text aling Left?",
+			"default":false
+          },
+		{
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+		{
+        "type": "textarea",
+        "id": "title",
+        "label": "Title",
+		"default": "<b>TALK ABOUT YOUR BRANDS</b>"		
+        },
+		{
+		  "type": "range",
+		  "id": "fs",
+		  "label": "Font Title",
+		  "default": 25,
+		  "min": 10,
+		  "max": 100,
+		  "step": 5,
+		  "unit": "px"
+        },
+ 		{
+        "type": "range",
+        "id": "lh",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Space between text lines. Default is set to 1.6 which is recommended."
+      },
+		{
+		  "type": "range",
+		  "id": "fsm",
+		  "label": "Font Title(mobile)",
+		  "default": 20,
+		  "min": 10,
+		  "max": 100,
+		  "step": 1,
+		  "unit": "px"
+        },
+		{
+        "type": "richtext",
+        "id": "richtxt",
+        "label": "Information",
+		"default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"		
+        },      			
+	    {
+            "type": "text",
+            "id": "btntxt",
+            "label": "Button Text",
+            "default": "Button Label"
+          },
+		  {
+            "type": "url",
+            "id": "btnurl",
+            "label": "URL",
+			"default": "/"
+          },
+ {
+            "type": "text",
+            "id": "btntxt1",
+            "label": "Button Text 2",
+            "default": "Button Label"
+          },
+		  {
+            "type": "url",
+            "id": "btnurl1",
+            "label": "URL",
+			"default": "/"
+          },	 
+        {
+            "type": "select",
+            "id": "btn-style",
+            "label": "Select Button",
+            "default": "btn1",
+            "options": [
+              {
+              "label": "Solid Button 1",
+              "value": "btn1"
+              },
+              {
+              "label": "Solid Button 2",
+              "value": "btn2"
+              },
+              {
+              "label": "Solid Button 3",
+              "value": "btn3"
+              },
+              {
+              "label": "Border Button 1",
+              "value": "bdr-btn1"
+              },
+              {
+              "label": "Border Button 2",
+              "value": "bdr-btn2"
+              } 
+            ]
+          },
+          {
+            "type": "select",
+            "id": "btn-size",
+            "label": "Button Size",
+            "default": "btn-med",
+            "options": [
+                {
+                "label": "Small",
+                "value": "btn-small"
+                },
+                {
+                "label": "Medium",
+                "value": "btn-med"
+                },
+                {
+                "label": "Large",
+                "value": "btn-large"
+                } 		  
+         	 ]
+          },
+		{
+              "type": "range",
+              "id": "max-width",
+              "label": "Content Width for Desktop",
+              "default": 60,
+              "min": 50,
+              "max": 100,
+              "step": 5,
+              "unit": "%"
+        },
+		{
+            "type": "color",
+            "id": "sec_bg_clr",
+            "label": "Background",
+			"default":"#fafafa"	
+		 },
+		{
+            "type": "color",
+            "id": "text_clr",
+            "label": "Text",
+			"default":"#111"	
+		 }				
+	],
+	"presets": [
+      {
+		 "name": "Rich Text"		
+         
+	 }
+   ]
+  }
+{% endschema %}

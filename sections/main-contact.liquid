@@ -1,0 +1,307 @@
+{% assign secSt = section.settings %}
+<div class="contact-page contact{{secSt.layout}}" style="--bg:{{secSt.form_bg}};--cl:{{secSt.form_text}};--page_wid:{{ secSt.page_Width }}px;">
+{%- if settings.breadcrumb_pg -%}{%- render 'breadcrumb' -%}{%- else -%}<div class="topSpace"></div>{%- endif -%}
+  
+{% comment %} contact form {% endcomment %}
+{% capture contactForm %}
+<div class="form-vertical">
+  <div class="section-header tc">
+    {% if secSt.contact_title != blank %}<h2 class="mb10">{{ secSt.contact_title }}</h2>{% endif %}
+  </div>
+  {% if secSt.contact_text_desc %}<div class="rte mb25">{{ secSt.contact_text_desc }}</div>{% endif %}
+  {% form 'contact' %}
+  {% if form.posted_successfully? %}<p class="note form-success">{{ 'contact.form.post_success' | t }}</p>{% endif %}
+
+  {{ form.errors | default_errors }} 
+        <div class="grid grid--half-gutters">
+          <div class="grid__item{% if secSt.layout == "1" %} medium-up--one-half{% endif %}">
+           	<input type="text" id="ContactFormName" name="contact[name]" placeholder="{{ 'contact.form.name' | t }}"  value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+          </div>       
+          <div class="grid__item{% if secSt.layout == "1" %} medium-up--one-half{% endif %}">
+            <input type="email" id="ContactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}"  autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" class="{% if form.errors contains 'email' %}input--error{% endif %}">
+          </div>              
+        </div>
+        {% unless secSt.show_phone %}
+        <input type="tel" id="ContactFormPhone" name="contact[phone]" pattern="[0-9\-]*" placeholder="{{ 'contact.form.phone' | t }}"  value="{% if form[phone] %}{{ form[phone] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+        {% endunless %} 
+        {% unless secSt.show_subject %}
+        <input type="text" id="ContactFormSubject" name="contact[subject]" placeholder="{{ 'contact.form.subject' | t }}"  value="{% if form[subject] %}{{ form[subject] }}{% endif %}">
+        {% endunless %}
+        <textarea rows="10" id="ContactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}" >{% if form.body %}{{ form.body }}{% endif %}</textarea>
+        <input type="submit" class="btn" value="{{ 'contact.form.submit' | t }}">
+        {% endform %}
+</div>
+{% endcapture %}
+
+
+{% capture address %}
+{% if secSt.logo %}
+<p class="mb20"><img src="{{ secSt.logo | img_url: '300x' }}" srcset="{{ secSt.logo | img_url: '300x' }} 1x, {{ secSt.logo | img_url: '300x', scale: 2 }} 2x" alt="{{ secSt.logo.alt | default: shop.name }}"></p>
+{% endif %}
+{% if secSt.cnt_title != blank %}<h4>{{ secSt.cnt_title }}</h4>{% endif %}
+{% if secSt.store_address != blank or secSt.store_phone != blank or secSt.store_email != blank %}
+<ul class="c_address mb15">
+  {% if secSt.store_address != blank %}<li>{{secSt.store_address }}</li>{% endif %}
+  {% if secSt.store_phone != blank %}<li class="phone">{{secSt.store_phone }}</li>{% endif %}
+  {% if secSt.store_email != blank %}<li class="email">{{secSt.store_email }}</li>{% endif %}
+</ul>
+{% endif %}
+{% endcapture %}
+
+
+ {% comment %} map {% endcomment %}
+  {% capture googlemap %}
+  	{% if section.settings.map_address != blank %}     
+      <div class="map-section map"> {{section.settings.map_address}}</div>
+  {% endif %}
+  {% endcapture %}
+
+{% if secSt.layout == "1" or secSt.layout == "2"  %}
+<div class="page-width"> 
+  {% if page.content.size > 0 %}{{ page.content }}{% endif %}    
+
+  {% if secSt.layout == "1" %}   
+  <div class="grid">
+    <div class="grid__item medium-up--two-thirds">{{contactForm}}</div>
+    <div class="grid__item medium-up--one-third">
+      <div class="contact-details">
+        {{address}}
+        {% if secSt.store_address != blank or secSt.store_phone != blank or secSt.store_email != blank %}<hr class="clr_light" />{% endif %}
+        {% if secSt.store_opening_time != blank %}<div class="open-hours">{{ secSt.store_opening_time }}</div><hr/>{% endif %}
+        {% if secSt.show_socials %}
+        <div class="follow-us">
+          {% if secSt.socials_ttl != blank %}<label class="mb20">{{ secSt.socials_ttl }}</label>{% endif %}
+          {%- render 'social-media' -%}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% if secSt.show_google_map %}{{googlemap}}{% endif %} 
+
+  {% elsif secSt.layout == "2" %}
+
+  <div class="grid">
+    <div class="grid__item medium-up--one-third">{{contactForm}}</div>
+    <div class="grid__item medium-up--two-thirds">
+      <div class="grid">
+        <div class="grid__item medium-up--three-fifths">
+          <div class="contact-details">{{address}}</div>
+          {% if secSt.show_socials %}
+          <div class="follow-us">
+            {% if secSt.socials_ttl != blank %}<label> {{ secSt.socials_ttl }}</label>{% endif %}
+            {% render 'social-media' %}
+          </div>
+          {% endif %}
+        </div>
+        {% if secSt.store_opening_time != blank %}
+        <div class="grid__item medium-up--two-fifths">
+          {{ secSt.store_opening_time }}
+        </div>
+        {% endif %}
+      </div>
+     {% if secSt.show_google_map %}{{googlemap}}{% endif %}    
+    </div>   
+  </div>
+	
+  {% endif %}
+</div>
+{% endif %}
+
+{% if secSt.layout == "3" %}
+<div class="{{ secSt.layout}}">
+  <div class="con-clm fl {% unless secSt.show_google_map or secSt.leftimg %} full{% endunless %}">
+    <div class="clm">
+      {% if secSt.show_google_map %}
+      	 {{googlemap}}     
+      {% else %}
+        {% if secSt.leftimg %}
+      		<div class="w_100" style="max-width:{{ secSt.leftimg.width }}px">
+                <img loading="lazy" class="img_fl lazyload" src="{{ secSt.leftimg | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: secSt.leftimg, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ secSt.leftimg.width }}" height="{{ secSt.leftimg.height }}" alt="{{ secSt.leftimg.alt | escape }}" />
+            </div>
+      	{% endif %}  
+      {% endif %}      
+    </div>
+    <div class="clm">     
+      {% if page.content.size > 0 %}{{ page.content }}{% endif %}          
+      <div class="grid contact-col">
+        <div class="grid__item">{{contactForm}}</div>
+        <div class="grid__item">
+          <div class="contact-details mt10">
+            {{address}}
+            {% if secSt.store_address != blank or secSt.store_phone != blank or secSt.store_email != blank %}<hr/>{% endif %}
+            {% if secSt.store_opening_time != blank %}<div class="open-hours">{{ secSt.store_opening_time }}</div><hr/>{% endif %}
+            {% if secSt.show_socials %}
+            <div class="follow-us" style="--soc_icn:{{secSt.soc_icn}};">
+              {% if secSt.socials_ttl != blank %}<label>{{ secSt.socials_ttl }}</label>{% endif %}
+              {%- render 'social-media' -%}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>     
+
+    </div>
+  </div>    
+</div>
+{% endif %}
+</div>
+<style>
+  hr { border-bottom:1px solid {{secSt.form_text |  color_lighten:80 }}; } 
+</style>
+
+{% schema %}
+{
+    "name": "Contact Page",
+    "class":"contact-template",
+    "settings": [
+      {
+            "type": "range",
+            "id": "page_Width",
+            "label": "Container Width",
+            "default": 1000,
+            "min": 700,
+            "max": 1600,
+            "step": 100,
+            "unit": "px"
+       },  
+      {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout Style",
+      "default": "1",
+      "options": [
+        {
+        "value": "1",
+        "label": "Style 1"
+        },
+        {
+        "value": "2",
+        "label": "Style 2"
+        },
+        {
+        "value": "3",
+        "label": "Style 3"
+        }
+      ]
+   },
+  {
+    "type": "checkbox",
+    "id": "show_google_map",
+    "label": "Show Google Map?",
+    "default": true
+  },      
+{
+	  "id": "map_address",
+	  "type": "textarea",
+	  "label": "Embed Google map code",
+	 "info": "[Guide to Embed map](https://support.google.com/maps/answer/144361?co=GENIE.Platform%3DDesktop&hl=en#). In the iframe code, set width = '100%' and height as needed."         
+	},    
+  {
+    "type": "header",
+    "content": "Contact Form"
+  },
+  {
+    "type": "text",
+    "id": "contact_title",
+    "label": "Title",
+    "default": "Drop Us A Line"
+  },
+  {
+    "type": "textarea",
+    "id": "contact_text_desc",
+    "label": "Text Description"
+  },
+  {
+  "type": "checkbox",
+  "id": "show_phone",
+  "label": "Hide Phone Field?",
+  "default":false
+  },
+  {
+  "type": "checkbox",
+  "id": "show_subject",
+  "label": "Hide Subject Field?",
+  "default":false
+  }, 
+  {
+    "type": "header",
+    "content": "Contact Details"
+  },
+  {
+    "type": "image_picker",
+    "id": "leftimg",
+    "label": "Left Side Image For Layout Style 3",
+    "info":"You can display either gmap or image on left side for Layout style 3"
+  }, 
+  {
+    "type": "image_picker",
+    "id": "logo",
+    "label": "Logo image"
+  }, 
+  {
+    "type": "text",
+    "id": "cnt_title",
+    "label": "Title Text"
+  },
+  {
+    "type": "textarea",
+    "id": "store_address",
+    "label": "Store Address"
+  }, 
+  {
+    "type": "text",
+    "id": "store_phone",
+    "label": "Phone Number"
+  }, 
+  {
+    "type": "text",
+    "id": "store_email",
+    "label": "Email"
+  },
+ {
+    "type": "header",
+    "content": "Opening Hours"
+  }, 
+  {
+    "type": "textarea",
+    "id": "store_opening_time",
+    "label": "Store Time"      
+  },
+  {
+    "type":"checkbox",
+    "id":"show_socials",
+    "label":"Show Socials",
+    "default":true
+  },
+   {
+    "type":"textarea",
+    "id":"socials_ttl",
+    "label":"Socials Title",
+    "default":"Stay Connected"
+  },
+  {
+    "type":"header",
+    "content":"Appearance"
+  },
+  {
+    "type": "color",
+    "id": "form_bg",
+    "label": "Background Color",
+    "default": "#f8f8f8"
+  },
+  {
+    "type": "color",
+    "id": "form_text",
+    "label": "Text Color",
+    "default": "#111"
+   },
+   {
+    "type": "color",
+    "id": "soc_icn",
+    "label": "Social Icons",
+    "default": "#111"
+   }  
+  ]
+}
+{% endschema %}

@@ -1,0 +1,56 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{%- if predictive_search.performed -%}
+{% assign first_column_results_size = predictive_search.resources.queries.size | plus: predictive_search.resources.collections.size | plus: predictive_search.resources.pages.size | plus: predictive_search.resources.articles.size %}
+  <div id="predictive-search-results" class="fl f-wrap tl" role="listbox">
+      {%- if predictive_search.resources.queries.size > 0 or predictive_search.resources.collections.size > 0 or predictive_search.resources.articles.size > 0 or predictive_search.resources.pages.size > 0 -%}
+          <div class="sSugestCol small--one-whole">
+              {%- if predictive_search.resources.queries.size > 0 or predictive_search.resources.collections.size > 0 -%}
+                <div class="suggest mb20">
+                  <h2 class="ttl">{{- 'general.search.suggestions' | t -}}</h2>
+                  <ul id="predictive-search-results-queries-list" class="predictive-search__results-list list-unstyled" role="group" aria-labelledby="predictive-search-queries">
+                    {%- for query in predictive_search.resources.queries -%}
+                      <li id="psearch-query-{{ forloop.index }}" class="ps-list-item" role="option" aria-selected="false">
+                        <a href="{{ query.url }}" class="psearch-item" tabindex="-1" aria-label="{{ query.text }}">{{ query.styled_text }}</a>
+                      </li>
+                    {%- endfor -%}
+                    {%- for collection in predictive_search.resources.collections -%}
+                      <li id="psearch-query-{{ forloop.index }}" class="ps-list-item" role="option" aria-selected="false">
+                        <a href="{{ collection.url }}" class="psearch-item" tabindex="-1">{{ collection.title }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+              
+              {%- if predictive_search.resources.articles.size > 0 or predictive_search.resources.pages.size > 0 -%}
+                <div class="psPages mb20 small--hide">
+                  <h2 class="ttl">{{- 'general.search.pages' | t -}}</h2>
+                  <ul id="predictive-search-results-pages-list-desktop" class="predictive-search__results-list list-unstyled" role="group" aria-labelledby="predictive-search-pages-desktop">
+                    {%- for page in predictive_search.resources.pages -%}
+                      <li class="psearch-list-item" role="option" aria-selected="false">
+                        <a href="{{ page.url }}" class="psearch-item" tabindex="-1">{{ page.title }}</a>
+                      </li>
+                    {%- endfor -%}
+                    {%- for article in predictive_search.resources.articles -%}
+                      <li class="predictive-search__list-item" role="option" aria-selected="false">
+                        <a href="{{ article.url }}" class="psearch-item" tabindex="-1">{{ article.title }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+          </div>
+      {% endif %}
+          {%- if predictive_search.resources.products.size > 0 -%}
+            <div class="psproducts fl1 mb10">
+              <h2 class="ttl">{{- 'general.search.products' | t -}}</h2>
+              <div class="psproducts fl f-wrap" role="group" aria-labelledby="predictive-search-products">
+                {%- for product in predictive_search.resources.products -%}
+                  {% include 'product-card-grid-columns', product:product, grid_image_width: image_size %}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}      
+      <p class="tc w_100 db mt10"> <button class="btn mb20" tabindex="-1" role="option" aria-selected="false">{{ 'general.search.all' | t: terms: predictive_search.terms }} <i class="at at-long-arrow-alt-right"></i></button></p>
+  </div>
+{%- endif -%}

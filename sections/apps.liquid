@@ -1,0 +1,95 @@
+{% assign secSt = section.settings %}
+  <div class="content-indent{% if secSt.hide_mobile %} small--hide{% endif %} {{ secSt.top-offeset}}">
+   {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}	<div class="{% if section.settings.sw %}fw-sec{% else %}page-width{% endif %}">
+      <div class="{% unless secSt.section_width %}page-width{% else %}fullwidth{% endunless %} wow fadeInUp" style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">    
+          {%- for block in section.blocks -%}
+              {% render block %}
+          {%- endfor -%}  
+      </div>
+  {% if secSt.section_cov %}</div> {% endif%}
+ </div>
+{% schema %}
+{
+  "name": "Apps",
+  "tag": "section", 
+  "settings": [	
+		{
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 
+	   {
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	 
+      {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },
+      {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },
+ 		{
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 10,
+        "min": 0,
+        "max": 20,
+        "step": 1
+      }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Apps"
+    }
+  ]
+}
+{% endschema %}

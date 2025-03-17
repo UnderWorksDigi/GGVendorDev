@@ -1,0 +1,353 @@
+{%- capture imageGallery -%}
+{% assign secSt = section.settings %}
+
+<div class="content-indent{% if secSt.hide_mobile %} small--hide{% endif %} {{ secSt.top-offeset}}" id="{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="masonary">    
+	
+ {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	
+  <div class="{% if secSt.fullwidth %}lbhome fullwidth{% else %}page-width{% endif %}" style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">   	     
+
+    {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+    <div class="sec-ttl {{ settings.title_align}} wow fadeIn">
+      <h3 class="h3">{{ secSt.title }}</h3>
+      {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%}
+    </div>
+    {%- endif -%}
+   
+      <div class="fl gspace lookbook grid-masonary gallery"  style="--grsp:0 -{{ secSt.grid-spacing | divided_by: 2.0  }}px;--grspi:0 {{ secSt.grid-spacing | divided_by: 2.0  }}px {{secSt.grid-spacing}}px;--grspm:0 -{{ secSt.grid-spacing-mbl | divided_by: 2.0  }}px;--grspim:0 {{ secSt.grid-spacing-mbl | divided_by: 2.0  }}px {{secSt.grid-spacing-mbl}}px; --bg:{{ secSt.cap_bg}}; --cl:{{ secSt.cap_text}}; --bgico:{{ secSt.zoom_bg}}; --clicon:{{ secSt.zoom_text }};--bdr:{{secSt.round_crn}}px;">
+		  
+        <div class="grid-sizer-{{section.id}} col-{{secSt.grid-spacing-col}} pa"></div>
+		  
+        {% for block in section.blocks limit: section.blocks.size %}
+
+        {% assign product_box = forloop.index | minus:1 %}
+        {% assign delay_time = 50 | times : product_box %}    	
+
+        {% case block.settings.width %}
+        {% when '20%' %}
+        {%- assign block_width = 'small--one-whole medium-up--one-fifth' -%}
+        {% when '25%' %}
+        {%- assign block_width = 'small--one-whole medium-up--one-quarter' -%}
+        {% when '33%' %}
+        {%- assign block_width = 'small--one-whole medium-up--one-third' -%}
+        {% when '40%' %}
+        {%- assign block_width = 'small--one-whole medium-up--two-fifths' -%}
+        {% when '50%' %}
+        {%- assign block_width = 'small--one-whole medium-up--one-half' -%}
+        {% when '60%' %}
+        {%- assign block_width = 'small--one-whole medium-up--three-fifths' -%}
+        {% when '66%' %}
+        {%- assign block_width = 'small--one-whole medium-up--two-thirds' -%}
+        {% when '75%' %}
+        {%- assign block_width = 'small--one-whole medium-up--three-quarters' -%}
+        {% when '80%' %}        
+        {%- assign block_width = 'small--one-whole medium-up--four-fifths' -%}
+        {% when '100%' %}          
+        {%- assign block_width = 'one-whole' -%}
+        {% endcase %}       
+
+                  
+        <div class="ms-item grid-lookbook {{ block_width }} wow fadeInUp" data-wow-delay="{{delay_time}}ms">
+          <div class="collection-grid-item" style="border-radius:{{secSt.round_crn}}px;">
+            <span class="zoom-img zoom db pa tc"><i class="at at-search-plus"></i></span>             
+
+            <a class="zoom"  href="javascript:void(0)" onclick="{{ block.settings.image | img_url:'master' }}"  data-size="{{block.settings.image.width}}x{{block.settings.image.height}}">                  		                     	                                                                     
+              {% if block.settings.image != blank %}
+                <img loading="lazy" class="img_fl lazyload" src="{{ block.settings.image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" alt="{{ block.settings.image.alt | escape }}" />
+              {% else %} 
+             	 {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}{{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}    
+              {% endif %}              
+            </a>
+
+            {% if block.settings.title != blank or  block.settings.title2 != blank %}
+            <div class="lb_text">
+              {% if block.settings.url != blank %}<a href="{{ block.settings.url}}">{% endif %}  
+              {% if block.settings.title != blank %}
+              <span class="text-1">{{ block.settings.title }}</span>
+              {% endif %}
+
+              {% if block.settings.title2 != blank %}
+              <span class="text-2">{{ block.settings.title2 }}</span>
+              {% endif %}
+              {% if block.settings.url != blank %}</a>{% endif %}  
+            </div>
+            {% endif %}             
+          </div>
+        </div>        
+        {% endfor %}
+      </div>    
+  </div>
+  {% if secSt.section_cov %}</div> {% endif %}
+</div>
+
+{{ 'photoswipe.css' | asset_url | stylesheet_tag }}
+{{ 'photoswipe.min.js' | asset_url | script_tag }}
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button class="pswp__button pswp__button--share" title="Share"></button><button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>
+{%- endcapture -%}
+{{imageGallery | strip_newlines | remove: "  " | remove: "	" }}
+<script>
+window.addEventListener('DOMContentLoaded',function(){
+    $(window).load(function(){
+
+      var $pswp = $('.pswp')[0],
+            image = [],
+            getItems = function(){
+                var items = [];
+                $('a.zoom').each(function() {
+                    var $href = $(this).attr('onclick'),
+                        $size = $(this).data('size').split('x'),
+                        item  = { src: $href, w: $size[0], h: $size[1] }
+                    items.push(item);
+                });
+                return items;
+            }
+        var items = getItems();
+        $('.zoom').click(function(event) {
+            event.preventDefault();
+            var $index = $(this).parents(".grid-lookbook").index();
+            $index = $index-1;
+            var options = {
+                index: $index,
+                bgOpacity: 0.9,
+                showHideOpacity: true
+            }
+            var lightBox = new PhotoSwipe($pswp, PhotoSwipeUI_Default, items, options);
+            lightBox.init();
+        });
+      });
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Image Gallery",
+	"class":"index-section",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+	"max_blocks":50,
+    "settings": [			
+	   {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Photo Gallery"		
+      },
+ 	  {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sub Heading",
+        "default": "Describe your products, collection etc..."
+      },
+ 	 {
+        "type": "header",
+        "content": "Appearance"
+      },
+     {
+		 "type": "paragraph",
+		 "content":"[Numerious grid style possible with this section](https://www.adornthemes.com/different-collection-banner-style/)"
+     },	 
+	  {
+        "type": "paragraph",      
+        "content": "Appearance Section ==="
+      }, 	  
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+		{
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "section_cov",
+          "label": "Add Background?",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "sec_bg_clr",
+          "label": "Background",
+          "default":"#fafafa",
+          "info":"select light color"
+        },
+		{
+         "type": "checkbox",
+		 "id": "fullwidth",
+		 "label": "Fullwidth?",
+		 "default": false
+        },
+		{
+        "type": "paragraph",
+         "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },     
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 10,
+        "min": 0,
+        "max": 20,
+        "step": 1
+      },	  
+	 {
+        "type": "header",
+        "content": "Appearance Grid ==="
+      },
+	  {
+        "type": "range",
+        "id": "grid-spacing",
+       	"label": "Grid Spacing",
+        "default": 15,
+        "min": 0,
+        "max": 50,
+        "step": 1,
+		"unit":"px",
+		"info":"space between two grid/box."
+      },
+     {
+        "type": "range",
+        "id": "grid-spacing-mbl",
+        "label": "Grid Spacing (mobile)",
+        "default": 5,
+        "min": 0,
+        "max": 30,
+        "step": 1,
+		"unit":"px"		
+      },
+	{
+        "type": "range",
+        "id": "grid-spacing-col",
+        "label": "Select Column",
+        "default": 2,
+        "min": 2,
+        "max": 5,
+        "step": 1,
+		"info":"[Column Selection guide](https://www.adornthemes.com/masonry-column-selection/)"
+      },
+	 {
+			"type":"color",
+			"id":"cap_bg",
+		    "label":"Text Background",
+			"default":"#fff"
+		},
+		{
+			"type":"color",
+			"id":"cap_text",
+		    "label":"Text",
+			"default":"#111"
+		},
+		{
+			"type":"color",
+			"id":"zoom_bg",
+		    "label":"Zoom Icon Background",
+			"default":"#fff"
+		},
+		{
+			"type":"color",
+			"id":"zoom_text",
+		    "label":"Zoom Icon",
+			"default":"#111"
+		},
+		{
+        "type": "range",
+        "id": "round_crn",
+        "label": "Image Rounded Corner",
+        "default": 0,
+        "min": 0,
+        "max": 20,
+        "step": 1		
+      }
+	 ],
+	"blocks":[
+		{
+			"name":"Image",
+			"type":"lookbook1",
+		 	"settings":[
+					{
+			"type":"image_picker",
+			"id":"image",
+		     "label":"Add Image"			 
+		    },
+			{
+			"type":"url",
+			"id":"url",
+		     "label":"Link"
+		    },
+			{
+			"type":"textarea",
+			"id":"title",
+		    "label":"Text Line 1",
+			"default":"<b>STREET STYLE</b>"
+		    },			
+	      {
+			"type":"textarea",
+			"id":"title2",
+		    "label":"Text Line 2",
+			"default":"GREAT SUMMER CLEARANCE SALES"
+		    },
+		 	 {
+            "type": "select",
+            "id": "width",
+            "label": "Column width",
+            "default": "50%",
+			"info":"Total width of all block should be 100%",
+            "options": [
+			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+              { "value": "33%", "label": "33%" },
+              { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+              { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "80%", "label": "80%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+		 ]
+	   }       
+     ],
+	"presets": [
+      {
+        "name": "Image Gallery",        
+		"blocks": [
+          {
+            "type": "lookbook1"
+          },
+          {
+            "type": "lookbook1"
+          }          	  
+        ]
+      }
+    ]
+  }
+{% endschema %}

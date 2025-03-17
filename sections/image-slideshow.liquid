@@ -1,0 +1,190 @@
+{%- capture imageSlideShow -%}
+{% assign secSt = section.settings %}
+<div class="content-indent {{ secSt.top-offeset}}">
+  <div data-section-id="{{ section.id }}" data-section-type="slideshow">
+
+    {% if section.blocks.size > 0 %}
+    <div class="oss_wrap{% unless secSt.section_width %} page-width{% endunless %}">
+      <div class="slideshow{% if secSt.arrow_m %} hide_ar{% endif %}{% if secSt.dots_m %} hide_dt{% endif %}" id="Slideshow-{{ section.id }}" data-slick='{"slidesToShow":1,"slidesToScroll":1,"arrows":{{ secSt.arrow }},"dots":{{ secSt.dots }},"fade":{{secSt.slideEf}},{%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "autoplay":{{secSt.autoplay}}, "autoplaySpeed":{{secSt.speed | times: 1000}} }' style="--cl:{{ secSt.ss_arrow}}; --dotbg:{{ secSt.ss_dot}}; --dotbga:{{ secSt.ss_dot_ac}};">
+        {% for block in section.blocks %}
+        <div class="ss_slide ss_slide--{{ block.id }}" {{ block.shopify_attributes }}>
+          {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="ss_link">{% endif %}         
+              {% if block.settings.image != blank %}
+                <img loading="lazy" class="img_fl lazyload js{% if block.settings.mb_image != blank %} small--hide{% endif %}" src="{{ block.settings.image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" alt="{{ block.settings.image.alt | escape }}" />
+                  {% if block.settings.mb_image != blank %}
+                    <img loading="lazy" class="img_fl lazyload js medium-up--hide" src="{{ block.settings.mb_image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.mb_image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ block.settings.mb_image.width }}" height="{{ block.settings.mb_image.height }}" alt="{{ block.settings.mb_image.alt | escape }}" />
+                  {% endif %}
+
+              {% else %}
+                <div class="ph_bg">
+                  {% capture current %}{% cycle 1,2 %}{% endcapture %}
+                  {% capture plClass %}placeholder-svg svgcl{{current}}{% endcapture %}
+                  {{ 'lifestyle-' | append: current | placeholder_svg_tag: plClass }}
+                </div>
+              {% endif %}         
+            {% if block.settings.link != blank %}</a>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if section.blocks.size == 0 %}
+    <div class="placeholder-noblocks">
+      {{ 'homepage.onboarding.no_content' | t }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{%- endcapture -%}
+{{imageSlideShow | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Image Slideshow",
+    "class": "index-section img_ss",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "max_blocks": 10,
+    "settings": [
+     {
+        "type": "paragraph",      
+        "content": "Use this slideshow only to display images. Images presented will not be cropped in any way"
+      },	 
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "none",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+		 {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": true
+	  },
+      {
+        "type": "select",
+        "id": "slideEf",
+        "label": "Slide Effect",
+        "default": "true",
+        "options": [
+          { "value": "true", "label": "Fade" },
+          { "value": "false", "label": "Slide" }
+        ]
+      },
+	  {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Auto-rotate slides",
+        "default": true
+      },
+	  {
+          "type": "range",
+          "id": "speed",
+          "label": "Change Slides Every",
+          "default": 5,
+          "min": 1,
+          "max": 60,
+          "step": 1,
+          "unit": "sec"
+      },
+	  {
+        "type": "checkbox",
+        "id": "arrow",
+        "label": "Show Next/Previous Arrows?",
+        "default": true
+      },
+		{
+        "type": "checkbox",
+        "id": "arrow_m",
+        "label": "Hide on mobile?",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "ss_arrow",
+        "label": "Arrows Color",
+        "default": "#eee"
+      },
+	 {
+        "type": "checkbox",
+        "id": "dots",
+        "label": "Show Dotted Navigation?",
+        "default": false
+      },
+ 	  {
+        "type": "checkbox",
+        "id": "dots_m",
+        "label": "Hide on mobile?",
+        "default": true
+      },
+        {
+          "type": "color",
+          "id": "ss_dot",
+          "label": "Dots Color",
+          "default": "#eee"
+        },
+        {
+          "type": "color",
+          "id": "ss_dot_ac",
+          "label": "Active Dot Color",
+          "default": "#111"
+        }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+			"info":"Recommended width 1920px"
+          },
+		  {
+            "type": "image_picker",
+            "id": "mb_image",
+            "label": "Mobile Image",
+			"info": "Recommended width 750. If mobile image is blank, dekstop image will be used"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Slide link"
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "Slideshow (Only Image)",     
+      "settings": {
+        "autoplay": true,
+        "speed": 5
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }]
+  }
+{% endschema %}

@@ -1,0 +1,505 @@
+{%- capture infoBanner -%}
+{% assign secSt = section.settings %}
+
+{%- capture style -%}
+--icl:{{ secSt.icons_clr }}; 
+--ifs:{{secSt.iconsize}}px;
+--tfs:{{secSt.tfs}}px;
+--tfsm:{{secSt.tfsm}}px;
+--tfw:{{secSt.tfw}};
+--cl:{{ secSt.text_clr }}; 
+--ibg:{{secSt.icons_bg}};
+--iw:{{secSt.iconsize | plus: 35 }}px; 
+--ih:{{secSt.iconsize | plus: 35 }}px; 
+--ilh:{{secSt.iconsize | plus: 32 }}px;
+{%- endcapture -%}
+
+
+<div class="content-indent {{ secSt.top-offeset}}">
+{% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	{% unless secSt.section_width %} <div class="page-width">{% endunless %}
+
+	{%- capture image_layout -%}
+  	<div class="row_item of_hidden fl fl1 w_100 f-aic jcc row_img {% if secSt.layout == 'right' %}order1{% endif %}">
+    	{% if secSt.image != blank %}
+      		{% if secSt.button_link != blank %}<a class="db w_100" href="{{ secSt.button_link}}">{% endif %}
+          	<div class="imgWrapper w_100">
+                <img loading="lazy" class="img_fl lazyload" src="{{ secSt.image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: secSt.image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ secSt.image.width }}" height="{{ secSt.image.height }}" alt="{{ secSt.image.alt | escape }}" />
+          	</div>
+      		{% if secSt.button_link != blank %} </a> {% endif %}
+    	{% else %}
+       		{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    	{% endif %}
+  	</div>
+	{%- endcapture -%}
+
+  <div class="ft_row fl f-aist f-jcsb w_100 row-{{section.id}} wow fadeInUp" data-wow-delay="50ms" style="--bg:{{secSt.bg}};--cl:{{secSt.cl}};--mw:{{secSt.image.width}}px;">
+
+    {{ image_layout }}
+
+    <div class="row_item of_hidden fl fl1 w_100 f-aic row_text">
+      <div class="row-text {{secSt.text_align}}">
+        {% if secSt.title != blank %}<h3 class="tltxt" style="--mb:15px;--mbm:10px;--ffm:var(--{{secSt.bb1_font}});--fs:{{secSt.ttl_font}}px;--fw:{{secSt.bb1_fweight}};--flh:{{secSt.ttl_font_l}};--fsm:{{secSt.ttl_font_m}}px;">{{ secSt.title }}</h3>{% endif %}
+        {% if secSt.text != blank %}<div class="rte dtxt" style="--dfs:{{secSt.detail_font}}px; --dflh:{{secSt.detail_font_l}}; --dfsm:{{secSt.detail_font_m}}px;">{{ secSt.text }}</div>{% endif %}
+        
+        {% case secSt.grid %}
+          {% when 1 %}{%- assign grid_ds = 'large-up--one-whole' -%}
+          {% when 2 %}{%- assign grid_ds = 'large-up--one-half' -%}
+          {% when 3 %}{%- assign grid_ds = 'large-up--one-third' -%}
+          {% when 4 %}{%- assign grid_ds = 'large-up--one-quarter' -%}
+        {% endcase %}
+        
+        {% case secSt.tablet-grid %}
+          {% when 1 %}{%- assign grid_tb = 'medium--one-whole' -%}
+          {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+          {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+        {% endcase %}
+        
+        {% case secSt.mobile-grid %}
+          {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+          {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+          {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+        {% endcase %}
+        
+        <ul class="fl f-wrap store-info rw {{ secSt.style}}{% if secSt.style == 'stl1' or secSt.style == 'stl4'%} tc{% endif %}" style="{{style}}">
+          {% for block in section.blocks limit: section.blocks.size %}
+          <li class="{{grid_mb}} {{grid_tb}} {{grid_ds}}{% if secSt.style == 'stl2' or secSt.style == 'stl3'%} fl{% endif %}">
+            <div{% if secSt.style == 'stl2' or secSt.style == 'stl3'%} class="fl"{% endif %}>
+                {% if secSt.icon-type == 'image' %}
+               	 <span class="at tc" {% if secSt.style != 'stl4'%}style="max-width:{{secSt.iconsize}}px;"{% endif %}><img class="img_fl lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{block.settings.image | img_url: '200x' }}" width="{{secSt.iconsize}}" height="{{secSt.iconsize}}" alt="{{block.settings.image.alt | default: block.settings.title }}" /></span>
+                {% else %}
+               	 <i class="at tc {{ block.settings.icons}} mb20"></i>
+                {% endif %}            	
+            	<div class="text">
+                	{% if block.settings.title %}<div class="bl_ttl mb5">{{ block.settings.title }}</div>{% endif %}
+                    {% if secSt.style != 'stl3' %}
+                  {% if block.settings.text %}<p>{{ block.settings.text}}</p>{% endif %} 
+                    {% endif %}
+            	</div>
+            </div>
+          </li>
+          {% endfor %}
+      </ul>        
+        {% if secSt.button_label != blank and secSt.button_link != blank %}
+        	<a href="{{secSt.button_link}}" class="btn {{secSt.btn-size}}" style="--bg:{{secSt.btn_bg}};--cl:{{secSt.btn_cl}};--mt:{{secSt.btn-mr}}px;--mtm:{{secSt.btn-mrm}}px;">{{secSt.button_label}}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+ 
+  <style type="text/css">         		          
+    .row-{{section.id}} .stl3 li .fl {  align-items:center; margin-bottom:10px;}
+    .row-{{section.id}} .stl3 li .fl .mb5 {margin-bottom:0;}	  
+  </style>
+
+  {% unless secSt.section_width %} </div>{% endunless %}
+  {% if secSt.section_cov %}</div> {% endif%}
+</div>
+{%- endcapture -%}
+{{infoBanner | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Image, Text & Features",
+    "class": "index-section image-with-text",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [	  	 
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+		 {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },
+		 {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },
+	  {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },  
+       {
+            "type": "select",
+            "id": "layout",
+			"label":"Image Alignment",
+ 			"default": "left",
+			"options": [
+        		{ "value": "left","label":"Left"},
+				{ "value": "right","label":"Right"}
+			]
+      },	  
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Spring Summer New Arrival"
+		
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+		
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button Label",
+		"default":"Shop Collection"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button Link",
+		"default":"/"
+      }, 
+  	{
+            "type": "select",
+            "id": "text_align",
+            "label": "Text Align",
+            "default": "tl",
+            "options": [
+              { "value": "tl", "label": "Left" },
+              { "value": "tc", "label": "Center" },
+              { "value": "tr", "label": "Right" }
+            ]
+      },	
+	  {
+            "type": "select",
+            "id": "style",
+            "label": "Select Style",
+            "default": "stl2",
+			"info":"[preview style](https://optimal-demos.myshopify.com/pages/icon-with-text)",
+            "options": [
+              { "value": "stl1", "label": "Style 1" },
+              { "value": "stl2", "label": "Style 2" },
+			  { "value": "stl3", "label": "Style 3 (Display One Line Text)" },
+			  { "value": "stl4", "label": "Style 4 (Icons with Background)" }
+			]
+      },
+	  {
+            "type": "select",
+            "id": "icon-type",
+            "label": "Icon Type",
+            "default": "icon",
+            "options": [
+              { "value": "image", "label": "Image" },
+              { "value": "icon", "label": "Font Icon" }
+			]
+      },
+      {
+          "type": "range",
+          "id": "iconsize",
+          "label": "Icons Size",
+          "default": 40,
+          "min": 20,
+          "max": 80,
+          "step": 1,
+          "unit": "px"
+      }, 			  
+      {
+        "type": "paragraph",
+        "content": "Features Per Row ==="
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Desktop",
+        "default": 2,
+        "min": 1,
+        "max": 4,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "tablet-grid",
+        "label": "Tablet",
+        "default": 2,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "mobile-grid",
+        "label": "Mobile",
+        "default": 1,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+	  {
+            "type": "header",
+            "content": "Appearance Text ==="
+       },
+	 {
+        "type": "color",
+        "id": "bg",
+        "label": "Background Color",
+        "default": "#eee"
+      },
+      {
+        "type": "color",
+        "id": "cl",
+        "label": "Text Color",
+        "default": "#000"
+      },
+        {
+            "type": "color",
+            "id": "icons_clr",
+            "label": "Icons",
+			"default":"#a9a9a9"	
+		 },
+ 		{
+            "type": "color",
+            "id": "icons_bg",
+            "label": "Icons Background",
+			"default":"#111",
+			"info":"For style4 only"
+		 },
+	  {
+        "type": "color",
+        "id": "btn_bg",
+        "label": "Button Background Color",
+		"default":"#000"
+      },	 
+ 	 {
+        "type": "color",
+        "id": "btn_cl",
+        "label": "Button Text Color",
+		"default":"#fff"
+      },
+      {
+        "type": "select",
+        "id": "bb1_font",
+        "label": "Title Font",
+        "default": "ft1",
+        "options": [
+          {
+            "value": "ft1",
+            "label": "Font 1"
+          },
+          {
+            "value": "ft2",
+            "label": "Font 2"
+          },
+          {
+            "value": "ft3",
+            "label": "Font 3"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bb1_fweight",
+        "label": "Font Weight",
+        "default": "600",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "ttl_font",
+        "label": "Title Font Size",
+        "default": 22,
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "ttl_font_l",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Default is set to 1.6"
+      },
+      {
+        "type": "range",
+        "id": "ttl_font_m",
+        "label": "Title Font (mobile)",
+        "default": 18,
+        "min": 12,
+        "max": 40,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "detail_font",
+        "label": "Detail Font Size",
+        "default": 14,
+        "min": 12,
+        "max": 60,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "detail_font_l",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Default is set to 1.6"
+      },
+      {
+        "type": "range",
+        "id": "detail_font_m",
+        "label": "Detail Font (mobile)",
+        "default": 13,
+        "min": 12,
+        "max": 40,
+        "step": 1,
+        "unit": "px"
+      },
+     {
+        "type": "select",
+        "id": "btn-size",
+        "label": "Button Size",
+        "default": "btn-med",
+        "options": [
+          {
+            "label": "Small",
+            "value": "btn-small"
+          },
+          {
+            "label": "Medium",
+            "value": "btn-med"
+          },
+		  {
+            "label": "Large",
+            "value": "btn-large"
+          } 		  
+        ]
+      },
+	  {
+        "type": "range",
+        "id": "btn-mr",
+        "label": "Buttons top offset",
+        "default": 20,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+		"unit":"px"
+      },
+		{
+        "type": "range",
+        "id": "btn-mrm",
+        "label": "Buttons top offset (mobile)",
+        "default": 15,
+        "min": 10,
+        "max": 50,
+        "step": 1,
+		"unit":"px"
+      }	 
+    ],
+	 "blocks": [
+      {
+        "type": "feature",
+        "name": "Feature",
+        "settings": [
+           {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+			"info":"You need to select Icon Type 'Image' from section."
+          },
+          {
+            "type": "text",
+            "id": "icons",
+            "label": "Icon class name",
+			"default":"at-truck-l",
+			"info":"[Find icons here](https://www.adornthemes.com/optimal-icons/)"
+
+		  }, 		 
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Heading",
+			"default": "<b>FEATURE TITLE TEXT</b>"		   
+          },
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Text",
+            "default":"Add feature short description text here"
+          }
+      	]
+     }
+   ],
+    "presets": [
+      {
+        "name": "Image with Text & Features",
+       
+		"blocks": [
+          {
+            "type": "feature"
+          },
+		  {
+            "type": "feature"
+          },
+		  {
+            "type": "feature"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

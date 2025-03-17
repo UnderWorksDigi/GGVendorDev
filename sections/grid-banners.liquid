@@ -1,0 +1,3471 @@
+{%- capture gridBanners -%}
+{% assign secSt = section.settings %}
+<div class="content-indent{% if secSt.hide_mobile %} small--hide{% endif %} {{ secSt.top-offeset}}"> {% capture imageGallery %}
+  {% if secSt.section_cov %}
+  <div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+    <div class="banners_wrap sec-{{section.id}}">
+      <div class="{% if secSt.section_width %}fullwidth{% else %}page-width{% endif %}" style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;"> {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+        <div class="sec-ttl {{ settings.title_align}} fadeIn">
+          <h3 class="h3">{{ secSt.title }}</h3>
+          {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%} </div>
+        {% endif %}
+        
+        {%- for block in section.blocks -%}
+        
+        {%- if block.type == 'styl1' -%}
+        <div class="grid" {{ block.shopify_attributes }}>
+          <div class="grid__item medium-up--one-half img-bnr wow fadeInUp" data-wow-delay="0ms">
+            <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif%}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};">{% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '930x620' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-half img-bnr wow fadeInUp" data-wow-delay="50ms">
+            <div class="b2_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif%}" style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '930x620' %}</div>
+          </div>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.type == 'styl2' -%}
+        <div class="grid" {{ block.shopify_attributes }}>
+          <div class="grid__item medium-up--one-half img-bnr wow fadeInUp" data-wow-delay="0ms">
+            <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};"> {% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '930x930' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-half img-bnr wow fadeInUp" data-wow-delay="50ms">
+            <div class="b2_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}"  style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '930x455' %}</div>
+            <div class="b3_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b3_txt }}; --bdr:{{block.settings.b3_bgr}}px;--bg:{{block.settings.b3_bg}};--bg_op:{{ block.settings.b3_bgo}};"> {% render 'image-grid', image: block.settings.image3, text1: block.settings.b3_text1, text2: block.settings.b3_text2, text3: block.settings.b3_text3, text_a: block.settings.b3_ta, pos: block.settings.b3_tp, pos_m:block.settings.b3_tpm, hidetxt1:block.settings.b3_hide_txt1, hidetxt2:block.settings.b3_hide_txt2, hidetxt3:block.settings.b3_hide_txt3, txt_size:block.settings.b3_size, link: block.settings.link3, imgSize: '930x455' %}</div>
+          </div>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.type == 'styl3' -%}
+        <div class="grid" {{ block.shopify_attributes }}>
+          <div class="grid__item large-up--two-fifths">
+            <div class="grid__item img-bnr medium-up--one-half large-up--one-whole wow fadeInUp" data-wow-delay="0ms">
+              <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};"> {% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '712x340' %}</div>
+            </div>
+            <div class="grid__item img-bnr medium-up--one-half large-up--one-whole wow fadeInUp" data-wow-delay="50ms">
+              <div class="b2_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '712x340' %}</div>
+            </div>
+          </div>
+          <div class="grid__item medium-one--whole large-up--three-fifths img-bnr wow fadeInUp" data-wow-delay="100ms">
+            <div class="b3_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif%}"  style="--cl:{{ block.settings.b3_txt }}; --bdr:{{block.settings.b3_bgr}}px;--bg:{{block.settings.b3_bg}};--bg_op:{{ block.settings.b3_bgo}};"> {% render 'image-grid', image: block.settings.image3, text1: block.settings.b3_text1, text2: block.settings.b3_text2, text3: block.settings.b3_text3, text_a: block.settings.b3_ta, pos: block.settings.b3_tp, pos_m:block.settings.b3_tpm, hidetxt1:block.settings.b3_hide_txt1, hidetxt2:block.settings.b3_hide_txt2, hidetxt3:block.settings.b3_hide_txt3, txt_size:block.settings.b3_size, link: block.settings.link3, imgSize: '1068x700' %}</div>
+          </div>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.type == 'styl4' -%}
+        <div class="grid style6" {{ block.shopify_attributes }}>
+          <div class="grid__item medium-up--one-half large-up--one-third img-bnr wow fadeInUp" data-wow-delay="0ms">
+            <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};"> {% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '640x640' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-half large-up--one-third img-bnr wow fadeInUp" data-wow-delay="50ms">
+            <div class="b2_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '640x640' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-half large-up--one-third img-bnr wow fadeInUp" data-wow-delay="100ms">
+            <div class="b3_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b3_txt }}; --bdr:{{block.settings.b3_bgr}}px;--bg:{{block.settings.b3_bg}};--bg_op:{{ block.settings.b3_bgo}};"> {% render 'image-grid', image: block.settings.image3, text1: block.settings.b3_text1, text2: block.settings.b3_text2, text3: block.settings.b3_text3, text_a: block.settings.b3_ta, pos: block.settings.b3_tp, pos_m:block.settings.b3_tpm, hidetxt1:block.settings.b3_hide_txt1, hidetxt2:block.settings.b3_hide_txt2, hidetxt3:block.settings.b3_hide_txt3, txt_size:block.settings.b3_size, link: block.settings.link3, imgSize: '640x640' %}</div>
+          </div>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.type == 'styl5' -%}
+        <div class="grid" {{ block.shopify_attributes }}>
+          <div class="grid__item large-up--one-half img-bnr wow fadeInUp" data-wow-delay="0ms">
+            <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};"> {% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '930x620' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-half large-up--one-quarter img-bnr wow fadeInUp" data-wow-delay="50ms">
+            <div class="b2_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '460x300' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-half large-up--one-quarter img-bnr wow fadeInUp" data-wow-delay="100ms">
+            <div class="b3_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b3_txt }}; --bdr:{{block.settings.b3_bgr}}px;--bg:{{block.settings.b3_bg}};--bg_op:{{ block.settings.b3_bgo}};"> {% render 'image-grid', image: block.settings.image3, text1: block.settings.b3_text1, text2: block.settings.b3_text2, text3: block.settings.b3_text3, text_a: block.settings.b3_ta, pos: block.settings.b3_tp, pos_m:block.settings.b3_tpm, hidetxt1:block.settings.b3_hide_txt1, hidetxt2:block.settings.b3_hide_txt2, hidetxt3:block.settings.b3_hide_txt3, txt_size:block.settings.b3_size, link: block.settings.link3, imgSize: '460x300' %}</div>
+          </div>
+          <div class="grid__item large-up--one-half img-bnr wow fadeInUp" data-wow-delay="150ms">
+            <div class="b4_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b4_txt }}; --bdr:{{block.settings.b4_bgr}}px;--bg:{{block.settings.b4_bg}};--bg_op:{{ block.settings.b4_bgo}};"> {% render 'image-grid', image: block.settings.image4, text1: block.settings.b4_text1, text2: block.settings.b4_text2, text3: block.settings.b4_text3, text_a: block.settings.b4_ta, pos: block.settings.b4_tp, pos_m:block.settings.b4_tpm, hidetxt1:block.settings.b4_hide_txt1, hidetxt2:block.settings.b4_hide_txt2, hidetxt3:block.settings.b4_hide_txt3, txt_size:block.settings.b4_size, link: block.settings.link4, imgSize: '930x300' %}</div>
+          </div>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.type == 'styl6' -%}
+        <div class="grid" {{ block.shopify_attributes }}>
+          <div class="grid__item medium-up--one-quarter">
+            <div class="img-bnr wow fadeInUp" data-wow-delay="0ms">
+              <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};">{% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '460x460' %}</div>
+            </div>
+            <div class="img-bnr wow fadeInUp" data-wow-delay="50ms">
+              <div class="b2_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}"  style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '460x460' %}</div>
+            </div>
+          </div>
+          <div class="grid__item medium-up--one-half img-bnr wow fadeInUp" data-wow-delay="100ms">
+            <div class="b3_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b3_txt }}; --bdr:{{block.settings.b3_bgr}}px;--bg:{{block.settings.b3_bg}};--bg_op:{{ block.settings.b3_bgo}};">{% render 'image-grid', image: block.settings.image3, text1: block.settings.b3_text1, text2: block.settings.b3_text2, text3: block.settings.b3_text3, text_a: block.settings.b3_ta, pos: block.settings.b3_tp, pos_m:block.settings.b3_tpm, hidetxt1:block.settings.b3_hide_txt1, hidetxt2:block.settings.b3_hide_txt2, hidetxt3:block.settings.b3_hide_txt3, txt_size:block.settings.b3_size, link: block.settings.link3, imgSize: '930x930' %}</div>
+          </div>
+          <div class="grid__item medium-up--one-quarter">
+            <div class="img-bnr wow fadeInUp" data-wow-delay="150ms">
+              <div class="b4_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b4_txt }}; --bdr:{{block.settings.b4_bgr}}px;--bg:{{block.settings.b4_bg}};--bg_op:{{ block.settings.b4_bgo}};"> {% render 'image-grid', image: block.settings.image4, text1: block.settings.b4_text1, text2: block.settings.b4_text2, text3: block.settings.b4_text3, text_a: block.settings.b4_ta, pos: block.settings.b4_tp, pos_m:block.settings.b4_tpm, hidetxt1:block.settings.b4_hide_txt1, hidetxt2:block.settings.b4_hide_txt2, hidetxt3:block.settings.b4_hide_txt3, txt_size:block.settings.b4_size, link: block.settings.link4, imgSize: '460x460' %}</div>
+            </div>
+            <div class="img-bnr wow fadeInUp" data-wow-delay="200ms">
+              <div class="b5_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b5_txt }}; --bdr:{{block.settings.b5_bgr}}px;--bg:{{block.settings.b5_bg}};--bg_op:{{ block.settings.b5_bgo}};"> {% render 'image-grid', image: block.settings.image5, text1: block.settings.b5_text1, text2: block.settings.b5_text2, text3: block.settings.b5_text3, text_a: block.settings.b5_ta, pos: block.settings.b5_tp, pos_m:block.settings.b5_tpm, hidetxt1:block.settings.b5_hide_txt1, hidetxt2:block.settings.b5_hide_txt2, hidetxt3:block.settings.b5_hide_txt3, txt_size:block.settings.b5_size, link: block.settings.link5, imgSize: '460x460' %}</div>
+            </div>
+          </div>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.type == 'styl7' -%}
+        <div class="grid" {{ block.shopify_attributes }}>
+          <div class="grid__item one-whole medium-up--one-whole large-up--one-half img-bnr wow fadeInUp" data-wow-delay="0ms">
+            <div class="b1_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}" style="--cl:{{ block.settings.b1_txt }}; --bdr:{{block.settings.b1_bgr}}px;--bg:{{block.settings.b1_bg}};--bg_op:{{ block.settings.b1_bgo}};"> {% render 'image-grid', image: block.settings.image1, text1: block.settings.b1_text1, text2: block.settings.b1_text2, text3: block.settings.b1_text3, text_a: block.settings.b1_ta, pos: block.settings.b1_tp, pos_m:block.settings.b1_tpm, hidetxt1:block.settings.b1_hide_txt1, hidetxt2:block.settings.b1_hide_txt2, hidetxt3:block.settings.b1_hide_txt3, txt_size:block.settings.b1_size, link:block.settings.link1, imgSize: '930x700' %}</div>
+          </div>
+          <div class="grid__item one-half medium-up--one-half large-up--one-quarter img-bnr wow fadeInUp" data-wow-delay="50ms">
+            <div class="b2_{{block.type}} inner{% if section.settings.enable_zoom %} zoom_hov{% endif %}"  style="--cl:{{ block.settings.b2_txt }}; --bdr:{{block.settings.b2_bgr}}px;--bg:{{block.settings.b2_bg}};--bg_op:{{ block.settings.b2_bgo}};"> {% render 'image-grid', image: block.settings.image2, text1: block.settings.b2_text1, text2: block.settings.b2_text2, text3: block.settings.b2_text3, text_a: block.settings.b2_ta, pos: block.settings.b2_tp, pos_m:block.settings.b2_tpm, hidetxt1:block.settings.b2_hide_txt1, hidetxt2:block.settings.b2_hide_txt2, hidetxt3:block.settings.b2_hide_txt3, txt_size:block.settings.b2_size, link: block.settings.link2, imgSize: '460x718' %}</div>
+          </div>
+          <div class="grid__item one-half medium-up--one-half large-up--one-quarter img-bnr wow fadeInUp" data-wow-delay="100ms">
+            <div class="b3_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}"  style="--cl:{{ block.settings.b3_txt }}; --bdr:{{block.settings.b3_bgr}}px;--bg:{{block.settings.b3_bg}};--bg_op:{{ block.settings.b3_bgo}};">{% render 'image-grid', image: block.settings.image3, text1: block.settings.b3_text1, text2: block.settings.b3_text2, text3: block.settings.b3_text3, text_a: block.settings.b3_ta, pos: block.settings.b3_tp, pos_m:block.settings.b3_tpm, hidetxt1:block.settings.b3_hide_txt1, hidetxt2:block.settings.b3_hide_txt2, hidetxt3:block.settings.b3_hide_txt3, txt_size:block.settings.b3_size, link: block.settings.link3, imgSize: '460x342' %}</div>
+            <div class="b4_{{block.type}} inner mb20{% if section.settings.enable_zoom %} zoom_hov{% endif %}"  style="--cl:{{ block.settings.b4_txt }}; --bdr:{{block.settings.b4_bgr}}px;--bg:{{block.settings.b4_bg}};--bg_op:{{ block.settings.b4_bgo}};"> {% render 'image-grid', image: block.settings.image4, text1: block.settings.b4_text1, text2: block.settings.b4_text2, text3: block.settings.b4_text3, text_a: block.settings.b4_ta, pos: block.settings.b4_tp, pos_m:block.settings.b4_tpm, hidetxt1:block.settings.b4_hide_txt1, hidetxt2:block.settings.b4_hide_txt2, hidetxt3:block.settings.b4_hide_txt3, txt_size:block.settings.b4_size, link: block.settings.link4, imgSize: '460x342' %}</div>
+          </div>
+        </div>
+        {%- endif -%} 		
+        {%- endfor -%}
+        {%- if section.blocks.size == 0 -%}{% render 'no-blocks' %}{%- endif -%} </div>
+    </div>
+    {% if secSt.section_cov %}</div>
+  {% endif%}
+  {% endcapture %}
+  {{imageGallery | strip_newlines | remove: "  " | remove: "	" }} </div>
+{%- endcapture -%}
+{{gridBanners | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Grid Banners",
+    "class": "index-section grid_banners",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [	
+     {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Heading"		
+      }, 		
+     {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sub Heading",
+        "default": "Describe your products, collection etc..."
+      },	 			 	 
+	  {
+        "type": "header",
+        "content": "Appearance Section ==="
+      },	 
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 
+	   {
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	 
+      {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },
+      {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },
+ 		{
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 15,
+        "min": 0,
+        "max": 15,
+        "step": 1
+      },
+      {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable Image zoom on hover?",
+      "default": true
+      }	 
+    ],
+    "blocks": [
+     {
+        "type": "styl1",
+        "name": "Style 1 / 2 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",
+			"default":"LIMITED TIME",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },          
+		 {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },          
+	     {
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"default":"Flat 50% off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+       {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",				
+            "options": [
+ 			 { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+            ]
+          },	           
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.9
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  { "value": "small", "label": "Small" },
+                  {	"value": "large", "label": "Big" }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+		    "default": "SUMMER 2022",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		  {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			 "default": "NEW COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },         
+	     {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+ 			"default": "Get Flat 10% Off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },   
+ 		  {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b2_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",				
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                  
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }	 	 	    		 
+        ]
+      },
+      {
+        "type": "styl2",
+        "name": "Style 2 / 3 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",
+			"default":"LIMITED TIME",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		  {
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"default":"Flat 50% off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 		  {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",				
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                             
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+			"default": "SUMMER 2022",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			"default": "NEW COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+	     {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+			"default": "Get Flat 10% Off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },         
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b2_ta",
+
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		 
+          {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	
+	 	  {
+			"type":"header",
+			"content":"Image 3"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image3",
+			"label":"Banner Image"
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b3_text1",
+			"label":"Text 1",
+			"default": "ITALIAN COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+ 			"type":"textarea",
+			"id":"b3_text2",
+			"label":"Text 2",
+			"default":"BEST SELLER",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+	     {
+ 			"type":"textarea",
+			"id":"b3_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },          
+		  {
+            "type": "url",
+			"id": "link3",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b3_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b3_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		
+          {
+            "type": "checkbox",
+            "id": "b3_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "b3_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "b3_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+          {
+            "type": "color",
+            "id": "b3_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b3_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b3_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b3_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b3_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }	
+        ]
+      },
+ 	 {
+        "type": "styl3",
+        "name": "Style 3 / 3 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",
+			"default":"LIMITED TIME",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		{
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"default":"Flat 50% off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 	      {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                              
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+			"default": "SUMMER 2022",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		  {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			"default": "NEW COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+			"default": "Get Flat 10% Off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b2_ta",
+
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                               
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	
+	 	  {
+			"type":"header",
+			"content":"Image 3"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image3",
+			"label":"Banner Image"
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b3_text1",
+			"label":"Text 1",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt1",
+			"default":"BEST SELLER",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b3_text2",
+			"label":"Text 2",
+			"default": "ITALIAN COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+	     {
+            "type": "checkbox",
+            "id": "b3_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b3_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link3",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b3_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b3_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",		
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                              
+          {
+            "type": "color",
+            "id": "b3_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b3_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b3_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b3_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b3_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }	
+        ]
+       },
+ 	 {
+        "type": "styl4",
+        "name": "Style 4 / 3 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",
+			"default":"LIMITED TIME",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"default":"Flat <span style='color:#ec9090'>50% OFF</span>",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },   
+		  {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                              
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+			"default": "SUMMER <span style='color:#ec9090'>2022</span>",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			"default": "NEW COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+			"default": "Get Flat 10% Off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },   
+  		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b2_ta",
+
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",				
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                            
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	
+	 	  {
+			"type":"header",
+			"content":"Image 3"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image3",
+			"label":"Banner Image"
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b3_text1",
+			"label":"Text 1",
+			"default": "<span style='color:#ec9090'>ITALIAN</span> COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b3_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b3_text2",
+			"label":"Text 2",
+			"default":"BEST SELLER",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b3_text3",
+			"label":"Text 3",
+			"default": "Get Flat 10% Off",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  }, 
+ 		  {
+            "type": "checkbox",
+            "id": "b3_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link3",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b3_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b3_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",		
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                              
+          {
+            "type": "color",
+            "id": "b3_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b3_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b3_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b3_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b3_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }	
+        ]
+       },		
+      {
+        "type": "styl5",
+        "name": "Style 5 / 4 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"			
+		  },
+		  {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",	
+			"default":"WOMEN",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+	 	  {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",	
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 	     {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+			{
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 	     {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+ 		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+         {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                             
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"			
+		  },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+			"default":"MEN",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+	    {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		{
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  }, 
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b2_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+             "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                            
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+	 	  {
+			"type":"header",
+			"content":"Image 3"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image3",
+			"label":"Banner Image"			
+		  },
+		  {
+ 			"type":"textarea",
+			"id":"b3_text1",
+			"label":"Text 1",
+			"default":"KIDS",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b3_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b3_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  }, 
+ 		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link3",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b3_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b3_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",				
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                              
+          {
+            "type": "color",
+            "id": "b3_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b3_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b3_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b3_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b3_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 4"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image4",
+			"label":"Banner Image"			
+		  },
+		  {
+ 			"type":"textarea",
+			"id":"b4_text1",
+			"label":"Text 1",
+			"default":"ACCSSORIES",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b4_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b4_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b4_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b4_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 	    {
+            "type": "checkbox",
+            "id": "b4_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link4",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b4_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b4_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                          
+          {
+            "type": "color",
+            "id": "b4_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b4_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b4_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b4_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b4_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }
+        ]
+      },
+	  {
+        "type": "styl6",
+        "name": "Style 6 / 5 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"			
+		  },
+		 {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",
+			"default":"WOMEN",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+ 		 {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+             "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                             
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"			
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+			"default":"MEN",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+         {
+            "type": "checkbox",
+            "id": "b2_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+             "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                          
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	 	 	    		 
+	 	  {
+			"type":"header",
+			"content":"Image 3"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image3",
+			"label":"Banner Image"			
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b3_text1",
+			"label":"Text 1",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b3_text2",
+			"label":"Text 2",
+			"default":"LIMITED TIME",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		{
+            "type": "checkbox",
+            "id": "b3_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+
+			"id":"b3_text3",
+			"label":"Text 3",
+			"default":"Flat <span style='color:#ec9090'>50% OFF</span>",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link3",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b3_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b3_tp",
+            "label": "Text Position",
+             "default": "text_bc f-jcc f-aie",		
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                          
+          {
+            "type": "color",
+            "id": "b3_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b3_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b3_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b3_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b3_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 4"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image4",
+			"label":"Banner Image"			
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b4_text1",
+			"label":"Text 1",
+			"default":"BEST RATED",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b4_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b4_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b4_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b4_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },   
+		 {
+            "type": "checkbox",
+            "id": "b4_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link4",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b4_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b4_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",		
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                             
+          {
+            "type": "color",
+            "id": "b4_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b4_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b4_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b4_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b4_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 5"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image5",
+			"label":"Banner Image"			
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b5_text1",
+			"label":"Text 1",
+			"default": "NEW ARRIVAL",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b5_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b5_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b5_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b5_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 	     {
+            "type": "checkbox",
+            "id": "b5_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link5",
+			"label": "Banner Link"
+          },
+		 		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b5_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b5_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",				
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		                              
+          {
+            "type": "color",
+            "id": "b5_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b5_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b5_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b5_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b5_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }
+        ]
+      },
+  {
+        "type": "styl7",
+        "name": "Style 7 / 4 Banners",
+        "settings": [
+		  {
+			"type":"header",
+			"content":"Image 1"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image1",
+			"label":"Banner Image"			
+		  },
+		 {
+ 			"type":"textarea",
+			"id":"b1_text1",
+			"label":"Text 1",
+			"default":"LIMITED TIME",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },                   
+		 {
+ 			"type":"textarea",
+			"id":"b1_text2",
+			"label":"Text 2",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b1_text3",
+			"label":"Text 3",
+			"default":"FINAL CLEARANCE",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  }, 
+ 		 {
+            "type": "checkbox",
+            "id": "b1_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link1",
+			"label": "Banner Link"
+          },
+ 		 {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b1_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b1_tp",
+            "label": "Text Position",
+             "default": "text_bc f-jcc f-aie",		
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		          
+          {
+            "type": "color",
+            "id": "b1_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b1_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b1_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b1_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b1_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 2"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image2",
+			"label":"Banner Image"			
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b2_text1",
+			"label":"Text 1",
+			"default": "SUMMER <span style='color:#ec9090'>2022</span>",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b2_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },
+		 {
+ 			"type":"textarea",
+			"id":"b2_text2",
+			"label":"Text 2",
+			"default": "NEW COLLECTION",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		{
+            "type": "checkbox",
+            "id": "b2_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+			"id":"b2_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },          
+          {
+            "type": "checkbox",
+            "id": "b2_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link2",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "checkbox",
+            "id": "b2_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b2_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",		
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		             
+          {
+            "type": "color",
+            "id": "b2_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b2_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b2_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b2_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b2_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },	 	 	    		 
+	 	  {
+			"type":"header",
+			"content":"Image 3"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image3",
+			"label":"Banner Image"			
+		  },
+		   {
+ 			"type":"textarea",
+			"id":"b3_text1",
+			"label":"Text 1",
+			"default":"WOMEN",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },         
+		 {
+ 			"type":"textarea",
+			"id":"b3_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		 {
+            "type": "checkbox",
+            "id": "b3_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },
+	     {
+ 			"type":"textarea",
+
+			"id":"b3_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },   
+          {
+            "type": "checkbox",
+            "id": "b3_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link3",
+			"label": "Banner Link"
+          },
+		  	  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b3_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b3_tp",
+            "label": "Text Position",
+             "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		             
+          {
+            "type": "color",
+            "id": "b3_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b3_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b3_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b3_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b3_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 4"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image4",
+			"label":"Banner Image"			
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b4_text1",
+			"label":"Text 1",
+			"default":"MEN",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+	    {
+            "type": "checkbox",
+            "id": "b4_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },          
+		 {
+ 			"type":"textarea",
+			"id":"b4_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b4_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },          
+	     {
+ 			"type":"textarea",
+			"id":"b4_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b4_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link4",
+			"label": "Banner Link"
+          },
+		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b4_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b4_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		           
+          {
+            "type": "color",
+            "id": "b4_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b4_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b4_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b4_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b4_size",
+                "label": "Description box size",
+                "default": "small",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          },
+		  {
+			"type":"header",
+			"content":"Image 5"
+		  },
+		  {
+			"type":"image_picker",
+			"id":"image5",
+			"label":"Banner Image"			
+		  },
+		    {
+ 			"type":"textarea",
+			"id":"b5_text1",
+			"label":"Text 1",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+		  {
+            "type": "checkbox",
+            "id": "b5_hide_txt1",
+            "label": "Hide Text 1 in mobile?",
+            "default": false
+          },         
+		 {
+ 			"type":"textarea",
+			"id":"b5_text2",
+			"label":"Text 2",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },
+ 		 {
+            "type": "checkbox",
+            "id": "b5_hide_txt2",
+            "label": "Hide Text 2 in mobile?",
+            "default": false
+          },         
+	     {
+ 			"type":"textarea",
+			"id":"b5_text3",
+			"label":"Text 3",
+			"info":"Use <strong>text here</strong> tag to make it bold"
+		  },  
+ 		 {
+            "type": "checkbox",
+            "id": "b5_hide_txt3",
+            "label": "Hide Text 3 in mobile?",
+            "default": true
+          },
+		  {
+            "type": "url",
+			"id": "link5",
+			"label": "Banner Link"
+          },
+		 		  {
+            "type": "paragraph",
+            "content": "Appearance Text ==="
+          },
+ 			{
+            "type": "checkbox",
+            "id": "b5_ta",
+            "label": "Text align left?",
+			"default":false
+          },
+           {
+            "type": "select",
+            "id": "b5_tp",
+            "label": "Text Position",
+            "default": "text_bc f-jcc f-aie",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "text_tl f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "text_tc f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "text_tr f-jce f-ais" },             
+			  { "label": "Left",   "value": "f-aic f-jcs" },
+ 			  { "label": "Center", "value": "f-jcc f-aic" },
+			  { "label": "Right",  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "text_bl f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "text_bc f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "text_br f-jce f-aie" }
+              
+            ]
+          }, 		           
+          {
+            "type": "color",
+            "id": "b5_txt",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "b5_bg",
+            "label": "Text background",
+            "default": "#fff"
+          },
+         {
+            "type": "range",
+            "id": "b5_bgo",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0.7
+          },
+        {
+            "type": "range",
+            "id": "b5_bgr",
+            "min": 0,
+            "max": 25,
+            "step": 1,
+            "label": "Background roundness",
+            "unit": "px",
+            "default": 0
+          },
+          {
+                "type": "select",
+                "id": "b5_size",
+                "label": "Description box size",
+                "default": "large",
+                "options": [              
+                  {
+                    "value": "small",
+                    "label": "Small"
+                  },
+                  {	
+                    "value": "large",
+                    "label": "Big"
+                  }
+                ]
+          }
+        ]
+      }		
+    ],
+    "presets": [
+      {
+        "name": "Grid Banners"        
+      }
+    ]
+  }
+{% endschema %}

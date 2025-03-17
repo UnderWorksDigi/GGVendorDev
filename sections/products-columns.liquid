@@ -1,0 +1,248 @@
+{%- capture productsColumn -%}
+{% assign secSt = section.settings %}
+<div class="content-indent{% if secSt.hide_mobile %} small--hide{% endif %} {{ secSt.top-offeset}}">
+   {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+		<div class="page-width cl_clm" data-section-id="{{ section.id }}" style="--bdr:{{secSt.prbdr}}">
+        {% case secSt.grid %}
+        	{% when '2' %}
+                {%- assign grid_item_ds = 'small--one-whole medium-up--one-half large-up--one-half' -%}   			 
+            {% when '3' %}
+                {%- assign grid_item_ds = 'small--one-whole medium-up--one-half large-up--one-third' -%}      			  
+            {% when '4' %}
+                {%- assign grid_item_ds = 'small--one-whole medium-up--one-half large-up--one-quarter' -%}      			  
+            {% endcase %}
+
+            <div class="grid grid--uniform">
+            {% for block in section.blocks limit: section.blocks.size %}
+              	{% case block.settings.width %}
+                  {% when '20%' %}{%- assign block_width = 'small--one-whole medium-up--one-fifth' -%}
+                  {% when '25%' %}{%- assign block_width = 'small--one-whole medium-up--one-quarter' -%}
+                  {% when '33%' %}{%- assign block_width = 'small--one-whole medium-up--one-third' -%}
+                  {% when '40%' %}{%- assign block_width = 'small--one-whole medium-up--two-fifths' -%}
+                  {% when '50%' %}{%- assign block_width = 'small--one-whole medium-up--one-half' -%}
+                  {% when '60%' %}{%- assign block_width = 'small--one-whole medium-up--three-fifths' -%}
+                  {% when '66%' %}{%- assign block_width = 'small--one-whole medium-up--two-thirds' -%}
+                  {% when '75%' %}{%- assign block_width = 'small--one-whole medium-up--three-quarters' -%}
+                  {% when '80%' %}{%- assign block_width = 'small--one-whole medium-up--four-fifths' -%}
+                  {% when '100%' %}{%- assign block_width = 'one-whole' -%}
+                {% endcase %}
+                <div class="grid__item {{ block_width }}">
+                {%- assign collection = collections[block.settings.collection] -%}
+                  <h4 class="{{secSt.ttl-align}}"><a class="tablink" href="#collection-{{ block.id }}">{{ block.settings.title }}</a></h4>
+                  <div id="collection-{{ block.id }}"> {% if block.settings.collection != blank %}
+                    <div class="grid grid--uniform">
+                      {%- case block.settings.grid -%}
+                      	  {%- when 1 -%}{%- assign grid_ds = 'large-up--one-whole' -%}{%- assign image_size = '100,200' -%}
+                          {%- when 2 -%}{%- assign grid_ds = 'large-up--one-half' -%}{%- assign image_size = '100,200' -%}
+                          {%- when 3 -%}{%- assign grid_ds = 'large-up--one-third' -%}{%- assign image_size = '100,200' -%}
+                          {%- when 4 -%}{%- assign grid_ds = 'large-up--one-quarter' -%}{%- assign image_size = '100,200' -%}
+                          {%- when 5 -%}{%- assign grid_ds = 'large-up--one-fifth' -%}{%- assign image_size = '100,200' -%}
+                          {%- when 6 -%}{%- assign grid_ds = 'large-up--one-sixth' -%}{%- assign image_size = '100,200' -%}
+                          {%- when 7 -%}{%- assign grid_ds = 'large-up--one-seventh' -%}{%- assign image_size = '100,200' -%}
+                      {%- endcase -%}
+                      {%- case block.settings.tablet-grid -%}
+                        {% when 1 %}{%- assign grid_tb = 'medium--one-whole' -%}
+                        {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+                        {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+                      {%- endcase -%}
+                      {%- case block.settings.mobile-grid -%}
+                        {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+                        {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+                        {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+                      {%- endcase -%}
+                      {% for product in collection.products limit: block.settings.rows %}
+                          <div class="grid__item {{ grid_mb }} {{ grid_tb }} {{grid_ds}}">{% include 'product-card-grid-columns', product:product, grid_image_width: image_size %}</div>
+                        {% else %}
+                          {% for i in (1..secSt.rows) %}
+                          <div class="grid__item item">
+                              <div class="grid_bx"> <a href="#" class="grid_lnk">
+                                  <div class="grid_img"> {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                                      {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }} </div>
+                                  <div class="h4 grid_title">{{ 'homepage.onboarding.product_title' | t }}</div>
+                                  <div class="grid_meta"> {% include 'product-price' %} </div>
+                                  </a>
+                              </div>
+                          </div>
+                          {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="tl">Please select collection to display the products</p>
+                    {% endif %}
+                </div>
+                </div>
+              {% endfor %}
+              </div>      	
+      <!-- collection tab end --> 	
+  	</div>
+  {% if secSt.section_cov %}</div> {% endif%}
+</div>
+{%- endcapture -%}
+{{productsColumn | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Products Columns",
+    "class": "index-section",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "max_blocks": 8,
+    "settings": [ 
+	 {
+        "type": "header",
+        "content": "Appearance Section ==="
+      },
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 
+	  {
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+      },
+	  {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },
+ 	  {
+            "type": "select",
+            "id": "ttl-align",
+            "label": "Title Text Alignment",
+            "default": "tl",
+            "options": [            
+ 			  { "value":"tl", "label":"Left" },
+              { "value":"tc", "label":"Center" },
+			  { "value":"tr", "label":"Right" }
+            ]
+      },
+	  {
+        "type": "color",
+        "id": "prbdr",
+        "label": "Product box border Color",
+		"default":"#eee"
+	  }
+	],
+	"blocks": [
+      {
+        "type": "collection_column",
+        "name": "Collection",
+        "settings": [			 
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Column Name",
+            "default": "Column Name",
+            "info":"Use <strong>text here</strong> to make tab bold"
+          },
+          {
+            "id": "collection",
+            "type": "collection",
+            "label": "Select Collection"
+    	  },
+		  {
+            "type": "select",
+            "id": "width",
+            "label": "Column Width",
+            "default": "25%",
+			"info":"Total width of all block must not be more than 100% per row",
+            "options": [
+			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+              { "value": "33%", "label": "33%" },
+              { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+              { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "80%", "label": "80%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": "Products per row ==="
+          }, 	
+          {
+            "type": "range",
+            "id": "grid",
+            "label": "Desktop",
+            "default": 1,
+            "min": 1,
+            "max": 4,
+            "step": 1
+          },
+          {
+            "type": "range",
+            "id": "tablet-grid",
+            "label": "Tablet",
+            "default": 1,
+            "min": 1,
+            "max": 3,
+            "step": 1
+          },
+          {
+            "type": "range",
+            "id": "mobile-grid",
+            "label": "Mobile",
+            "default": 1,
+            "min": 1,
+            "max": 3,
+            "step": 1
+          },
+          {
+            "type": "text",
+            "id": "rows",
+            "label": "Products Per Row",
+            "default": "4"
+          }
+      	]
+     }
+	],
+    "presets": [
+      {
+        "name": "Products Columns",            
+        "blocks": [
+          {
+            "type": "collection_column"
+          },
+          {
+            "type": "collection_column"
+          },
+          {
+            "type": "collection_column"
+          },
+ 		  {
+            "type": "collection_column"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %} 

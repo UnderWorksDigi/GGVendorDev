@@ -1,0 +1,399 @@
+{%- capture collectionList -%}
+{% assign secSt = section.settings %}
+
+<div class="content-indent{% if secSt.hide_mobile %} small--hide{% endif %} {{ secSt.top-offeset}}">
+    
+	{% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	
+  	<div class="cl_box cl_box3 {% unless secSt.section_width %}page-width {% else %}fullwidth{% endunless %}" id="sliderbox-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="carousel"  style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">   	
+   
+    {%- if secSt.title != blank  or secSt.subtitle != blank -%}
+    <div class="sec-ttl {{ settings.title_align}} wow fadeIn">
+      <h3 class="h3">{{ secSt.title }}</h3>
+      {%- if secSt.subtitle != blank -%}<span>{{secSt.subtitle}}</span>{%- endif -%}                 
+    </div>
+    {% endif %}
+
+    {% case section.settings.grid %}
+    {% when 2 %}{%- assign grid_ds = 'large-up--one-half' -%}
+    {% when 3 %}{%- assign grid_ds = 'large-up--one-third' -%}
+    {% when 4 %}{%- assign grid_ds = 'large-up--one-quarter' -%}
+    {% when 5 %}{%- assign grid_ds = 'large-up--one-fifth' -%}
+    {% when 6 %}{%- assign grid_ds = 'large-up--one-sixth' -%}
+    {% when 7 %}{%- assign grid_ds = 'large-up--one-seventh' -%}
+    {% endcase %}
+    
+    {% case section.settings.tablet-grid %}
+    {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+    {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+    {% when 4 %}{%- assign grid_tb = 'medium--one-quarter' -%}
+    {% when 5 %}{%- assign grid_tb = 'medium--one-fifth' -%}
+    {% endcase %}
+    
+    {% case section.settings.mobile-grid %}
+    {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+    {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+    {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+    {% endcase %}
+    
+    {% capture styles %}
+        --grsp:0 -{{ secSt.grid-spacing | divided_by: 2.0  }}px;--grspi:0 {{ secSt.grid-spacing | divided_by: 2.0  }}px {{secSt.grid-spacing}}px;--grspm:0 -{{ secSt.grid-spacing-mbl | divided_by: 2.0  }}px;--grspim:0 {{ secSt.grid-spacing-mbl | divided_by: 2.0  }}px {{secSt.grid-spacing-mbl}}px;
+        --cl:{{ secSt.cl }};--bg:{{ secSt.bg | color_modify: 'alpha', secSt.op }};--bgm:{{ secSt.bgm }};--tlbg:{{ secSt.tlbg }};
+        --fs:{{ secSt.fs }}px;--fsm:{{ secSt.fsm }}px;--fw:{{ secSt.fw }};--flh:{{ secSt.flh }};
+    {%- endcapture -%}
+        
+      <div class="grid gspace{% unless secSt.enable_carousel %} grid--uniform{% endunless %} collection-grid{% if secSt.enable_carousel %} carousel arwOut{% else %} listing{% endif %} m0 round-list" {% if section.settings.enable_carousel %}data-slick='{"slidesToShow": {{ secSt.grid }},"slidesToScroll": 1, {%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": {{ section.settings.tablet-grid }} }},{"breakpoint": 768,"settings":{"slidesToShow":{{ secSt.mobile-grid }} }} ]}'{% endif %}
+           style="{{ styles }}">
+        {% for block in section.blocks limit: section.blocks.size %}
+          {% assign product_box = forloop.index | minus:1 %}
+          {% assign delay_time = 50 | times : product_box %}
+          <div class="grid__item tc {{grid_mb}} {{grid_tb}} {{grid_ds}} wow fadeIn" {{ block.shopify_attributes }} data-wow-delay="{{delay_time}}ms">
+            {%- assign collection = collections[block.settings.collection] -%}
+            {% render 'collection-grid-item', collection:collection, secSt:secSt, roundBnr:true, blkSt:block.settings %}
+          </div>
+        {% endfor %}
+      </div>       
+    {% if section.blocks.size == 0 %}{% render 'no-blocks' %}{% endif %}
+  </div>
+  {% if section.settings.section_cov %}</div> {% endif%}
+</div>
+{%- endcapture -%}
+{{collectionList | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Round Banners",
+    "class": "index-section",
+	"disabled_on": {
+    "groups": ["header", "footer"]
+    },	
+    "max_blocks": 15,
+    "settings": [	 	 
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Round Banners"
+      },
+      {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sub Heading",
+        "default": "Describe your products, collection, content etc..."
+      },	  	 
+	     {
+		 "type": "paragraph",
+		 "content":"[preview different style](https://www.adornthemes.com/different-style-for-collection-list/)"
+      }, 
+ 		{
+        "type": "header",
+        "content": "Appearance Section ==="
+      },
+	   {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+      }, 
+	   {
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	 
+      {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },
+	 {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },
+ 		{
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 15,
+        "min": 0,
+        "max": 15,
+        "step": 1
+      }, 
+	 {
+        "type": "header",
+        "content": "Appearance Grid ==="
+      },
+ 	 {
+		"type":"checkbox",
+		"id":"enable_carousel",
+		"label":"Enable Carousel",
+		"default": true
+	  },
+	  {
+        "type": "range",
+        "id": "grid-spacing",
+        "label": "Grid Spacing",
+        "default": 30,
+        "min": 0,
+        "max": 30,
+        "step": 1,
+		"unit":"px"
+		
+      },
+     {
+        "type": "range",
+        "id": "grid-spacing-mbl",
+        "label": "Grid Spacing (mobile)",
+        "default": 15,
+        "min": 0,
+        "max": 15,
+        "step": 1,
+		"unit":"px"		
+      },          	 
+ 	  {
+		"type":"checkbox",
+		"id":"product_count",
+		"label":"Show Products Count?",
+		"default": false
+	  }, 		
+ 	  {
+        "type": "select",
+        "id": "btn-style",
+        "label": "Select Button",
+        "default": "btn1",
+        "options": [
+          {
+            "label": "Solid Button 1",
+            "value": "btn1"
+          },
+          {
+            "label": "Solid Button 2",
+            "value": "btn2"
+          },
+		  {
+            "label": "Solid Button 3",
+            "value": "btn3"
+          },
+ 		  {
+            "label": "Border Button 1",
+            "value": "bdr-btn1"
+          },
+ 		{
+            "label": "Border Button 2",
+            "value": "bdr-btn2"
+          } 
+        ]
+      },
+   {
+        "type": "select",
+        "id": "btn-size",
+        "label": "Button Size",
+        "default": "btn-small",
+        "options": [
+          {
+            "label": "Small",
+            "value": "btn-small"
+          },
+          {
+            "label": "Medium",
+            "value": "btn-med"
+          },
+		  {
+            "label": "Large",
+            "value": "btn-large"
+          } 		  
+        ]
+      },
+	  {
+        "type": "paragraph",
+        "content": "Items per row ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Desktop",
+        "default": 5,
+        "min": 2,
+        "max": 7,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "tablet-grid",
+        "label": "Tablet",
+        "default": 3,
+        "min": 1,
+        "max": 5,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "mobile-grid",
+        "label": "Mobile",
+        "default": 2,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+	  {
+        "type": "header",
+        "content": "Appearance Text ==="
+      },
+	 {
+        "type": "color",
+        "id": "cl",
+        "label": "Title",
+        "default": "#000"
+     },
+ 	 {
+        "type": "range",
+        "id": "fs",
+        "label": "Title Font Size",
+        "min": 12,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "fsm",
+        "label": "Title Font (mobile)",
+        "min": 12,
+        "max": 30,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      },
+	 {
+        "type": "select",
+        "id": "fw",
+        "label": "Font Weight",
+        "default": "700",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+	 {
+        "type": "checkbox",
+        "id": "enable_zoom",
+        "label": "Enable Image zoom on hover?",
+        "default": true
+     }	 
+    ],
+    "blocks": [
+      {
+        "type": "featured_collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          },
+		  {
+			"type":"image_picker",
+			"id":"image",
+			"label":"Upload Image",
+			"info":"Image size is flexible but it should be in square and same size for all collections"
+		  },
+		  {
+ 			"type":"textarea",
+			"id":"title",
+			"label":"Title",
+			"default":"<span class='fwm'>SHOP WOMEN</span>"			
+		  },
+         {
+            "type": "text",
+            "id": "collection_btn",
+            "label": "Button Text",            
+			"info":"Keep it empty to hide button" 
+          },
+		  {
+          "type": "url",
+          "id": "url",
+          "label": "Link (optional)",
+          "info": "Keep it empty to use 'collection url'."
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Round Banners ",       
+        "settings": {
+          "grid": 4
+        },
+        "blocks": [
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          },
+		  {
+            "type": "featured_collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,48 @@
+{%- if settings.breadcrumb_pg -%}{%- include 'breadcrumb' -%}{%- else -%}<div class="topSpace"></div>{%- endif -%}
+<div class="page-width">
+   <h1 class="page-title {{settings.title_align}}">{{page.title}}</h1>
+  <div id="wishlist" class="grid grid--uniform grid-products"></div>
+</div>
+<style>
+#wishlist {margin-top:20px;}
+#wishlist > .grid__item  {position:relative;}
+#wishlist .removeItem {position:absolute; right:3px; top:-10px; z-index:333; height:22px; width:22px; text-align:center;line-height:20px; padding:0; border-radius:25px;}
+.removeItem .at {font-size:13px;}
+</style>
+<script>
+window.addEventListener('DOMContentLoaded',function(){
+      var cookieName = "wishlistList";
+       $.ajax({
+            url: '/collections/all?type='+$.cookie(cookieName)+'&view=prlist',
+              dataType: 'html',
+              type: 'GET',
+              success: function(data){
+                if($(data).find('.grid_bx').length){
+                    $('#wishlist').html(data);
+                	$(theme.init);
+                }
+              },
+              error: function(data){console.log('ajax error')},
+              complete: function(){}
+        });
+      
+      	$(document).on('click', '.removeItem', function(e){
+            e.preventDefault();
+            var item = $(this).parent();
+            var str = $.cookie(cookieName);
+            str = str.replace($(this).attr("href"), '');
+            str = str.replace('++', '+');
+            $.cookie(cookieName, str, {expires:30, path:"/;SameSite=None", secure: true});
+
+            item.fadeOut(500);
+            setTimeout(removeItem, 500, item);
+          });
+      
+        function removeItem(item) {
+          item.remove();
+          if($.cookie(cookieName) == '+' || $.cookie(cookieName) == ''){
+            $('.wishlist-empty').show();
+          }
+        }
+      });
+</script>

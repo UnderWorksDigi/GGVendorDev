@@ -1,0 +1,199 @@
+{%- capture topInfoBar -%}
+{% assign secSt = section.settings %}
+<div class="top-promo wr{{ section.id }}{% if secSt.hide_mobile %} small--hide{% endif %}" id="carousel-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="quotes">
+  	{% if section.blocks.size > 1 %}<div id="Quotes-{{ section.id }}" data-slick='{"slidesToShow":1,"slidesToScroll":1,"arrows":false,"fade":{{secSt.slideEf}},{%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "autoplay": true, "autoplaySpeed":{{secSt.speed | times: 1000 }} }'>{% endif %}
+	{% for block in section.blocks limit: section.blocks.size %}
+      	<div class="quotes_sl-{{block.id}}{% unless forloop.first %} slick-slide{% endunless %}" {{ block.shopify_attributes }}>
+      	{%- assign blockNo = forloop.index0 -%}
+      	{% capture countdown %}
+      		{% if block.settings.promo_txt contains '[countdown]' %}
+          <div class="atCounter fl ttu" data-date="{{ block.settings.ann_date}}" style="color:{{block.settings.cnt_text}}"><span><span class="days">00</span> {{'date_formats.short_names.days' | t}}</span> : <span class="hours">00</span> : <span class="minutes">00</span> : <span class="seconds">00</span></div>
+      		{% endif %}
+      	{% endcapture %}
+      	{% capture button %}
+      		{% if block.settings.promo_txt contains '[button]' and block.settings.promo_btn_tx != blank -%}
+          		<span class="btn btn--small{% if block.settings.promo_btn_mob %} small--hide{% endif %}" style="color:{{block.settings.promo_btn_tx_clr}};background-color:{{block.settings.promo_btn_clr}}">{{ block.settings.promo_btn_tx }}</span>        
+      		{% endif %}
+      	{% endcapture %}
+      	{% if block.settings.promo_txt != blank %}
+			<{% if block.settings.promo_link != blank %}a href="{{ block.settings.promo_link }}"{% else %}div{% endif %} class="fl f-jcc f-aic promo_msg tc tpromobr{{blockNo}} {{secSt.fontFm}} lazyload" style="--mh:{{secSt.promo_ht}}px;--fs:{{secSt.promo_fs}}px;--pfs:{{secSt.promo_fs}}px;--pmw:{{secSt.promo_fs | plus: 5}}px;"
+               data-bgset="{% render 'bgset', image: block.settings.promotion_bg %}" data-sizes="auto" data-parent-fit="contain">
+        		{{ block.settings.promo_txt | replace:"[countdown]", countdown | replace:"[button]", button }}
+      		</{% if block.settings.promo_link != blank %}a{% else %}div{% endif %}>
+          	{% unless secSt.hideClose %}<span class="close-promo" style="color:{{block.settings.promo_txt_cl}}"><i class="at at-times-l" aria-hidden="true"></i></span>{% endunless %}
+          	<style>
+               .quotes_sl-{{block.id}} .tpromobr{{blockNo}}, .quotes_sl-{{block.id}} a.tpromobr{{blockNo}}:hover { color:{{block.settings.promo_txt_cl}}; background-color:{{block.settings.promo_bgcl}}; }
+               .quotes_sl-{{block.id}} .tpromobr{{blockNo}} .hl { color:{{block.settings.promo_hl}}; }
+            </style>
+      	{% endif %}
+      	</div>
+	{% endfor %}
+  	{% if section.blocks.size > 1 %}</div>{% endif %}
+</div>
+<style> 
+  {% if request.design_mode %}.top-promo { display:block; }{% endif %}
+</style>
+{%- endcapture -%}
+{% if secSt.topbar %}{{ topInfoBar | strip_newlines | remove: "  " | remove: "	" }}{% endif %}
+{% schema %}
+  {
+    "name": "Top Promotion Bar",
+    "class": "index-section promoBr",
+	"max_blocks": 5,
+	"settings":[				
+		{ 
+          "type":"checkbox",
+          "id":"topbar",
+          "label":"Display Bar?",
+          "default": false
+	    },
+		{ 
+          "type":"checkbox",
+          "id":"hide_mobile",
+          "label":"Hide in Mobile?",
+          "default": false
+	    },
+		{
+          "type": "range",
+          "id": "promo_ht",
+          "label": "Minimum Height",
+          "default": 30,
+          "min": 30,
+          "max": 130,
+          "step": 1,
+          "unit": "px"
+      },
+	  { 
+          "type":"checkbox",
+          "id":"hideClose",
+          "label":"Hide Close Button",
+          "default": false
+	  },
+      {
+        "type": "select",
+        "id": "slideEf",
+        "label": "Slide Effect",
+        "default": "true",
+        "options": [
+          { "value": "true", "label": "Fade" },
+          { "value": "false", "label": "Slide" }
+        ]
+      },
+	  {
+          "type": "range",
+          "id": "speed",
+          "label": "Change Message Every",
+          "default": 5,
+          "min": 1,
+          "max": 60,
+          "step": 1,
+          "unit": "sec"
+      },
+      {
+        "type": "select",
+        "id": "fontFm",
+        "label": "Font Family",
+        "default": "ft1",
+        "options": [
+          { "value": "ft1", "label": "Font 1" },
+          { "value": "ft2", "label": "Font 2" },
+          { "value": "ft3", "label": "Font 3" }
+        ]
+      },
+	  {
+          "type": "range",
+          "id": "promo_fs",
+          "label": "Font Size",
+          "default": 12,
+          "min": 10,
+          "max": 16,
+          "step": 1,
+          "unit": "px"
+      }
+	],
+    "blocks": [
+      {
+        "type": "text_block",
+        "name": "Promotion Text",
+        "settings": [         
+          {
+            "type": "textarea",
+            "id": "promo_txt",
+            "label": "Promotion Text",
+            "default": "UP TO 80% OFF ON THE ENTIRE STORE! hurry up!",
+			"info": "Use shortcode [countdown] to show Countdown, [button] to show button and <span class=\"hl\">text</span> to Highlight text"
+          },
+          {
+            "type": "text",
+            "id": "ann_date",
+            "label": "Countdown Date",
+            "info": "Date Formate is Month\/Day\/Year. i.e 11\/25\/2023",
+            "default": "12\/20\/2024"
+          },
+          {
+            "type": "text",
+            "id": "promo_btn_tx",
+            "label": "Button Text",
+            "default": "Shop Now"
+          },
+          {
+            "type": "checkbox",
+            "id": "promo_btn_mob",
+            "label": "Hide Button in Mobile?",
+            "default": true
+          },
+          {
+            "type": "url",
+            "id": "promo_link",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "APPEARANCE TEXT ==="
+          },
+          {
+            "type": "color",
+            "id": "promo_txt_cl",
+            "label": "Text Color",
+            "default": "#B05D5D"
+          },
+          {
+            "type": "color",
+            "id": "promo_hl",
+            "label": "Highlight Text",
+            "default": "#050505"
+          },
+          {
+            "type": "color",
+            "id": "cnt_text",
+            "label": "Countdown Text",
+            "default": "#B05D5D"
+          },
+          {
+            "type": "color",
+            "id": "promo_btn_clr",
+            "label": "Button Background",
+            "default": "#333"
+          },
+          {
+            "type": "color",
+            "id": "promo_btn_tx_clr",
+            "label": "Button Text",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "promo_bgcl",
+            "label": "Background Color",
+            "default": "#FFE8E8"
+          },
+          {
+            "type": "image_picker",
+            "id": "promotion_bg",
+            "label": "Background image"
+          }
+        ]
+      }
+    ]    
+  }
+{% endschema %}

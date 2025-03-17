@@ -1,0 +1,622 @@
+{%- capture heroBanner -%}
+{% assign secSt = section.settings %}
+
+{% capture style %}
+    --th:{{secSt.tb_height}}px;
+    --thm:{{secSt.mb_height}}px;
+    --thd:{{secSt.ds_height}}px;
+    --cl:{{ secSt.txt_clr}};
+    --h1m:{{secSt.hd1_fs_m}}px;
+    --h1_ls:0.0{{ secSt.hd1_ls}}em;
+    --h2m:{{secSt.hd2_fs_m}}px; 
+    --h2_ls:0.0{{ secSt.hd2_ls}}em; 
+    --h2_lh:{{ secSt.hd2_lh }}; 
+    --h2m_mb:{{secSt.hd2_mb_m}}px;
+    --h3m:{{secSt.hd3_fs_m}}px; 
+    --h3_ls:0.0{{ secSt.hd3_ls}}em; 
+    --h3_lh:{{ secSt.hd3_lh }}; 
+    --h3m_mb:{{secSt.hd3_mb_m}}px;
+    --h1:{{secSt.hd1_fs}}px;
+    --h2:{{secSt.hd2_fs}}px;
+    --h3:{{secSt.hd3_fs}}px;
+    --h2_mb:{{secSt.hd2_mb}}px;
+    --h3_mb:{{secSt.hd3_mb}}px;
+{% endcapture style %}
+
+
+<div class="content-indent {{ secSt.top-offeset}}{% if secSt.hide_mobile %} small--hide{% endif %}">
+	
+  <div class="{% unless secSt.section_width %}page-width {% else %}fullwidth{% endunless %}"  style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">   	 
+	  
+    <div class="fl hero pr hero-{{ section.id }} wow fadeIn" style="{{style}}">
+      	 {% if secSt.image != blank %}
+      		<div class="heroImg lazyload{% if secSt.mb_image != blank %} small--hide{% endif %}"
+                data-bgset="{% render 'bgset', image: secSt.image %}" data-sizes="auto" data-parent-fit="contain"
+         		style="background-image: url('{{ secSt.image | img_url: '100x' }}'); background-position:center {{ secSt.alignment }};{% if secSt.parallax_scroll %}background-attachment:fixed;{% endif %}"
+                {% if secSt.parallax_scroll %} data-stellar-background-ratio="0.08" data-stellar-vertical-offset="0" {% endif %}></div>
+         {% endif %}
+      	 {% if secSt.mb_image != blank %}
+      		<div class="heroImg medium-up--hide lazyload" data-bgset="{% render 'bgset', image: secSt.mb_image %}" data-sizes="auto" data-parent-fit="contain"
+         		style="background-image:url('{{ secSt.mb_image | img_url: '100x' }}'); background-position:center {{ secSt.alignment }};"></div>
+         {% endif %}
+      	 {% if secSt.image == blank %}<div class="ph_bg">{{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg svgcl4' }}</div>{% endif %}                       	
+     
+       <div class="hero_txt_wrap fl m_auto {{secSt.text_align}} {{secSt.text_align_m}}" style="max-width:{{secSt.con_width }}%;">
+       {% if secSt.ol_link %}<a class="pa z3 l0 r0 t0 b0" href="{{ secSt.button_link }}" ></a> {% endif %}
+        <div class="hero_txt pr{% if secSt.text-align %} tl{% else %} tc{% endif %}">          	
+          {% unless secSt.hero_hd1 == blank %}<p class="hero_hd1 mb5">{{ secSt.hero_hd1 }}</p>{% endunless %}
+          {% unless secSt.title == blank %}<h2 class="hero_hd2">{{ secSt.title  }}</h2>{% endunless %}
+          {% if secSt.hero_dealtimer %}
+          	<div class="atCounter fl tc ht{{section.id}} mb20{% unless secSt.text-align %} f-jcc{% endunless %}" data-date="{{secSt.cnt_date}}">
+                <span><span class="tm days">00</span>{{'date_formats.short_names.days' | t}}</span>
+                <span><span class="tm hours">00</span>{{ 'date_formats.short_names.hours' | t }}</span>
+                <span><span class="tm minutes">00</span>{{'date_formats.short_names.minuts' | t}}</span>
+                <span><span class="tm seconds">00</span>{{'date_formats.short_names.seconds' | t}}</span>
+          	</div>
+          {% endif %}
+          {% unless secSt.hero_hd3 == blank %}<div class="hero_hd3{% if secSt.hero_hd3_hide %} small--hide{% endif %}">{{ secSt.hero_hd3 }}</div>{% endunless %}
+          {% if secSt.ol_link != true %}
+            {% if secSt.button_label != blank and secSt.button_link != blank %}
+            <a href="{{ secSt.button_link }}" class="btn {{secSt.btn-size}} {{secSt.btn-style}}">{{ secSt.button_label | escape }}</a>
+            {% endif %}
+          {% endif %}          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>	  
+<style>
+	
+  {% if secSt.hero_bg and secSt.bg_clr != 'rgba(0,0,0,0)' %}
+  .hero-{{ section.id }} .hero_txt { background-color:rgba({{ secSt.bg_clr | color_to_rgb | remove:'rgb(' | remove: ')' }},{{ secSt.bg_opacity}}); }
+  {% endif %}
+  
+{% if secSt.hero_dealtimer %}
+  .ht{{section.id}} > span { color:{{secSt.cnt_text}}; background:{{secSt.cnt_bg}}; border:1px dashed {{secSt.cnt_bdr}}  }
+  .hero-{{section.id}} .atCounter > span { border-radius:{{secSt.b_rad}}px; text-transform:uppercase; font-weight:600; padding:10px 12px;
+	{% if secSt.b_rad == 50 %} padding:8px; height:75px; width:75px; {% endif %}
+  }
+  .hero-{{section.id}} .atCounter > span { border-radius:{{secSt.b_rad}}px; text-transform:uppercase; font-weight:600; padding:10px 12px; font-size:13px}
+  .hero-{{section.id}} .atCounter span span {font-size:18px}
+{% endif %}   
+	
+</style>
+{%- endcapture -%}
+{{heroBanner | strip_newlines | remove: "  " | remove: "	" }}
+
+{% schema %}
+  {
+    "name": "Hero Banner",
+    "class": "index-section",
+ 	"disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [
+	 {
+		 "type": "paragraph",
+		 "content":"[Preview different style](https://www.adornthemes.com/parallax-banner/)"
+      },
+	 {
+		 "type": "header",
+		 "content":"APPEARANCE SECTION ==="
+      },
+	 {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",			
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        }, 
+ 	   {
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	
+	  {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": true
+	  },
+	  {
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 0,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 0,
+        "min": 0,
+        "max": 15,
+        "step": 1
+      }, 
+	  {
+        "type": "header",
+        "content": "Appearance Banner ==="
+      },
+	  {
+		"type":"paragraph",
+		"content":"Height ==="
+	  },
+      {
+        "type": "range",
+        "id": "ds_height",
+        "label": "Desktop",
+        "default": 600,
+        "min": 100,
+        "max": 1000,
+        "step": 10
+      },
+      {
+        "type": "range",
+        "id": "tb_height",
+        "label": "Tablet",
+        "default": 350,
+        "min": 100,
+        "max": 1000,
+        "step": 10
+      },  
+	  {
+        "type": "range",
+        "id": "mb_height",
+        "label": "Mobile",
+        "default": 250,
+        "min": 100,
+        "max": 1000,
+        "step": 10
+      },  	  
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image",
+		"info": "Recommended width 1920px and height as per above desktop height"
+      },
+	 {
+            "type": "image_picker",
+            "id": "mb_image",
+            "label": "Mobile Image",
+			"info": "Recommended width 750px and height as per above mobile height. If mobile image is blank, dekstop image will be used."
+       },
+      {
+        "type": "select",
+        "id": "alignment",
+        "label": "Image Alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+	{
+        "type": "checkbox",
+        "id": "parallax_scroll",
+        "label": "Enable Parallax Scrolling",
+        "default":true,
+		"info":"Only applies to desktop.For Parallax Effect Recommanded Image Size 1900x1000."
+      },		
+     {
+          "type":"header",
+          "content":"Pre Heading"	
+          },
+          {
+            "type": "text",
+            "id": "hero_hd1",
+            "label": "Text",
+            "default": "SELL MORE..."			
+          },          
+          {
+              "type": "range",
+              "id": "hd1_fs",
+              "label": "Font Size",
+              "default": 14,
+              "min": 10,
+              "max": 30,
+              "step": 1,
+              "unit": "px"
+          }, 			  
+            {
+            "type": "range",
+            "id": "hd1_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          }, 		 
+			{
+              "type": "range",
+              "id": "hd1_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 13,
+              "min": 10,
+              "max": 20,
+              "step": 1,
+              "unit": "px"
+          }, 			             	 
+     	 {
+            "type":"header",
+            "content":"Big Heading"	
+          },
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Text",
+            "default": "THE MOST ADVANCED<br/>SHOPIFY THEME IN THE MARKET"			
+          },		
+          {
+              "type": "range",
+              "id": "hd2_fs",
+              "label": "Font Size",
+              "default": 22,
+              "min": 10,
+              "max": 100,
+              "step": 1,
+              "unit": "px"
+          }, 
+ 			{
+              "type": "range",
+              "id": "hd2_lh",
+              "label": "Line Height",
+              "default": 1.2,
+              "min": 1.0,
+              "max": 2.0,
+              "step": 0.1,
+              "info": "Space between text lines. Default is set to 1.3"
+          }, 	
+            {
+            "type": "range",
+            "id": "hd2_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd2_mb",
+            "label": "Margin Bottom",
+            "default": 20,
+            "min": 5,
+            "max": 50,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd2_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 18,
+              "min": 10,
+              "max": 30,
+              "step": 1,
+              "unit": "px"
+          }, 		           
+ 		  {
+            "type": "range",
+            "id": "hd2_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 20,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+		 {
+            "type":"header",
+            "content":"Detail"	
+          },
+          {
+            "type": "textarea",
+            "id": "hero_hd3",
+            "label": "Text",
+            "default": "The design of your site plays a crucial role. <br>It can make or break your website leading to sales either <br>falling flat or converting profitably."			
+          },
+		 {
+            "type": "checkbox",
+            "id": "hero_hd3_hide",
+            "label": "Hide in mobile?",
+            "default": true			
+          },		
+         {
+              "type": "range",
+              "id": "hd3_fs",
+              "label": "Font Size",
+              "default": 14,
+              "min": 10,
+              "max": 100,
+              "step": 1,
+              "unit": "px"
+          }, 
+ 			{
+              "type": "range",
+              "id": "hd3_lh",
+              "label": "Line Height",
+              "default": 1.5,
+              "min": 1.0,
+              "max": 2.0,
+              "step": 0.1,
+              "info": "Space between text lines. Default is set to 1.6"
+          }, 	
+            {
+            "type": "range",
+            "id": "hd3_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd3_mb",
+            "label": "Margin Bottom",
+            "default": 25,
+            "min": 5,
+            "max": 50,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd3_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 14,
+              "min": 10,
+              "max": 30,
+              "step": 1,
+              "unit": "px"
+          }, 			            
+ 		  {
+            "type": "range",
+            "id": "hd3_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 20,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button Text",
+			"default": " Shop Collection"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link",
+			"default": "/"
+          },
+ 		 {
+            "type": "checkbox",
+            "id": "ol_link",
+            "label": "Enable click on entire image.",
+			"default":false
+          },
+		 {
+            "type": "select",
+            "id": "btn-style",
+            "label": "Select Button",
+            "default": "btn1",
+            "options": [
+              {
+              "label": "Solid Button 1",
+              "value": "btn1"
+              },
+              {
+              "label": "Solid Button 2",
+              "value": "btn2"
+              },
+              {
+              "label": "Solid Button 3",
+              "value": "btn3"
+              },
+              {
+              "label": "Border Button 1",
+              "value": "bdr-btn1"
+              },
+              {
+              "label": "Border Button 2",
+              "value": "bdr-btn2"
+              } 
+            ]
+        },
+          {
+            "type": "select",
+            "id": "btn-size",
+            "label": "Button Size",
+            "default": "btn-med",
+            "options": [
+                {
+                "label": "Small",
+                "value": "btn-small"
+                },
+                {
+                "label": "Medium",
+                "value": "btn-med"
+                },
+                {
+                "label": "Large",
+                "value": "btn-large"
+                } 		  
+         	 ]
+          },
+          {
+            "type": "header",        
+            "content": "Banner Caption" 			
+           },
+		  {
+            "type": "range",
+            "id": "con_width",
+            "min": 60,
+            "max": 90,
+            "step": 1,
+            "label": "Container Max Width (desktop)",
+            "unit": "%",
+            "default": 85
+          },
+		  {
+            "type": "checkbox",
+            "id": "text-align",
+            "label": "Text Align Left",
+            "default": false            
+          },
+ 		   {
+            "type": "select",
+            "id": "text_align",
+            "label": "Position",
+            "default": "f-jcc-md f-aic-md",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "f-ais-md f-jcs-md" },
+  			  { "label": "Top Center",    "value": "f-jcc-md f-ais-md" },
+  			  { "label": "Top Right",     "value": "f-jce-md f-ais-md" },             
+			  { "label": "Left",  		  "value": "f-aic-md f-jcs-md" },
+ 			  { "label": "Center", 		  "value": "f-jcc-md f-aic-md" },
+			  { "label": "Right",  		  "value": "f-jce-md f-aic-md" },
+ 			  { "label": "Bottom Left",   "value": "f-aie-md f-jcs-md" },						 
+              { "label": "Bottom Center", "value": "f-jcc-md f-aie-md" }, 						 
+			  { "label": "Bottom Right",  "value": "f-jce-md f-aie-md" }
+              
+            ]
+          },
+ 		 {
+            "type": "select",
+            "id": "text_align_m",
+            "label": "Position (mobile)",
+            "default": "f-jcc f-aic",			
+            "options": [ 			
+			  { "label": "Top Left",      "value": "f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "f-jce f-ais" },             
+			  { "label": "Left",  		  "value": "f-aic f-jcs" },
+ 			  { "label": "Center", 		  "value": "f-jcc f-aic" },
+			  { "label": "Right",  		  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "f-jce f-aie" }			              
+            ]
+          }, 	    
+			{
+            "type": "checkbox",
+            "id": "hero_bg",
+            "label": "Display Background?",
+            "default": true
+          },
+         {
+            "type": "color",
+            "id": "bg_clr",
+            "label": "Background",
+            "default": "#fff"
+          },
+       {
+          "type": "range",
+          "id": "bg_opacity",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "label": "Background Opacity",
+          "unit": "%",
+          "default": 0.9
+        },
+       {
+          "type": "color",
+          "id": "txt_clr",
+          "label": "Text Color",
+          "default": "#000"
+        },
+	  {
+        "type": "header",
+        "content": "Countdown Timer"
+      },
+ 	  {
+		"type":"checkbox",
+		"id":"hero_dealtimer",
+		"label":"Display?",
+		"default": false,
+		"info":"please click save button to view"
+	  },
+	  {
+        "type": "text",
+        "id": "cnt_date",
+        "label": "Enter Date",
+        "info": "Date Formate should be Month\/Day\/Year.i.e mm\/dd\/year, 11\/25\/2023",
+        "default": "12\/20\/2023"
+      },
+      {
+        "type": "color",
+        "id": "cnt_bg",
+        "label": "Background",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "cnt_text",
+        "label": "Text",
+        "default": "#eee"
+      },
+      {
+        "type": "color",
+        "id": "cnt_bdr",
+        "label": "Border",
+        "default": "#000"
+      },
+		{
+          "type": "range",
+          "id": "b_rad",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "label": "Border Radius",
+          "unit": "px",
+          "default": 0
+        }
+    ],
+    "presets": [
+      {
+        "name": "Hero Banner"       
+      }
+    ]
+  }
+{% endschema %}

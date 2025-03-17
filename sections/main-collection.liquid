@@ -1,0 +1,1328 @@
+
+
+
+{% assign secSt = section.settings %}
+{% capture collectionPage %}
+<style type="text/css">
+  :root {
+   	--flbgcl:{{secSt.flbgcl}};
+  	--flbdr:{{secSt.flbdr}};
+    --wdttl:{{secSt.bx_ttl}}px;
+    --filterby:{{secSt.bx_ttl | minus:1}}px;
+  	--wdtcl:{{secSt.bx_ttlc}};
+    --opt:{{secSt.opt}}px;
+    --optcl:{{secSt.floptcl}};
+    --actclr:{{secSt.actclr}};
+    --actftxt:{{secSt.act_fltxt}};
+    --actfbg:{{secSt.act_flbg}};
+    --actfbd:{{secSt.act_fltxt | color_modify:'alpha', 0.2 }};
+    --tfminH:{{secSt.tf_h}}px;
+    --catactl:{{secSt.catlinkhv}};
+    --catlbd:{{secSt.catlinkbd}};
+    --hrmenubg:{{secSt.hrmenu_bg}};
+    --hrmenutxt:{{secSt.hrmenu_txt}};
+    --hrmf:{{secSt.hrmenu_font}}px;
+  }
+</style>
+<div id="{{ section.id }}" data-section-type="collection-template">
+{%  if secSt.dis_hrmenu and section.settings.hrmenu != blank %}
+<div class="cl_hrm">
+  <div class="page-width">
+   <ul class="fl f-jcc">
+     {% for link in linklists[secSt.hrmenu].links %}
+                  	<li class="{{ secSt.hrmenu_case }}{% if link.active or link.child_active %} active{% endif %}">
+                      <a href="{{ link.url }}">{{ link.title }}</a>
+                    </li>
+       {%  endfor %}
+  </ul>
+  </div>
+</div>
+{% endif %}
+  
+{%- paginate collection.products by secSt.products_per_page -%}
+{% if secSt.page_header and secSt.banner_position == 'style1' %}   		
+	<div class="cl_bnr {{secSt.banner_position}}" style="{% if secSt.show_banner and collection.metafields.my_fields.banner_image != blank %} background-image:url({{ collection.metafields.my_fields.banner_image | img_url: '1920x' }});{% endif %}--bg:{{secSt.clr_bg}};--height:{{secSt.bheight}}px;
+	--heightt:{{secSt.bheightipad}}px;--heightm:{{secSt.bheightmob}}px;--fs:{{secSt.fs}}px;--fw:{{secSt.fw}};--fsm:{{secSt.fsm}}px;--fc:{{secSt.fc}};--dfs:{{secSt.fsd}}px;--dfsm:{{secSt.fsdm}}px;--cl:{{secSt.clr_text}};">		
+		<h1 class="tltxt m0" itemprop="name">{{collection.title}}</h1>
+	</div>
+{% endif %}
+
+{%- if settings.breadcrumb_cl -%}{%- render 'breadcrumb' -%}{%- else -%}<div class="topSpace"></div>{%- endif -%}
+
+{%- liquid
+	assign sort_by = collection.sort_by | default: collection.default_sort_by
+	
+	assign drower = ''
+	assign flclass = 'f-wrap'
+	assign bgttl = ''
+	if secSt.sb_position == 'left' or secSt.sb_position == 'right' or secSt.sb_position == 'popup'
+		assign drower = 'open'
+		assign flclass = 'f-col w_100'
+		assign bgttl = 'hide'
+	endif
+    assign pageurl = content_for_header| split:'"pageurl":"' | last | split:'"' | first | split:'view=' | last
+-%}
+{%- case secSt.grid -%}
+  {%- when 2 -%}{%- assign grid_ds = 'large-up--one-half' -%}{%- assign image_size = '150,350,550,750,950' -%}
+  {%- when 3 -%}{%- assign grid_ds = 'large-up--one-third' -%}{%- assign image_size = '150,350,550,750' -%}
+  {%- when 4 -%}{%- assign grid_ds = 'large-up--one-quarter' -%}{%- assign image_size = '150,350,550,750' -%}
+  {%- when 5 -%}{%- assign grid_ds = 'large-up--one-fifth' -%}{%- assign image_size = '150,350,550' -%}
+  {%- when 6 -%}{%- assign grid_ds = 'large-up--one-sixth' -%}{%- assign image_size = '130,300,500' -%}
+  {%- when 7 -%}{%- assign grid_ds = 'large-up--one-seventh' -%}{%- assign image_size = '130,280,400' -%}
+{%- endcase -%}
+{% case secSt.tablet-grid %}
+  {% when 2 %}{%- assign grid_tb = 'medium--one-half' -%}
+  {% when 3 %}{%- assign grid_tb = 'medium--one-third' -%}
+  {% when 4 %}{%- assign grid_tb = 'medium--one-quarter' -%}
+  {% when 5 %}{%- assign grid_tb = 'medium--one-fifth' -%}
+{% endcase %}
+{% case secSt.mobile-grid %}
+  {% when 1 %}{%- assign grid_mb = 'small--one-whole' -%}
+  {% when 2 %}{%- assign grid_mb = 'small--one-half' -%}
+  {% when 3 %}{%- assign grid_mb = 'small--one-third' -%}
+{% endcase %}
+  
+{%- capture filters -%}
+  <form id="CollectionFiltersForm" class="flForm{% unless secSt.sb_position == 'top' %} fl f-col f-ais f-row-md{% endunless %}{% if secSt.sb_position == 'popup' %} h_100{% endif %}">
+	{%- assign total_active_values = 0 -%}
+    {%- assign activeDynamicFl = false -%}
+	{% if secSt.filters %}
+  	<div class="closeFilter{% if secSt.sb_position != 'popup' %} large-up--hide{% endif %}"><i class="at at-times-r" aria-hidden="true"></i></div>
+	<div class="filterWrap fl {{flclass}}" data-url="{{shop.url}}{{collection.url | split: "?" | first}}">
+      	{% for block in section.blocks %}
+          {% if block.type == 'categories' and secSt.sb_position != 'top' %}
+              <div class="filterBx{% if secSt.flbg %} filter_bg{% endif %}">
+                <div class="flTtl"><span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">{{block.settings.title}}</span></div>
+                <ul class="sdCate sdBlock">
+                  {% for link in linklists[block.settings.side_categories].links %}
+                  	<li class="lvl-1{% if link.active or link.child_active %} active{% endif %}">
+                      <a href="{{ link.url }}" class="site-nav">{{ link.title | split: '[' | first }}{%- if link.links != blank -%}<i class="at {% if link.active or link.child_active %}at-minus-l{% else %}at-plus-l{% endif %}" aria-hidden="true"></i>{%- endif -%}</a>
+                      {%- if link.links != blank -%}
+                      <ul class="subLinks">
+                        {%- for childlink in link.links -%}
+                        <li class="lvl-2{% if childlink.active or childlink.child_active %} active{% endif %}">
+                          <a href="{{ childlink.url }}" class="site-nav lvl-2">{{childlink.title}}{%- if childlink.links != blank -%}<i class="at {% if childlink.active or childlink.child_active %}at-minus-l{% else %}at-plus-l{% endif %}" aria-hidden="true"></i>{%- endif -%}</a>
+                          {%- if childlink.links != blank -%}
+                          <ul class="subLinks">{%- for lvl3link in childlink.links -%}<li class="lvl-3 {% if lvl3link.active %}active{% endif %}"><a href="{{ lvl3link.url }}" class="site-nav lvl-3">{{lvl3link.title}}</a></li>{%- endfor -%}</ul>
+                          {%- endif -%}
+                        </li>
+                        {%- endfor -%}
+                      </ul>
+                      {%- endif -%}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+          {% endif %}
+      
+      	  {% if block.type == 'filtertag' %}
+      		<details class="filterBx pr js-filter{% if secSt.flbg %} filter_bg{% endif %}" data-index="{{ forloop.index }}" {{drower}}>
+                <summary class="flTtl">
+                  <span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">{{block.settings.title}} <i class="at at-angle-down-l"></i></span>
+                </summary>
+              	<div class="filterDD">
+                  {%- liquid
+						assign isSize = false
+                        assign sizeOptions = secSt.flcolumn | downcase | replace:", ","," | replace:" , ","," | replace:" ,","," | split: ","
+                        assign fname = block.settings.title | downcase
+                        if sizeOptions contains fname
+                        	assign isSize = true
+                        endif
+                  		assign tags = block.settings.filter_tags | split: ','
+                  -%}
+                  <ul class="flList {{secSt.optcase}}" role="list" {% if isSize %}style="column-count:2"{% endif %}>
+                    {%- for filter_t in tags -%}
+                    {%- assign tag = filter_t | strip -%}
+                    {%- assign tag_value = tag | handleize -%}
+                    {%- assign filtertag = forloop.index | minus:1 -%}
+                    {%- assign filtertagid = 2 | times : filtertag -%}
+                    {%- if collection.tags contains tag -%}
+                    <li>
+                      <label for="{{block.id}}-{{filtertagid}}"><input class="custCheck optTag" type="checkbox" value="{{ tag_value }}" id="{{block.id}}-{{filtertagid}}" {% if current_tags contains tag %}checked{% endif %} />
+                      <span class="checkbox"></span>{{tag}}</label>
+                    </li>
+                    {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+              	</div>
+      		</details>
+          {% endif %}
+
+          {% if block.type == 'by_color' %}
+            <details class="filterBx pr js-filter{% if secSt.flbg %} filter_bg{% endif %}" data-index="{{ forloop.index }}" {{drower}}>
+              <summary class="flTtl">
+                <span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">{{block.settings.title}} <i class="at at-angle-down-l"></i></span>
+              </summary>
+              <div class="filterDD filterClr">
+                {% assign tags = block.settings.filter_tags | split: ',' %}
+                <ul class="flList {{secSt.optcase}}" role="list" {% if isSize %}style="column-count:2"{% endif %}>
+                  {%- for filter_t in tags -%}
+                  {%- assign tag = filter_t | strip -%}
+                  {%- assign tag_value = tag | handleize -%}
+                  {%- assign filtertag = forloop.index | minus:1 -%}
+                  {%- assign filtertagid = 2 | times : filtertag -%}
+                  {%- if collection.tags contains tag -%}
+                  <li class="color">
+                    <label for="{{block.id}}-{{ filtertagid }}" class="m0 fl-checkbox{% if value.count == 0 and value.active == false %} disabled{% endif %}">
+                      <input class="custCheck optTag" type="checkbox" value="{{ tag_value }}" id="{{block.id}}-{{ filtertagid }}" {% if current_tags contains tag %}checked{% endif %} />
+                      <span class="swt swt{{tag_value}} clrbox {{secSt.fclr_size}} {{secSt.fclr_style}}" style="background-color:{{tag_value}};"></span>
+                      <span class="tooltip-label top">{{tag}}</span>
+                    </label>
+                  </li>
+                  {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+               </div>
+      		</details>
+          {% endif %}
+      	  {% if block.type == 'filter_by' %}
+      		{%- assign activeDynamicFl = true -%}
+      		{% if block.settings.title != blank %}<label class="flby mb20{% if secSt.sb_position != 'top' %} col-1{% else %} f-asc{% endif %}">{{block.settings.title}}</label>{% endif %}
+      		{%- for filter in collection.filters -%}
+              {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+              {% case filter.type %}
+                  {% when 'list' %}
+                      <details class="filterBx dyFilters pr js-filter{% if secSt.flbg %} filter_bg{% endif %}" data-index="{{ forloop.index }}" {{drower}}>
+                          <summary class="flTtl">
+                              <span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">
+                                {{ filter.label | escape }}
+                                <span class="count-bubble">{% if filter.active_values.size > 0 %}{{ filter.active_values.size }}{% endif %}</span> 
+                                <i class="at at-angle-down-l"></i>
+                              </span>
+                          </summary>
+                        
+                          {%- liquid
+                          		assign iscolor = false
+                                assign isSize = false
+                                assign colorOptions = settings.colorOpt | downcase | replace:", ","," | replace:" , ","," | replace:" ,","," | split: ","
+                                assign sizeOptions = secSt.flcolumn | downcase | replace:", ","," | replace:" , ","," | replace:" ,","," | split: ","
+                                assign fname = filter.label | downcase
+                                if colorOptions contains fname
+                                	assign iscolor = true
+                                endif
+                                if sizeOptions contains fname
+                                    assign isSize = true
+                                endif
+                          -%}
+                          <div class="filterDD{% if iscolor %} filterClr{% endif %}">
+                              <div class="bxTtl fl f-jcsb {{bgttl}}">
+                                  <span class="facets__selected no-js-hidden">{{ 'collections.general.filters_selected' | t: count: filter.active_values.size }}</span>
+                                  <a href="{{ filter.url_to_remove }}" class="facets__reset link underlined-link js-facet-remove" >{{ 'collections.general.reset' | t }}</a>
+                              </div>
+                              <ul class="flList {{secSt.optcase}}" role="list" {% if isSize %}style="column-count:2"{% endif %}>
+                              {% if iscolor %}
+                                  {%- for value in filter.values -%}
+                                  <li class="color">
+									<label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="m0 fl-checkbox{% if value.count == 0 and value.active == false %} disabled{% endif %}">
+                                    	<input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="custCheck dyfl"
+                                            {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                                        <span class="swt swt{{value.value|handleize}}{% if iscolor %} clrbox {{secSt.fclr_size}} {{secSt.fclr_style}}{% endif %}" style="background-color:{{value.value|handleize}};"></span>
+                                        <span class="tooltip-label top">{{ value.value }}</span>
+                                  	</label>
+                                  </li>
+                                  {%- endfor -%}
+                              {% else %}
+                                  {%- for value in filter.values -%}
+                                  <li>
+                                  	  <label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="m0 fl-checkbox{% if value.count == 0 and value.active == false %} disabled{% endif %}">
+                                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="custCheck dyfl"
+                                          	{% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                                      	  <span class="checkbox"></span> {{ value.label | escape }} {% if block.settings.dis_prod_cntl %}<span class="prcnt">({{ value.count }})</span>{% endif %}
+                                      </label>
+                                  </li>
+                                  {%- endfor -%}
+                              {% endif %}
+                              </ul>
+                          </div>
+                      </details>
+                  {% when 'price_range' %}
+                      {% liquid
+                          assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+                          assign uses_comma_decimals = false
+                          if currencies_using_comma_decimals contains cart.currency.iso_code
+                              assign uses_comma_decimals = true
+                          endif
+                      %}
+                      <details class="filterBx dyFilters pr{% if secSt.flbg and secSt.optbg %} bxBg{% endif %}" data-index="{{ forloop.index }}" {{drower}}>
+                          <summary class="flTtl">
+                              <span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">
+                                  {{ filter.label | escape }}
+                                  <span class="count-bubble{% if filter.min_value.value or filter.max_value.value %}{{ filter.active_values.size }} count-bubble--dot{% endif %}"></span> <i class="at at-angle-down-l"></i>
+                              </span>
+                          </summary>
+                          <div class="filterDD prsld">
+                            <div class="bxTtl fl f-jcsb {{bgttl}}">
+								{%- assign max_price_amount = filter.range_max | money -%}
+								<span class="facets__selected">{{ "collections.general.max_price_html" | t: price: max_price_amount }}</span>
+								<a href="{{ filter.url_to_remove }}" class="facets__reset link underlined-link js-facet-remove" >{{ 'collections.general.reset' | t }}</a>
+							</div>
+                            <price-range class="fl flList {{secSt.optcase}}">
+                              <div class="field hide">
+                                <label class="field__label" for="Filter-{{ filter.label | escape }}-GTE">{{ 'collections.general.from' | t }}</label>
+                                <input class="prRange w_100" name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.label | escape }}-GTE" type="number" placeholder="0" min="0"
+                                    {%- if filter.min_value.value -%}
+                                       {%- if uses_comma_decimals -%}
+                                         value="{{ filter.min_value.value | money_without_currency | replace: ',', '' | round }}"
+                                         {%- assign minPrice = filter.min_value.value | money_without_currency | replace: ',', '' | round -%}
+                                       {%- else -%}
+                                       		value="{{ filter.min_value.value | money_without_currency | replace: ',', '' | round }}"
+                                       		{%- assign minPrice = filter.min_value.value | money_without_currency | replace: ',', '' | round -%}
+                                       {% endif %}
+                                    {%- else -%}
+                                       {%- assign minPrice = 0 -%}
+                                    {%- endif -%}
+                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' | round }}" />
+                              </div>
+                              <div class="field hide" style="margin-left:10px;">
+                                <label class="field__label" for="Filter-{{ filter.label | escape }}-LTE">{{ 'collections.general.to' | t }}</label>
+                                <input class="prRange w_100" name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.label | escape }}-LTE" type="number" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0"
+                                    {%- if filter.max_value.value -%}
+                                       {%- if uses_comma_decimals -%}
+                                         value="{{ filter.max_value.value | money_without_currency | replace: ',', '' | round }}"
+                                         {%- assign maxPrice = filter.max_value.value | money_without_currency | replace: ',', '' | round -%}
+                                       {%- else -%}
+                                         value="{{ filter.max_value.value | money_without_currency | replace: ',', '' | round }}"
+                                         {%- assign maxPrice = filter.max_value.value | money_without_currency | replace: ',', '' | round -%}
+                                       {% endif %}
+                                    {%- else -%}
+                                       {%- assign maxPrice = filter.range_max | money_without_currency | replace: ',', '' | round -%}
+                                    {%- endif -%}
+                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' | round }}" />
+                              </div>
+                              <input class="range-slider" type="hidden" value="{{minPrice}},{{maxPrice}}" />
+                            </price-range>
+                         </div>
+                      </details>
+                  {% endcase %}
+              {%- endfor -%}
+      	  {% endif %}
+      		
+      	  {% comment %} *** Product Slider *** {% endcomment %}
+          {% if block.type == 'products' and secSt.sb_position != 'top' %}
+          <div class="filterBx small--hide medium--hide{% if secSt.flbg %} filter_bg{% endif %}">
+                <div class="flTtl"><span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">{{block.settings.title}}</span></div>
+            <div class="sdBlock">
+              {% if block.settings.sidebar_products != blank %}
+              <div class="side-pr-{{block.settings.side_prod_opt}}" {% if block.settings.side_prod_opt == "slider" %}id="sideProdSlider" data-slick='{"slidesToShow":1,"slidesToScroll":1, "autoplay":true,"autoplaySpeed":6000,{%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true }'{% endif %}>
+                  {% for product in collections[block.settings.sidebar_products].products limit:block.settings.num_of_products %}
+                  {% if block.settings.side_prod_opt == "slider" %}
+                    <div class="item">{% render 'product-card-grid', product:product %}</div>
+                  {% else %}
+                    {% render 'product-card-grid-columns', product:product %}
+                  {% endif %}
+                  {% endfor %}
+                {% if block.settings.side_all_products %}
+                <div class="text-center"><a href="{{block.settings.sidebar_products}}" class="btn">{{ block.settings.btn_txt}}</a></div>
+                {% endif %} 
+              </div>
+              {% else %}
+              <p>Please select collection from store admin > customize > Collection page > sidebar</p>
+              {% endif %} 
+            </div>
+          </div>
+          {% endif %}
+
+          {% comment %} *** Image Banner *** {% endcomment %}
+          {% if block.type == 'image_bnr' and secSt.sb_position != 'top' %}
+      	  <div class="filterBx small--hide medium--hide{% if secSt.flbg %} filter_bg{% endif %}">
+            {% if block.settings.side_bnr_link != blank %}<a href="{{ block.settings.side_bnr_link }}">{% endif %}
+            {% if block.settings.side_bnr_img != blank %}
+              <img loading="lazy" class="img_fl lazyload" src="{{ block.settings.side_bnr_img | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.side_bnr_img, sizes: '300,460,600' %}" data-sizes="auto" width="{{ block.settings.side_bnr_img.width }}" height="{{ block.settings.side_bnr_img.height }}" alt="{{ block.settings.side_bnr_img.alt | escape }}" />
+            {% else %}
+              {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+              {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+            {% if block.settings.side_bnr_link != blank %}</a>{% endif %}
+          </div>
+          {% endif %}
+
+          {% comment %} *** Static Text Block *** {% endcomment %}
+          {% if block.type == 'static_text' and secSt.sb_position != 'top' %}
+          <div class="filterBx small--hide medium--hide{% if secSt.flbg %} filter_bg{% endif %}">
+            <div class="flTtl"><span class="fl f-jcsb f-aic {{secSt.bx_ttlw}} {{secSt.bx_tcase}}">{{block.settings.title}}</span></div>
+            <div class="sdBlock">
+              {% if block.settings.text != blank %}
+              {{ block.settings.text }}
+              {% else %}
+              <p>Please select collection from store admin > customize > Collection page > sidebar</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+      	{% endfor %}
+  	  </div>
+	{% endif %}
+	{% if collection.current_vendor or collection.current_type %}<input type="hidden" name="q" value="{{ collection.current_vendor }}{{ collection.current_type }}">{% endif %}
+    <div class="hide">
+      {% if secSt.sb_position == 'top' %}<label class="collection-filters__label" for="SortBy">{{ 'collections.general.sort_by_label' | t }}</label>{% endif %}
+      {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+      <select name="sort_by" class="select__select sortBy" id="SortBy" aria-describedby="a11y-refresh-page-message">
+        {%- for option in collection.sort_options -%}<option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>{%- endfor -%}
+      </select>
+      <input type="hidden" name="view" value="{% if pageurl == 'list' %}list{% else %}grid{% endif %}">
+      {%- assign cttemplate = template | split: "." | last -%}
+      {% if cttemplate != blank %}<input type="hidden" name="view" value="{{cttemplate}}">{% endif %}
+      <noscript><button type="submit" class="button button--small">{{ 'collections.general.sort_button' | t }}</button></noscript>
+    </div>
+  </form>
+{%- endcapture -%}
+{%- capture activefiltersDs -%}
+  	<div class="active-facets active-facets-desktop fl f-wrap">
+    	{% if activeDynamicFl %}
+            <a href="{{ collection.url }}?sort_by={{sort_by}}" class="active-fl removefl">{{ 'collections.general.clear_all' | t }}</a>
+            {%- for filter in collection.filters -%}
+                {%- for value in filter.active_values -%}
+                    <a class="active-fl removefl" href="{{ value.url_to_remove }}">{{ value.label | escape }} <i class="at at-times-l"></i></a>
+                {%- endfor -%}
+                {% if filter.type == "price_range" %}
+                    {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+                        <a class="active-fl removefl" href="{{ filter.url_to_remove }}">{%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%} <i class="at at-times-l"></i></a>
+                    {%- endif -%}
+                {% endif %}
+            {%- endfor -%}
+  		{% elsif current_tags %}
+          <a href="{{collection.url}}" class="active-fl removeAll">{{ 'collections.general.clear_all' | t }}</a>
+          {% for tag in current_tags %}<span class="active-fl removetag" data-value="{{ tag | handleize}}">{{tag}}<i class="at at-times-l"></i></span>{% endfor %}
+    	{% endif %}
+	</div>
+{%- endcapture -%}
+
+{% capture prView %}
+	{% if secSt.dis_grid_icn %}
+	<div class="prView{% if secSt.sb_position == 'top' %} mr0{% endif %}">
+    	<button type="button" title="Grid View" class="change-view{% unless pageurl == 'list' %} active_view{% endunless %}" data-view="grid"><i class="at at-th" aria-hidden="true"></i></button>
+        <button type="button" title="List View" class="change-view{% if pageurl == 'list' %} active_view{% endif %}" data-view="list"><i class="at at-th-list" aria-hidden="true"></i></button>
+	</div>
+	{% endif %}
+{%- endcapture -%}
+
+{% capture shorting %}
+	{%- if secSt.enable_sorting -%}
+		<div class="collection-filters__item sorting{% if secSt.sb_position == 'top' %} fl f-aic tpShort{% endif %}">
+			{% if secSt.sb_position == 'top' %}<label class="collection-filters__label" for="SortBy">{{ 'collections.general.sort_by_label' | t }}</label>{% endif %}
+			{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+			<select name="sortby" class="select__select sortBy" id="SortBySt" aria-describedby="a11y-refresh-page-message">
+				{%- for option in collection.sort_options -%}<option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>{%- endfor -%}
+			</select>
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+{% capture productcount %}
+	{% if secSt.dis_prod_cnt %}
+    <div class="tlbr_item tlbr_item_cnt">
+      <span class="tlbr_pr_cnt collection-product-count light" role="status">{{ 'collections.general.product_count' | t: product_count: collection.products_count, count: collection.all_products_count }}</span>
+    </div>
+    {% endif %}
+{%- endcapture -%}
+                    
+{% capture productList %}
+	
+      {%- if collection.products.size == 0 -%}
+          <div class="collection collection--empty" id="collectionPr" data-id="{{ section.id }}">
+              <p class="collection-product-count light" role="status">{{ 'collections.general.product_count' | t: product_count: collection.products_count, count: collection.all_products_count }}</p>
+            <div class="title-wrapper center">
+              <div class="title title--primary">
+                <h3>{{ 'collections.general.empty' | t }}</h3>
+                <p>{{ 'collections.general.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}</p>
+              </div>
+            </div>
+          </div>
+      {%- else -%}
+          <div class="collection">
+              {% if pageurl == 'list' %}
+                  <div id="collectionPr" data-id="{{ section.id }}" class="listview_items">
+                  {%- for product in collection.products -%}
+                      {% assign box_animation_time = forloop.index | minus:1 %}
+                      {% assign delay_time = 100 | times : box_animation_time %}
+                      <div class="lv_item wow fadeInUp" data-wow-delay="{{delay_time}}ms">{% render 'product-card-list', product: product, secSt:secSt %}</div>
+                  {%- endfor -%}
+                  </div>
+              {% else %}
+                  <div id="collectionPr" data-id="{{ section.id }}" class="grid grid--uniform grid-products">
+                      {%- for product in collection.products -%}
+                          {% assign box_animation_time = forloop.index | minus:1 %}
+                          {% assign delay_time = 100 | times : box_animation_time %}
+                          <div class="grid__item {{ grid_mb }} {{ grid_tb }} {{grid_ds}}">{% render 'product-card-grid', product: product, sizes:image_size, secSt:secSt %}</div>
+                      {%- endfor -%}
+                  </div>
+              {% endif %}
+          </div>
+
+  		  {%- if paginate.pages > 1 -%}
+				{% if secSt.pagination == "infinite" or secSt.pagination == "button" %}
+					{% if paginate.next %}
+						<div class="infinitpaginOuter" data-type="{{secSt.pagination}}">
+							<div class="infinitpagin tc">
+								{% if secSt.pagination == "infinite" %}
+									<a href="{{paginate.next.url}}" class="infinite"><img src="{{ 'ajax-loader.gif' | asset_url }}" alt="{{ 'general.pagination.loading' | t }}" /><p>{{ 'general.pagination.loading' | t }}</p></a>
+								{% else %}
+									<a href="{{paginate.next.url}}" class="btn loadMore">{{ 'general.pagination.loadmore' | t }}</a>
+								{% endif %}
+							</div>
+						</div>
+					{% endif %}
+				{% else %}
+					{% render 'pagination', paginate: paginate %}
+				{% endif %}
+			{%- endif -%}
+      {%- endif -%}
+
+{% endcapture %}
+  
+	<collection-filters-form class="facets db page-width{% if secSt.fullwidth %} fullwidth{% endif %}" id="Collection" style="--plm:{{secSt.pad-mbl}}px;--prm:{{ secSt.pad-mbl}}px;--pld:{{secSt.pad-desk}}px;--prd:{{secSt.pad-desk}}px;">   	 
+		
+		<div class="{% unless secSt.sb_position == 'top' %}fl f-col f-ais f-row-md{% endunless %}">
+			{% if secSt.filters and secSt.sb_position != 'top' %}
+				<div class="sidebar sb_filter anim collection-filters{% if secSt.addbg %} {{secSt.filter_bg}}{% endif %}{% if secSt.sb_position == 'popup' %} sb_popup{% endif %}{% if secSt.sb_position == 'right' %} order2 sb_right{% endif %}" id="main-collection-filters" data-id="{{ section.id }}">{{filters}}</div>
+			{% endif %}
+				
+          <div class="main-col fl1 w_100" id="CollectionProductGrid" style="--dfs:{{secSt.fsd}}px;--dfsm:{{secSt.fsdm}}px;--cl:{{secSt.clr_text}};">
+              {% if secSt.page_header %}
+                  {% if collection.description != blank and secSt.banner_position == "style1" and secSt.des_position == "above" %}
+                  <div class="rte dtxt top">{{ collection.description }}</div>
+                  {% endif %}        
+
+                  {% if secSt.banner_position == "style2" or secSt.banner_position == "style3" %}  
+                  <div class="cl_bnr content-side {{secSt.banner_position}}" {% if secSt.show_banner and collection.metafields.my_fields.banner_image != blank and secSt.banner_position == 'style3' %} style="background-image:url({{ collection.metafields.my_fields.banner_image | img_url: '900x400', crop: 'center' }});" {% endif %}>  		                         
+
+                    {% if secSt.show_banner and collection.metafields.my_fields.banner_image != blank and secSt.banner_position == 'style2' %}
+                    {%- assign climg_url = collection.metafields.my_fields.banner_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                        <img loading="lazy" class="img_fl cl_img lazyload" src="{{ collection.metafields.my_fields.banner_image | img_url: '100x' }}" data-srcset="{{ collection.metafields.my_fields.banner_image | img_url: 'master' }}" width="100" height="50" alt="{{ collection.metafields.my_fields.banner_image.alt }}" />
+                    {% endif %}
+
+                    <h1 class="tltxt m0" itemprop="name" style="--fs:{{secSt.fs}}px;--fw:{{secSt.fw}};--fsm:{{secSt.fsm}}px;--fc:{{secSt.fc}};--dfs:{{secSt.fsd}}px;--dfsm:{{secSt.fsdm}}px;--cl:{{secSt.clr_text}};">{{ collection.title }}</h1>
+                    {% if collection.description != blank and secSt.des_position == "above" %}
+                    <div class="rte dtxt mt15">{{ collection.description }}</div>
+                    {% endif %}                             
+                  </div>
+                  {% endif %}
+              {% endif %}                                       		
+
+            	{% if secSt.filters and secSt.sb_position == 'top' %}
+					<div class="anim fl flTop mb15 sb_filter{% if secSt.filter_shadow %} ddshadow{% endif %}" id="main-collection-filters" data-id="{{ section.id }}">{{filters}}{{shorting}}</div>
+				{% endif %}
+            
+				{{activefiltersDs}}
+            
+				<div class="tlbr fl f-jcsb f-aic mb15">                  	
+                   {% if secSt.filters %}
+                 	 <button type="button" class="mr15 btn btn-filter{% if secSt.sb_position != 'popup' %} large-up--hide{% endif %}"><i class="at at-slider-3" aria-hidden="true"></i><span class="small--hide medium--hide"> {{ 'collections.general.filter_button' | t }}</span></button>
+                   {% endif %}                 				
+                   {{productcount}}{{prView}}{{shorting}}
+            	</div>            
+				{{productList}}            
+                <br/>
+               {% if collection.description != blank and secSt.des_position == "below" %}<div class="rte dtxt mt30">{{ collection.description }}</div>{% endif %}	
+			</div>          
+		</div>
+ 	</collection-filters-form>
+  	<script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "OfferCatalog",
+            "itemListElement": [
+            	{% for product in collection.products %}
+                {% assign prindex = forloop.index %}
+                {
+                  "@type": "ListItem",
+                  "position": "{{prindex}}",
+                  "url": "{{product.url}}",
+                  "name": "{{product.title}}",
+                  "image": "{{product.featured_image | img_url: 'master'}}"
+                }{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+            ]
+          }
+    </script>
+{%- endpaginate -%}
+</div>
+<style>
+  {% if secSt.fullwidth %} .template-collection .bc_wr .page-width { max-width:100%; padding-left:{{ secSt.pad-desk}}px; padding-right:{{ secSt.pad-desk}}px;} {% endif %}    
+  @media only screen and (max-width: 767px) {   
+    {% if secSt.fullwidth %} .template-collection .bc_wr .page-width { padding-left:{{ secSt.pad-mbl}}px; padding-right:{{ secSt.pad-mbl}}px;} {% endif %}       
+  }  
+</style>
+{%- for filter in collection.filters -%}
+    {% if filter.type == 'price_range' %}
+	<script src="{{ 'jquery.range-min.js' | asset_url }}" defer="defer"></script>
+	<script type="text/javascript">
+    	window.addEventListener('DOMContentLoaded',function(){
+			priceSlider = function(){
+      			var minPrice = $('input[name="filter.v.price.gte"]').val(),
+            		maxPrice = $('input[name="filter.v.price.lte"]').val();
+    			$('.range-slider').jRange({
+                	from: 0,
+                    to: '{{ filter.range_max | money_without_currency | replace: ',', '' | round }}',
+                    step: 1,
+                  	format: '{{cart.currency.symbol}}%s',
+                    width: 250,
+                    showLabels: true,
+                    isRange : true,
+                    ondragend: function(value){
+						var values = value.split(',');
+                      	if(minPrice != values[0]){
+                        	$('input[name="filter.v.price.gte"]').val(values[0]).trigger('change');
+                        }
+                      	if(maxPrice != values[1]){
+                        	$('input[name="filter.v.price.lte"]').val(values[1]).trigger('change');
+                        }
+                    }
+				});
+  			};
+            priceSlider();
+        });
+	</script>
+    <style>
+      .slider-container { width:100%; margin:20px 0 10px; }
+      .slider-container .back-bar { height:5px; position:relative; background-color:#eee; }
+      .slider-container .back-bar .selected-bar { position:absolute; height:100%; background-color:#333; }
+      .slider-container .back-bar .pointer { position:absolute; top:-4px; width:14px; height:14px; cursor:col-resize; opacity: 1; z-index:2;
+        background-color:#ddd; border:1px solid #333; border-radius:50%; 
+      }
+      .slider-container .back-bar .pointer.last-active { z-index:3; }
+      .slider-container .back-bar .pointer-label { position:absolute; top:-17px; font-size:10px; white-space:nowrap; line-height:1; }
+      .slider-container .back-bar .focused { z-index: 10; }
+      .slider-container .clickable-dummy { cursor:pointer; position:absolute; width:100%; height:100%; z-index:1; }
+      .slider-container .scale { top:2px; position:relative; }
+      .slider-container .scale ins { font-size:10px; text-decoration:none; color:#999; line-height:1; }
+      .slider-container .scale ins:before { content:'{{cart.currency.symbol}}'; }
+      .slider-container.slider-readonly .clickable-dummy, .slider-container.slider-readonly .pointer { cursor:auto; }
+    </style>
+	{% endif %}
+{%- endfor -%}
+{% endcapture %}
+{{collectionPage | strip_newlines | remove:"	"}}
+{% schema %}
+{
+	"name": "Collection Page",
+	"class": "collectionPage",
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "fullwidth",
+			"label": "Fullwidth?",
+			"default": false
+		},
+		{
+        "type": "paragraph",
+        "content": "Left/Right Padding for Fullwidth ==="
+      }, 	
+      {
+        "type": "range",
+        "id": "pad-desk",
+        "label": "Desktop",
+        "default": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },      
+      {
+        "type": "range",
+        "id": "pad-mbl",
+        "label": "Mobile",
+        "default": 15,
+        "min": 0,
+        "max": 15,
+        "step": 1
+      }, 
+		{
+			"type": "header",
+			"content": "Header",
+			"info":"Display collection name, description and banner. [preview header style](https://optimal-demos.myshopify.com/pages/collection-page-header)"
+		},
+		{
+			"type": "checkbox",
+			"id": "page_header",
+			"label": "Show?",
+			"default": true	
+		},
+		{
+			"type": "checkbox",
+			"id": "show_banner",
+			"label": "Show Collection Banner?",
+			"default": true,
+			"info":"[How to add collection banner in background for each collection?](https://www.adornthemes.com/knowledge-base/how-to-add-collection-banner-by-metafield/)Recommended banner width 1920px and height as per below selection"
+		},
+		{
+			"type": "select",
+			"id": "banner_position",
+			"label": "Select Style",
+			"default": "style1",
+			"options": [        
+				{ "value": "style1", "label": "Style 1" },
+				{ "value": "style2", "label": "Style 2" },    
+				{ "value": "style3", "label": "Style 3" } 		  
+			]
+		}, 
+		{
+			"type": "paragraph",
+			"content": "Banner Height for Style 1 & Style 3"		
+		},
+		{
+			"type": "range",
+			"id": "bheight",
+			"label": "Desktop",
+			"default": 100,
+			"min": 50,
+			"max": 400,
+			"step": 10,
+			"unit":"px"		
+		}, 
+		{
+			"type": "range",
+			"id": "bheightipad",
+			"label": "Tablet",
+			"default": 100,
+			"min": 50,
+			"max": 400,
+			"step": 10,
+			"unit":"px"		
+		}, 	
+		{
+			"type": "range",
+			"id": "bheightmob",
+			"label": "Mobile",
+			"default": 100,
+			"min": 50,
+			"max": 400,
+			"step": 10,
+			"unit":"px"		
+		}, 			 
+		{
+			"type": "color",
+			"id": "clr_bg",
+			"label": "Background Color",
+			"default": "#f5f5f5",
+			"info":"For Style 1 & Style 3, if collection image is not available"
+		},
+		{
+			"type": "color",
+			"id": "clr_text",
+			"label": "Text Color",
+			"default": "#111"		
+		},			
+      {
+        "type": "range",
+        "id": "fs",
+        "label": "Title Font",
+        "default": 15,
+        "min": 14,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+      },
+     {
+        "type": "range",
+        "id": "fsm",
+        "label": "Title Font(mobile)",
+        "default": 15,
+        "min": 14,
+        "max": 50,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "select",
+        "id": "fw",
+        "label": "Font Weight",
+        "default": "700",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "fc",
+        "label": "Text Transform",
+        "default": "uppercase",
+        "options": [
+          {
+            "value": "none",
+            "label": "none"
+          },
+          {
+            "value": "capitalize",
+            "label": "Capitalize"
+          },
+          {
+            "value": "uppercase",
+            "label": "Uppercase"
+          }
+        ]
+      },
+     {
+			"type": "select",
+			"id": "des_position",
+			"label": "Collection Description",
+			"default": "below",
+			"options": [        
+				{ "value": "above", "label": "Display Above Products" },          
+				{ "value": "below", "label": "Display Below Products" } 		  
+			]
+	 },	
+      {
+        "type": "range",
+        "id": "fsd",
+        "label": "Description Font",
+        "default": 13,
+        "min": 13,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },	
+     {
+        "type": "range",
+        "id": "fsdm",
+        "label": "Description Font(mobile)",
+        "default": 13,
+        "min": 13,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },	
+       {
+			"type": "header",
+			"content": "Horizontal Collection List"
+		},
+      {
+			"type": "checkbox",
+			"id": "dis_hrmenu",
+			"label": "Display?",
+			"default": false
+		},
+       {
+              "type": "link_list",
+              "id": "hrmenu",
+              "label": "Select Menu"
+        },
+       {
+          "type": "color",
+          "id": "hrmenu_bg",
+          "label": "Background",
+          "default": "#f5f5f5"         
+        },
+       {
+          "type": "color",
+          "id": "hrmenu_txt",
+          "label": "Text",
+          "default": "#000"         
+        },
+       {
+			"type": "range",
+			"id": "hrmenu_font",
+			"label": "Font Size",
+			"default": 12,
+			"min": 10,
+			"max": 16,
+			"step": 1
+		},    
+      {
+        "type": "select",
+        "id": "hrmenu_case",
+        "label": "Text Transform",
+        "default": "ttu",
+        "options": [
+          {
+            "label": "Uppercase",
+            "value": "ttu"
+          },
+          {
+            "label": "Capitalize",
+            "value": "ttc"
+          },
+          {
+            "label": "Default",
+            "value": "none"
+          }
+        ]
+      },
+		{
+			"type": "header",
+			"content": "Product Toolbar"
+		},
+		{
+			"type": "checkbox",
+			"id": "dis_prod_cnt",
+			"label": "Display product count?",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "dis_grid_icn",
+			"label": "Display grid icons?",
+			"default": true
+		},	
+		{
+			"type": "checkbox",
+			"id": "enable_sorting",
+			"default": true,
+			"label": "Enable sorting dropdown"
+		},    											
+		{
+			"type": "paragraph",
+			"content": "Products per row (grid view)"
+		},
+		{
+			"type": "range",
+			"id": "grid",
+			"label": "Desktop",
+			"default": 4,
+			"min": 2,
+			"max": 7,
+			"step": 1
+		},
+		{
+			"type": "range",
+			"id": "tablet-grid",
+			"label": "Tablet",
+			"default": 3,
+			"min": 2,
+			"max": 5,
+			"step": 1
+		},
+		{
+			"type": "range",
+			"id": "mobile-grid",
+			"label": "Mobile",
+			"default": 2,
+			"min": 1,
+			"max": 3,
+			"step": 1
+		},
+		{
+			"type": "range",
+			"id": "products_per_page",
+			"min": 4,
+			"max": 50,
+			"step": 1,
+			"default": 12,
+			"label": "Products per page"
+		},
+		{
+			"type": "select",
+			"id": "pagination",
+			"label": "Pagination type",
+			"default": "button",
+			"options": [
+				{ "value": "default", "label": "Classic" },
+				{ "value": "infinite", "label": "Infinite Scroll" },
+				{ "value": "button", "label": "Load more button" }
+			]
+		},
+		{
+			"type": "header",
+			"content": "Filters and Sidebar"
+		},	
+		{
+			"type": "checkbox",
+			"id": "filters",
+			"default": true,
+			"label": "Enable Sidebar"
+		}, 	
+		{
+			"type": "select",
+			"id": "sb_position",
+			"label": "Position",
+			"default": "left",			
+			"options": [
+				{ "value": "top", "label": "Top (Horizontal)" },
+				{ "value": "left", "label": "Left (Vertical)" },
+				{ "value": "right", "label": "Right (Vertical)" },
+				{ "value": "popup", "label": "Popup Box (Vertical)" }
+			],
+			"info":"Top Position will display product filters only."
+		},
+		{
+          "type": "checkbox",
+          "id": "addbg",
+          "label": "Add Background Color",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "flbgcl",
+          "label": "Background Color",
+          "default": "#fff",
+		  "info":" This color will apply by default to Filter Popup and Top Filter"
+        },
+		{
+			"type": "select",
+			"id": "filter_bg",
+			"label": "Background apply to",
+			"default": "flbg",
+			"info":"Option work when filter bar set at left or right",
+			"options": [
+				{ "value": "flbg", "label": "Whole sidebar" },
+				{ "value": "optbg", "label": "Separate to each box" }
+			]
+		}, 	              
+        {
+          "type": "color",
+          "id": "flbdr",
+          "label": "Top filter border",
+          "default": "#eee"         
+        },
+		{
+          "type": "range",
+          "id": "tf_h",
+          "label": "Top filter bar min. height",
+          "default": 30,
+          "min": 30,
+          "max": 60,
+          "step": 1,
+          "unit": "px"
+        },
+		{
+			"type": "checkbox",
+			"id": "filter_shadow",
+			"label": "Enable top filter dropdown shadow",
+			"default": true			
+		},
+		{
+          "type": "paragraph",      
+          "content": "Block Title ==="
+		},
+        {
+          "type": "range",
+          "id": "bx_ttl",
+          "label": "Font size",
+          "default": 14,
+          "min": 12,
+          "max": 20,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "select",
+          "id": "bx_ttlw",
+          "label": "Font Weight",
+          "default": "fwb",
+          "options": [
+            { "value": "fwl", "label": "Light" },
+            { "value": "fwr", "label": "Regular" },
+            { "value": "fwm", "label": "Medium" },
+            { "value": "fwsb", "label": "Semi Bold" },
+            { "value": "fwb", "label": "Bold" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "bx_tcase",
+          "label": "Text Case",
+          "default": "ttu",
+          "options": [
+            { "value": "ttu", "label": "Uppercase" },
+            { "value": "ttc", "label": "Capitalize" },
+			{ "value": "ttn", "label": "Default" }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "bx_ttlc",
+          "label": "Text Color",
+          "default": "#000"
+        },		
+		{
+          "type": "paragraph",      
+          "content": "Filters and Links ==="
+		},
+        {
+          "type": "range",
+          "id": "opt",
+          "label": "Font Size",
+          "default": 13,
+          "min": 10,
+          "max": 25,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "select",
+          "id": "optcase",
+          "label": "Text Case",
+          "default": "ttc",
+          "options": [
+            { "value": "ttu", "label": "Uppercase" },
+            { "value": "ttc", "label": "Capitalize" },
+			{ "value": "ttn", "label": "Default" }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "floptcl",
+          "label": "Text Color",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "catlinkhv",
+          "label": "Active Link Color",
+          "default": "#fe877b"
+        },
+        {
+          "type": "color",
+          "id": "catlinkbd",
+          "label": "Link separator Border",
+          "default": "#eee"
+        },		
+		{
+          "type": "paragraph",      
+          "content": "Filters By Colors ==="
+		},
+        {
+          "type": "select",
+          "id": "fclr_size",
+          "label": "Color Swatch Size",
+          "default": "small",
+          "options": [
+            { "value": "small", "label": "Small" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "large", "label": "Large" } 
+          ]
+       },
+	   {
+          "type": "select",
+          "id": "fclr_style",
+          "label": "Color Swatch Style",
+          "default": "rounded_rectangle",
+          "options": [
+            { "value": "rounded", "label": "Rounded" },
+            { "value": "rectangle", "label": "Square" },
+            { "value": "l_rectangle", "label": "Rectangle Small Size" },
+            { "value": "rounded_rectangle", "label": "Rounded Rectangle" }
+           ]
+      	},
+        {
+          "type": "color",
+          "id": "actclr",
+          "label": "Active filter Border",
+          "default": "#000"
+        },		
+		{
+          "type": "paragraph",      
+          "content": "Filters in two column ==="
+		},		
+        {
+        	"type": "textarea",
+            "id": "flcolumn",
+            "label": "Add Filter title names need to show in two column.",
+            "default": "Size",
+            "info": "Eg: Size, Product type, Brand ..."
+        },
+		{
+          "type": "paragraph",
+          "content": "Selected Filter Labels"
+		},
+        {
+          "type": "color",
+          "id": "act_fltxt",
+          "label": "Text Color",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "act_flbg",
+          "label": "Background",
+          "default": "#fff"
+        }
+	],
+	"blocks": [
+      {
+        "type": "categories",
+        "name": "Categories",        
+        "settings": [
+         	{ 
+              "type":"text",
+              "id":"title",
+              "label":"Categories",
+              "default":"Categories"
+          	},
+            {
+              "type": "link_list",
+              "id": "side_categories",
+              "label": "Select Categories",
+              "default": "main-menu"
+            }
+        ]
+     },
+	 {
+        "type": "filter_by",
+        "name": "Dynamic Filters",		
+		"limit": 1,
+        "settings": [
+			 {
+                "type": "paragraph",                
+				"content": "This options will not work  with products tag based filters. You can choose either dynamic filters OR product filters using tags.[How to set?](https://www.adornthemes.com/documentation/optimal/#ProductsFiltering)"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Filter By",
+				"default": "Filter By"
+            },
+			{
+                "type": "paragraph",                
+				"content": "[Manage dyanmic filters](\/admin\/menus)"
+            },
+            {
+                "type": "checkbox",
+                "id": "dis_prod_cntl",
+                "label": "Display product count?",
+                "default": false,
+                "info":"Products counts in left sidebar. Work only with in dynamic filters."
+            }
+       ]
+     },
+	 {
+        "type": "filtertag",
+        "name": "Filter By Tags",
+        "settings": [
+				 {
+                "type": "paragraph",                
+				"content": "This options will not work  with dynamic product filters. You can choose either dynamic filters OR product filters using tags. [How to set?](https://www.adornthemes.com/documentation/optimal/#ProductsFilterTags)"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Filter By Title",
+				"default": "Filter By Title",
+                "info": "i.e 'Filter by Size, Filter by Brands'"
+            },
+            {
+                "type": "textarea",
+                "id": "filter_tags",
+                "label": "Add Filter tags",
+                "info": "Separate by a comma, i.e \"Tag1, Tag2, Tag3\"."
+            }
+      	]
+     },
+     {
+        "type": "by_color",
+        "name": "Filter By Color Tags",
+        "limit": 1,
+        "settings": [
+ 			{
+                "type": "paragraph",                
+				"content": "This options will not work  with dynamic product filters. You can choose either dynamic filters OR product filters using tags. [How to set?](https://www.adornthemes.com/documentation/optimal/#ProductsFilterTags)"
+            },
+         	{ 
+              "type":"text",
+              "id":"title",
+              "label":"Filter by section title",
+              "default":"Filter By Color"
+          	},
+            {
+            	"type": "textarea",
+             	"id": "filter_tags",
+             	"label": "Add Filter tags",
+             	"info": "Separate by a comma, i.e \"Black, Red, Blue\". Filter will not work untill you don't assign the same TAG NAME to relavant products."
+           	},
+ 			{
+            	"type": "paragraph",             
+             	"content": "Custom color name must be predefined. Add custom colors from Custom Colors section. Section located right below footer section."
+           	}
+			
+       ]
+     },
+     {
+        "type": "products",
+        "name": "Products",
+		"limit": 1,
+        "settings": [
+         	{ 
+              "type":"text",
+              "id":"title",
+              "label":"Title Text",
+              "default":"Popular Products"
+          	},
+            {
+              "type": "collection",
+              "id": "sidebar_products",
+              "label": "Select Collection"
+            },
+            {
+              "type": "text",
+              "id": "num_of_products",
+              "label": "Number of products to show",
+              "default": "3"
+            },
+            {
+              "type": "select",
+              "id": "side_prod_opt",
+              "label": "Display Type",
+              "default": "slider",
+              "options": [
+                { "value":"slider","label":"Slider" },
+                { "value":"list", "label":"List" }
+              ]
+            },
+			{
+              "type": "checkbox",
+              "id": "side_all_products",
+              "label": "View all products button",
+              "default": false
+            },
+			{
+              "type": "text",
+              "id": "btn_txt",
+              "label": "Button Text",
+              "default": "View All"
+            }
+        ]
+      },
+	  {
+        "type": "image_bnr",
+        "name": "Image Banner",
+        "settings": [
+            {
+              "type": "image_picker",
+              "id": "side_bnr_img",
+              "label": "Banner Image"
+            },
+            {
+              "type": "url",
+              "id": "side_bnr_link",
+              "label": "Banner"
+            }
+      	]
+      },
+	  {
+        "type": "static_text",
+        "name": "Static Text",
+        "settings": [
+            { 
+              "type":"text",
+              "id":"title",
+              "label":"Title Text",
+              "default":"Static Block Title"
+          	},
+            {
+              "type": "richtext",
+              "id": "text",
+              "label": "Text",
+              "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            }
+      	]
+      }
+	]
+}
+{% endschema %}

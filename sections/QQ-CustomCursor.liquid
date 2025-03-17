@@ -1,0 +1,68 @@
+{% comment %}
+[[ QQ - Custom Cursor ]] [[ Section for Shopify Websites to display a custom mouse icon ]]
+Author: qwiqode.com
+Created: 05.22.24 Version: 1.01
+Company website: qwiqode.com
+Email: hello@qwiqode.com
+* (c) Copyright by Studio Umbrella Inc. /
+{% endcomment %}
+{% liquid
+  assign mouseIcon = section.settings.mouse_icon
+  assign mouseIconHover = section.settings.mouse_icon_hover
+  assign mouseIconSize = section.settings.mouse_icon_size
+  assign imageSize = mouseIconSize | append: 'x' | append: mouseIconSize
+  assign mouseIconUrl = mouseIcon | img_url: imageSize
+  assign mouseIconUrlHover = mouseIconHover | img_url: imageSize
+%}
+<style data='../CustomCursor-inline-css.min.css.liquid'>{% if mouseIcon != blank %} body { cursor: url('{{mouseIconUrl}}'), auto !important; } {% endif %} {% if mouseIconHover != blank %} body button, body a { transition:all 0.2s ease !important; } body button:hover, body a:hover { cursor: url('{{mouseIconUrlHover}}'), pointer !important; } {% endif %}</style>
+{% schema %}
+{
+  "name": "QQ - Custom Cursor",
+  "tag": "section",
+  "class": "qq-custom-cursor",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "mouse_icon",
+      "label": "Mouse Icon",
+      "info": "PNG, GIF or CUR format recommended."
+    },
+    {
+      "type": "image_picker",
+      "id": "mouse_icon_hover",
+      "label": "Mouse Icon on Hover",
+      "info": "This would be applied to all links and buttons when hovering"
+    },
+    {
+      "type": "select",
+      "id": "mouse_icon_size",
+      "options": [
+        {
+          "value": "16",
+          "label": "Small"
+        },
+        {
+          "value": "32",
+          "label": "Medium"
+        },
+        {
+          "value": "64",
+          "label": "Large"
+        },
+        {
+          "value": "128",
+          "label": "X-Large"
+        }        
+      ],
+      "default": "32",
+      "label": "Icon Size"
+    }
+  ],
+  "presets": [
+    {
+      "name": "QQ - Custom Cursor",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

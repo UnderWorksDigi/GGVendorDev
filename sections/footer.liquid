@@ -1,0 +1,1113 @@
+{% capture siteFooter %}
+{% assign secSt = section.settings %}
+<footer class="o_ft" role="contentinfo" style="--ffm:var(--{{secSt.ff}});--fs:{{secSt.fs}}px;--tcl:{{secSt.tcl}};--fc:{{secSt.fc}};--dfs:{{secSt.dfs}}px;--dcl:{{secSt.dcl}};--bdr:{{secSt.bdr}};--bg:{{secSt.bg}};--icon_colors:{{secSt.icon_colors}};--fb_bg:{{secSt.fb_bg}};--fb_cl:{{secSt.fb_cl}};--mob_br:{{secSt.mob_br}};--fbdr:{{secSt.fbdr}};{% if secSt.bg_img %}--url:url({{ secSt.bg_img | img_url:'master' }});--bg_r:{{secSt.bg_r}};--bgs:{{secSt.bgs}};--bgp:{{secSt.bgp | replace:"_", " " }};--bga:{{ secSt.bga}};{% endif %}">  
+  {%- if section.blocks.size != 0 -%}
+  	<div class="ft_top">  
+    <div class="{% unless secSt.section_width %}page-width{% else %} footer-fw{% endunless %}">
+      <div class="ft_block fl f-wrap">
+		  
+		 {%- for block in section.blocks -%}    		  
+		 {% assign blkSt = block.settings %}
+         {% case blkSt.width %}
+          {% when '5%' %}
+          	{%- assign block_width = 'medium-up--one-twelfth' -%}
+          {% when '20%' %}
+          	{%- assign block_width = 'medium-up--one-fifth' -%}
+          {% when '25%' %}
+          	{%- assign block_width = 'medium-up--one-quarter' -%}
+          {% when '30%' %}
+          	{%- assign block_width = 'medium-up--three-tenths' -%}
+          {% when '33%' %}
+          	{%- assign block_width = 'medium-up--one-third' -%}
+          {% when '40%' %}
+          	{%- assign block_width = 'medium-up--two-fifths' -%}
+          {% when '50%' %}
+          	{%- assign block_width = 'medium-up--one-half' -%}
+          {% when '60%' %}
+          	{%- assign block_width = 'medium-up--three-fifths' -%}
+          {% when '66%' %}
+          	{%- assign block_width = 'medium-up--two-thirds' -%}
+          {% when '75%' %}
+          	{%- assign block_width = 'medium-up--three-quarters' -%}
+          {% when '100%' %}
+          	{%- assign block_width = 'one-whole' -%}
+        {% endcase %}
+
+        {% capture blockTtl %}{% if blkSt.title != blank %}<h4 class="h4">{{ blkSt.title }}</h4>{% endif %}{% endcapture %}
+        {%- case block.type -%}
+       
+        {% when 'custom' %}
+        <div id="nav_menu-{{ block.id }}" class="ft_block_item {{ block_width }} custom-block{% if blkSt.txt_center %} tc{% endif %}">
+          {{blockTtl}}
+
+          {% if blkSt.logo %}
+          <p style="max-width:{{blkSt.logo-wd}}px" {% if blkSt.txt_center %}class="m_auto"{% endif %}>
+            <img loading="lazy" class="img_fl" src="{{ blkSt.logo | img_url: '300x' }}" width="{{blkSt.logo-wd}}" height="{{blkSt.logo-wd | divided_by: blkSt.logo.aspect_ratio | floor}}"
+                    srcset="{{ blkSt.logo | img_url: '300x' }} 1x, {{ blkSt.logo | img_url: '300x', scale: 2 }} 2x"
+                    alt="{{ blkSt.logo.alt | default: shop.name }}"></p>
+          {% endif %}
+
+          {% if blkSt.custom-text != blank %}<div class="text custom-text mb15">{{ blkSt.custom-text }}</div>{% endif %}
+          {% if blkSt.show_socials %}
+          	  {% if blkSt.socials_ttl != blank %}<h5 class="h4">{{ blkSt.socials_ttl }}</h5>{% endif %}
+              {% render 'social-media' %}
+          {% endif %}
+          
+           {% if blkSt.show_payicon %}
+            {% for type in shop.enabled_payment_types %}{{ type | payment_type_svg_tag: class: 'payment-list__item' }}{% endfor %}          
+          {% endif %}  
+          
+        </div>
+
+          {% when 'image' %}
+        <div id="nav_menu-{{ block.id }}" class="imgblock ft_block_item {{ block_width }} custom-block{% if blkSt.txt_center %} tc{% endif %}">
+          {{blockTtl}}
+
+          
+          {% if blkSt.custom-text != blank %}<div class="text custom-text mb15">{{ blkSt.custom-text }}</div>{% endif %}
+          
+          <div class="fl f-wrap">
+           {% if blkSt.logo %}
+          <p style="max-width:{{blkSt.logo-wd}}px" class="mb10{% if blkSt.logomr %} mr15{% endif %}" >
+            <a target="_blank" href="{{blkSt.url1}}">
+                <img class="img_fl" loading="lazy" src="{{ blkSt.logo | img_url: '300x' }}" width="{{blkSt.logo-wd}}" height="{{blkSt.logo-wd | divided_by: blkSt.logo.aspect_ratio | floor}}"
+                    srcset="{{ blkSt.logo | img_url: '300x' }} 1x, {{ blkSt.logo | img_url: '300x', scale: 2 }} 2x" alt="{{ blkSt.logo.alt | default: shop.name }}">
+             </a>
+          </p>
+          {% endif %}
+          
+          {% if blkSt.logo2 %}
+          <p style="max-width:{{blkSt.logo-wd2}}px">
+              <a target="_blank" href="{{blkSt.url2}}">
+                  <img class="img_fl" loading="lazy" src="{{ blkSt.logo2 | img_url: '300x' }}" width="{{blkSt.logo-wd2}}" height="{{blkSt.logo-wd2 | divided_by: blkSt.logo2.aspect_ratio | floor}}"
+                    srcset="{{ blkSt.logo2 | img_url: '300x' }} 1x, {{ blkSt.logo2 | img_url: '300x', scale: 2 }} 2x" alt="{{ blkSt.logo2.alt | default: shop.name }}">
+              </a>
+          </p>
+          {% endif %}          
+          </div>                            
+        </div>
+        
+        
+        {% when 'menu' %}
+        <div id="nav_menu-{{ block.id }}" class="ft_block_item {{ block_width }} f_links">
+          {{blockTtl}}
+          <ul>
+            {% for link in linklists[blkSt.menulinks].links %}
+            <li><a href="{{ link.url }}" {% if link.title contains '[new]' %} target="_blank" {% endif %}>{{ link.title | split: '[' | first }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% when 'hmenu' %}
+          <div id="nav_menu-{{ block.id }}" class="ft_block_item {{ block_width }} {{blkSt.talign}} menuhr"{% if blkSt.btmmr %} style="margin-bottom:0"{% endif %}>
+            {% if blkSt.bdr_top %}<hr style="border-bottom-color:{{blkSt.bdr}}" />{% endif %}
+            {{blockTtl}}
+            <ul class="horLinks">
+              {% for link in linklists[blkSt.menulinks].links %}
+              <li><a href="{{ link.url }}"{% if link.title contains '[new]' %} target="_blank" {% endif %}>{{ link.title | split: '[' | first }}</a></li>
+              {% endfor %}
+            </ul>
+            {% if blkSt.bdr_btm %}<hr style="border-bottom-color:{{blkSt.bdr}}" />{% endif %}
+          </div>
+        {% when 'contact' %}
+        <div id="text-{{ block.id }}" class="ft_block_item {{ block_width }} contact-box">
+
+          {{blockTtl}}
+
+          {% if blkSt.logo %}
+            <p style="max-width:{{blkSt.logo-wd}}px">
+                <img loading="lazy" src="{{ blkSt.logo | img_url: '300x' }}" width="{{blkSt.logo.width}}"
+                    srcset="{{ blkSt.logo | img_url: '300x' }} 1x, {{ blkSt.logo | img_url: '300x', scale: 2 }} 2x" alt="{{ blkSt.logo.alt | default: shop.name }}">
+            </p>
+          {% endif %}
+          
+          <ul class="f_addr">
+            {% if blkSt.address  != blank  %}
+            <li>{% if blkSt.show_icons %} <i class="at at-map-marker-al " aria-hidden="true"></i> {% endif %} {{ blkSt.address }}</li>
+            {% endif %}
+            {% if blkSt.phone  != blank  %}
+            <li class="phone">{% if blkSt.show_icons %}<i class="at at-phone-l" aria-hidden="true"></i> {% endif %}<a href="tel:{{blkSt.phone }}">{{ blkSt.phone }}</a></li>
+            {% endif %}
+            {% if blkSt.email  != blank  %}
+            <li class="email">{% if blkSt.show_icons %}<i class="at at-envelope-l" aria-hidden="true"></i> {% endif %} <a href="mailto:{{blkSt.email}}">{{ blkSt.email }}</a></li>
+            {% endif %}
+          </ul>
+          
+          {% if blkSt.show_socials %}
+            {% if blkSt.socials_ttl != blank %}<h5 class="h4">{{ blkSt.socials_ttl }}</h5>{% endif %} 
+            {% render 'social-media' %}
+          {% endif %} 
+        </div>         			
+
+        {% when 'newsletter' %}
+        <div id="text-{{ block.id }}" class="ft_block_item {{ block_width }} ft_newsltr{% if blkSt.newltr_align %} tc{% endif %}" style="--bg:{{blkSt.bg}};--cl:{{blkSt.cl}};--bcl:{{blkSt.bcl}};--btnbg:{{blkSt.btnbg}};">
+          <div class="wrap-newsletter">
+            {{blockTtl}}
+            {% if blkSt.sub_title %}<p>{{ blkSt.sub_title }}</p>{% endif %}
+            {% render 'newsletter-form', formId: 'footer', isicon: blkSt.icon %}
+            {% if blkSt.show_socials %}
+            <div class="socials">
+              {%- if blkSt.socials_ttl != blank -%}<h3 class="h4">{{ blkSt.socials_ttl }}</h3>{%- endif -%}
+              {% render 'social-media' %}
+            </div>
+            {% endif %}
+          </div>                  
+        </div>
+
+        {% when 'instagram' %}
+        <div id="text-{{ block.id }}" class="ft_block_item {{ block_width }} home-instagram instagram">   
+          <div data-section-id="{{ section.id }}" data-section-type="instagram" data-image="{{ blkSt.images_size }}"
+               data-count="{{ blkSt.limit }}" data-from="{{ blkSt.imgfrom }}" data-user="{{ blkSt.user-id }}" data-tag="{{ blkSt.tag }}">
+            {{blockTtl}}
+            {% if blkSt.sub_title %}<p>{{ blkSt.sub_title }}</p>{% endif %}
+            <div id="instafeed{{section.id}}" class="instafeed im{{ blkSt.images_size }}"></div>
+          </div>
+        </div>
+
+        {% when 'socialicons' %}
+        <div id="text-{{ block.id }}" class="ft_block_item {{ block_width }} soc_icons">
+          {{blockTtl}}
+          {% render 'social-media', hideLbl: true %}
+        </div>
+        
+         {% when 'emptycol' %}
+        <div id="text-{{ block.id }}" class="ft_block_item {{ block_width }} emptycol"></div> 
+        
+        {% when 'hrline' %}
+        <div id="hrline-{{ block.id }}" class="hrline ft_block_item one-whole">
+        <hr/>
+        </div>
+        <style>
+          .hrline hr {border-bottom:1px solid {{blkSt.lineclr}};}
+        </style>
+        
+        {%- endcase -%}                
+        {%- endfor -%}
+      </div>        
+    </div>
+  </div>
+  {%- endif -%}
+  
+  {%- if secSt.copyright_text != blank or secSt.show_payment -%}
+  <div class="ft_bottom">
+    <div class="fl f-aic f-col f-row-md {% unless secSt.section_width %}page-width{% else %}footer-fw{% endunless %}">
+        {% if secSt.show_payment %}
+          <div class="fl1 paymentCall tc{% if secSt.copyright_text != blank %} medium-up--one-half tr-md{% endif %}">
+            {%- if secSt.payment_img != blank -%}
+           	 <p class="footer-img"><img loading="lazy" src="{{ secSt.payment_img | img_url: '600x' }}" alt="{{ secSt.logo.alt }}" style="max-width:{{secSt.payimg-wd}}px" /></p>
+            {%- else -%}
+	          {% for type in shop.enabled_payment_types %}{{ type | payment_type_svg_tag: class: 'payment-list__item' }}{% endfor %}
+            {%- endif -%}
+          </div>
+        {% endif %}
+        {% if secSt.copyright_text != blank %}
+        <div class="fl1 tc{% if secSt.show_payment %} medium-up--one-half tl-md{% endif %}">
+          {{ secSt.copyright_text }}
+          {% if secSt.show_designby %}<span class="designBy">{% if secSt.copyright_text != blank %}<br />{% endif %}Designed by <a href="https://www.adornthemes.com" target="_blank">AdornThemes</a></span>{% endif %}
+        </div>
+        {% endif %}
+    </div>
+  </div>
+  {%- endif -%}
+</footer>
+{% endcapture %}{{ siteFooter | strip_newlines | remove: "  " | remove: "	" }}
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+	 {
+        "type": "paragraph",
+        "content": "[preview footer style](https://optimal-demos.myshopify.com/pages/footer-style)"
+      },
+	  {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },		      
+ 	  {
+        	"type": "textarea",
+        	"id": "copyright_text",
+        	"label": "Copyright Text",
+        	"default": "© 2023,Optimal. All Rights Reserved."
+      	},
+        {
+          "type": "checkbox",
+          "id": "show_designby",
+          "label": "Give credit to theme developer?",
+          "default": true,
+		  "info":"display design by in footer"
+        },
+		{
+			"type":"header",
+        	"content":"Payment Options"
+		},
+      	{
+        	"type": "checkbox",
+        	"id": "show_payment",
+        	"label": "Show Paymnet Icons",
+        	"default": true
+        },
+		{
+          "type": "image_picker",
+          "id": "payment_img",
+          "label": "Payment Icon Image",
+          "info": "Use image instead of Payment icons"
+        },
+		{
+            "type": "range",
+            "id": "payimg-wd",
+            "label": "Image max width",
+            "default": 300,
+            "min": 100,
+            "max": 600,
+            "step": 5,
+            "unit": "px"
+        },
+ 	  {
+        "type": "header",
+        "content": "Appearance ====="
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_img",
+        "label": "Background image",
+        "info": "This is optional"
+      },
+      {
+        "type": "select",
+        "id": "bg_r",
+        "label": "Background Repeat",
+        "default": "inherit",
+        "info": "[how to repeat the background image](https:\/\/w3schools.com\/cssref\/pr_background-repeat.asp)",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No Repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "All Sides"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Horizontally"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Vertically"
+          },
+          {
+            "value": "inherit",
+            "label": "Inherit"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bgp",
+        "label": "Background Position",
+        "default": "center_center",
+        "info": "[position of the background images](https:\/\/w3schools.com\/cssref\/pr_background-position.asp)",
+        "options": [
+          {
+            "value": "left_top",
+            "label": "Left Top"
+          },
+          {
+            "value": "left_center",
+            "label": "Left Center"
+          },
+          {
+            "value": "left_bottom",
+            "label": "Left Bottom"
+          },
+          {
+            "value": "center_top",
+            "label": "Center Top"
+          },
+          {
+            "value": "center_center",
+            "label": "Center Center"
+          },
+          {
+            "value": "center_bottom",
+            "label": "Center Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bgs",
+        "label": "Background Size",
+        "default": "auto",
+        "info": "[Specifies the size of the background image](https:\/\/w3schools.com\/cssref\/css3_pr_background-size.asp)",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "cover",
+            "label": "Cover"
+          },
+          {
+            "value": "contain",
+            "label": "Contain"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bga",
+        "label": "Background Attachment",
+        "default": "inherit",
+        "info": "[Specifies background image is fixed or scrolls with page](https:\/\/w3schools.com\/cssref\/pr_background-attachment.asp)",
+        "options": [
+          {
+            "value": "fixed",
+            "label": "Fixed"
+          },
+          {
+            "value": "scroll",
+            "label": "Scroll"
+          },
+          {
+            "value": "inherit",
+            "label": "Inherit"
+          }
+        ]
+      },     
+      {
+        "type": "select",
+        "id": "ff",
+        "label": "Title Font",
+        "default": "ft1",
+        "options": [
+          {
+            "value": "ft1",
+            "label": "Font 1"
+          },
+          {
+            "value": "ft2",
+            "label": "Font 2"
+          },
+          {
+            "value": "ft3",
+            "label": "Font 3"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "fs",
+        "label": "Title Font Size",
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "default": 14,
+        "unit": "px"
+      },
+      {
+        "type": "select",
+        "id": "fc",
+        "label": "Title Case",
+        "default": "none",
+        "options": [
+          {
+            "label": "Uppercase",
+            "value": "uppercase"
+          },
+          {
+            "label": "Capitalize",
+            "value": "capitalize"
+          },
+          {
+            "label": "Default",
+            "value": "none"
+          }
+        ]
+      },
+ 		{
+        "type": "range",
+        "id": "dfs",
+        "label": "Detail Font Size",
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "default": 13,
+        "unit": "px"
+      },
+      {
+        "type": "paragraph",
+        "content": "Top Footer ====="
+      },
+      {
+        "type": "color",
+        "id": "bdr",
+        "label": "Border",
+        "default": "#eee"
+      },
+      {
+        "type": "color",
+        "id": "bg",
+        "label": "Background",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "tcl",
+        "label": "Title",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "dcl",
+        "label": "Text",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "icon_colors",
+        "label": "Icon",
+        "default": "#000"
+      },
+      {
+        "type": "paragraph",
+        "content": "Bottom Footer ====="
+      },
+      {
+        "type": "color",
+        "id": "fb_bg",
+        "label": "Background",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "fb_cl",
+        "label": "Text",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "fbdr",
+        "label": "Border"
+      },
+      {
+        "type": "color",
+        "id": "mob_br",
+        "label": "Mobile view border",
+        "default": "#f9f9f9"
+      }     
+    ],
+	"blocks": [
+	  {
+        "type": "menu",
+        "name": "Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Navigation Title",
+			"default": "Informations"
+          },
+          {
+            "type": "link_list",
+            "id": "menulinks",
+            "label": "Select Navigation",
+            "default": "main-menu"
+          },
+		  {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "25%",
+			"info":"Total width of all block must not exceed 100%",
+            "options": [  			 
+			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+	  {
+        "type": "hmenu",
+        "name": "Horizontal Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Navigation Title",
+			"default": "Informations"
+          },
+          {
+            "type": "link_list",
+            "id": "menulinks",
+            "label": "Select Navigation",
+            "default": "main-menu"
+          },
+ 	      {
+            "type": "select",
+            "id": "talign",
+            "label": "Text Align",
+            "default": "tc",
+            "options": [		    
+			 { "value": "tl", "label": "Left" },
+              { "value": "tc", "label": "Center" },
+			  { "value": "tr", "label": "right" }
+            ]
+          },
+ 		  {
+			"type":"checkbox",
+			"id":"bdr_top",
+			"label":"Show Top Border",
+			"default":false
+		  },
+ 		  {
+			"type":"checkbox",
+			"id":"bdr_btm",
+			"label":"Show Bottom Border",
+			"default":false
+		  },
+          {
+            "type": "color",
+            "id": "bdr",
+            "label": "Border Color",
+            "default": "#000"
+          },
+ 		  {
+			"type":"checkbox",
+			"id":"btmmr",
+			"label":"Remove bottom space",
+			"default":false
+		  },
+		  {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "100%",
+			"info":"Total width of all block must not exceed 100%",
+            "options": [  			 
+			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+	  {
+        "type": "contact",
+        "name": "Contact Details",
+		"limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+			"default": "Contact Us"
+          },
+          {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Logo image"
+          },
+          {
+              "type": "range",
+              "id": "logo-wd",
+              "label": "Logo max width",
+              "default": 200,
+              "min": 100,
+              "max": 300,
+              "step": 5,
+              "unit": "px"
+          },
+		  {
+            "type": "textarea",
+            "id": "address",
+            "label": "Address",
+			"default": "55 Gallaxy Enque,<br />2568 steet, 23568 NY"
+          },
+		  {
+            "type": "textarea",
+            "id": "phone",
+            "label": "Phone",
+			"default": "(440) 000 000 0000"
+          },
+		  {
+            "type": "textarea",
+            "id": "email",
+            "label": "Email",
+			"default": "sales@yousite.com"
+          },
+ 		  {
+			"type":"checkbox",
+			"id":"show_icons",
+			"label":"Show Icons",
+			"default":false
+		  },
+      	  {
+			"type":"checkbox",
+			"id":"show_socials",
+			"label":"Show Socials",
+			"default":true
+		  },
+      	  {
+			"type":"text",
+			"id":"socials_ttl",
+			"label":"Socials Title",
+			"default":"Stay Connected"
+		  },
+		  {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "25%",
+             "info":"Total width of all block must not exceed 100%",
+            "options": [ 			
+			 { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+	  {
+        "type": "custom",
+        "name": "Custom Block",
+        "settings": [
+ 		  {
+			"type":"checkbox",
+			"id":"txt_center",
+			"label":"Text align center?",
+			"default":false
+		  },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+			"default": "About Us"
+          },
+          {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Upload Image"
+          },
+          {
+              "type": "range",
+              "id": "logo-wd",
+              "label": "Logo max width",
+              "default": 200,
+              "min": 100,
+              "max": 300,
+              "step": 5,
+              "unit": "px"
+          },
+		  {
+            "type": "textarea",
+            "id": "custom-text",
+            "label": "Text",
+			"default": "Making a profitable ecommerce store is hard work. You can't just open a website and expect people to flood in. If you really want to succeed you have to create traffic"
+          },
+		 {
+			"type":"checkbox",
+			"id":"show_socials",
+			"label":"Show Socials",
+			"default":true
+		  },
+      	  {
+			"type":"text",
+			"id":"socials_ttl",
+			"label":"Socials Title",
+			"default":"Stay Connected"
+		  },
+			{
+			"type":"checkbox",
+			"id":"show_payicon",
+			"label":"Show Paymnet Icons",
+			"default":false
+		  },
+ 	     {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "25%",
+             "info":"Total width of all block must not exceed 100%",
+            "options": [		    
+			 { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+		{
+        "type": "image",
+        "name": "Image Block",
+        "settings": [ 		 
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+			"default": "Download App"
+          },
+			{
+            "type": "textarea",
+            "id": "custom-text",
+            "label": "Text",
+			"default": "Optimal App is now available on App Store & Google Play. Get it now. "
+          },	
+          {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Upload image"
+          },
+		 {
+            "type": "text",
+            "id": "url1",
+            "label": "Image Url"
+          },
+          {
+              "type": "range",
+              "id": "logo-wd",
+              "label": "Image max width",
+              "default": 200,
+              "min": 100,
+              "max": 300,
+              "step": 5,
+              "unit": "px"
+          },
+			{
+            "type": "checkbox",
+            "id": "logomr",
+            "label": "Enable image right padding",
+			"default":true
+          },
+				{
+            "type": "image_picker",
+            "id": "logo2",
+            "label": "Upload image"
+          },
+		{
+            "type": "text",
+            "id": "url2",
+            "label": "Image Url"
+          },
+          {
+              "type": "range",
+              "id": "logo-wd2",
+              "label": "Image max width",
+              "default": 200,
+              "min": 100,
+              "max": 300,
+              "step": 5,
+              "unit": "px"
+          },		  	 			
+ 	     {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "25%",
+             "info":"Total width of all block must not exceed 100%",
+            "options": [		    
+			 { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "newsletter",
+        "name": "Newsletter Signup",
+        "limit": 1,
+        "settings": [
+		  {
+			"type":"checkbox",
+			"id":"newltr_align",
+			"label":"Align Center",
+			"default":false
+		  },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Newsletter"
+          },
+		  {
+            "type": "text",
+            "id": "sub_title",
+            "label": "text",
+			"default": "Enter your email to receive daily news and get 20% off coupon for all items. NO spam, we promise"
+          },
+ 		  {
+			"type":"checkbox",
+			"id":"icon",
+			"label":"Show Icons only in button",
+			"default":false,
+			"info": "Select when need more space for email field"
+		  },
+		 {
+			"type":"checkbox",
+			"id":"show_socials",
+			"label":"Show Socials",
+			"default":true
+		  },
+      	  {
+			"type":"text",
+			"id":"socials_ttl",
+			"label":"Socials Title",
+			"default":"Stay Connected"
+		  },		 
+		  {
+			"type": "color",
+			"id": "bg",
+			"label": "Textfield Background",
+			"default": "#fff"
+		  },
+		  {
+			"type": "color",
+			"id": "cl",
+			"label": "Textfield Text Color",
+			"default": "#fff"
+		  },
+		  {
+			"type": "color",
+			"id": "bcl",
+			"label": "Button Text",
+			"default": "#fff"
+		  },
+		  {
+			"type": "color",
+			"id": "btnbg",
+			"label": "Button Background",
+			"default": "#333"
+		  },
+		  {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "25%",
+            "info":"Total width of all block must not exceed 100%",
+            "options": [ 			
+			 { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }		 
+        ]
+      },
+  	 {
+        "type": "instagram",
+        "name": "Instagram",
+        "limit": 1,
+        "settings": [
+		  {
+			"type":"paragraph",
+			"content":"Note: Instagram will not work at 2 place at the same time. Either you can display in section or footer"
+		  },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Avon On Instagram"
+          },
+		  {
+            "type": "text",
+            "id": "sub_title",
+            "label": "text",
+			"default": "Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom."
+          },
+          {
+             "type": "select",
+             "id": "imgfrom",
+             "label": "Show images from",
+             "default": "user",
+             "options": [
+             	{
+                    "value": "user",
+                    "label": "User Id"
+                },
+                {
+                    "value": "tag",
+                    "label": "Tag Name"
+                }
+			]
+          },
+          {
+            "type": "text",
+            "id": "user-id",
+            "label": "User Id",
+            "default": "adornthemes"
+          },
+          {
+            "type": "text",
+            "id": "tag",
+            "label": "Tag Name",
+            "default": "shopify"
+          },
+          {
+              "type": "select",
+              "id": "images_size",
+              "label": "Image Size",
+              "default":"150",
+              "options": [
+                {
+                  "value": "150",
+                  "label": "Small"
+                },
+                {
+                  "value": "320",
+                  "label": "Medium"
+                },
+                {
+                  "value": "640",
+                  "label": "Large"
+                }
+              ]
+          },
+        {
+          "type": "range",
+          "id": "limit",
+          "label": "Number of photos",
+          "default": 8,
+          "min": 1,
+          "max": 12,
+          "step": 1
+        },
+		{
+          "type": "select",
+          "id": "width",
+          "label": "Footer block width",
+          "default": "50%",
+          "info":"Total width of all block must not exceed 100%",
+          "options": [
+			 { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+	  {
+        "type": "socialicons",
+        "name": "Social Icons",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Stay Connected"
+          },		  
+		   {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "25%",
+            "info":"Total width of all block must not exceed 100%",
+            "options": [ 			 
+			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      },
+	  {
+        "type": "emptycol",
+        "name": "Empty Column",      
+        "settings": [         	  
+		   {
+            "type": "select",
+            "id": "width",
+            "label": "Footer block width",
+            "default": "5%",
+            "info":"Total width of all block must not exceed 100%",
+            "options": [
+ 			  { "value": "5%", "label": "5%" },
+ 			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+			  { "value": "30%", "label": "30%" },
+              { "value": "33%", "label": "33%" },
+			  { "value": "40%", "label": "40%" },
+              { "value": "50%", "label": "50%" },
+			  { "value": "60%", "label": "60%" },
+              { "value": "66%", "label": "66%" },
+              { "value": "75%", "label": "75%" },
+              { "value": "100%", "label": "100%" }		
+            ]
+          }
+        ]
+      },
+      {
+      	"type": "hrline",
+      	"name": "Horizontal Line",
+		 "settings": [         	  
+		    {
+            "type": "color",
+            "id": "lineclr",
+            "label": "Line Color",
+            "default": "#eee"
+          }
+		]
+      }
+	]
+  }
+{% endschema %}

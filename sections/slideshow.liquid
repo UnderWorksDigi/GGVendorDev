@@ -1,0 +1,1345 @@
+{% assign secSt = section.settings %}
+{%- capture style -%}
+--cl:{{ secSt.ss_arrow}};
+--dotbg:{{ secSt.ss_dot}};
+--dotbga:{{ secSt.ss_dota}};
+    {% if section.settings.ht == '1' %}
+        {% for block in section.blocks %}
+            {% if block.settings.image != blank %}
+                --dh:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100}}%;
+                {% if block.settings.mb_image != blank %}
+                    --mh:{{ 1 | divided_by: block.settings.mb_image.aspect_ratio | times: 100}}%;
+                {% else %}
+                    --mh:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100}}%;
+                {% endif %}
+                {% break %}
+            {% else %}
+                --dh:40%;--mh:40%;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        --dh:{{secSt.ds_height}}px;--th:{{secSt.tb_height}}px;--mh:{{secSt.mb_height}}px;
+    {% endif %}
+{%- endcapture -%}
+{%- capture slideShowSec -%}
+<div class="content-indent {{ secSt.top-offeset}}{% if secSt.sld %} medium-up--hide{% endif %}{% if secSt.slm %} small--hide{% endif %}" data-section-id="{{ section.id }}" data-section-type="slideshow">
+  
+{% if section.blocks.size > 0 %}
+  <div class="oss_wrap{% if secSt.section_width %} page-width{% endif %}"{% if secSt.section_width %} style="max-width:{{ secSt.box-width}}px; margin:0 auto"{% endif %}>
+ 
+    <div class="slideshow{% if section.settings.ht == '1' %} im{% else %} ct{% endif %}{% if secSt.arrow_m %} hide_ar{% endif %}{% if secSt.dots_m %} hide_dt{% endif %}" id="Slideshow-{{ section.id }}" data-slick='{"slidesToShow":1,"slidesToScroll":1,"arrows":{{ secSt.arrow }},"dots":{{ secSt.dots }},"fade":{{secSt.slideEf}},{%- if settings.rtl -%}"rtl": true,{%- endif -%} "infinite": true, "autoplay":{{secSt.autoplay}}, "autoplaySpeed":{{secSt.speed | times: 1000}} }' style="{{style}}">
+           
+      {% for block in section.blocks %}
+      
+      {%- liquid
+            assign blkSt = block.settings
+        	if blkSt.video_url.type == "youtube"
+        		assign videotype = "youtube"
+        	elsif blkSt.video_url.type == "vimeo"
+        		assign videotype = "vimeo"
+        	else
+        		assign videotype = "video"
+            endif
+            
+            if blkSt.mb_image != blank
+            	assign dsizes = '1296,1512,2000,2450,3000,3600'
+            else
+        		assign dsizes = ''
+            endif    
+            assign msizes = '375,540,780,1080'
+            
+            assign imgPos = blkSt.ialign | replace:"_"," "
+            if blkSt.image.presentation.focal_point != blank
+               assign imgPos = blkSt.image.presentation.focal_point
+            endif
+            assign img2Pos = blkSt.ialign | replace:"_"," "
+            if blkSt.imagem != blank and blkSt.imagem.presentation.focal_point != blank
+               assign img2Pos = blkSt.imagem.presentation.focal_point
+            endif
+      %}
+      
+      <div class="ss_slide sslide{{ block.id }}" data-type="{{block.type}}" {% if block.type == 'video' %} data-video="{{videotype}}"{% endif %} {{ block.shopify_attributes }}>
+        {% if blkSt.display_btn != true and blkSt.link != blank and block.type != 'video' %}<a href="{{ blkSt.link }}" class="ss_link" {% if blkSt.newt1 %}target="_blank"{% endif %}>{% endif %}
+
+        {% if block.type == 'image' and blkSt.image != blank %}
+              <img {% if section.index > 2 %} loading="lazy"{% endif %}class="ss_img lazyload js{% if blkSt.mb_image != blank %} small--hide{% else %}{% if forloop.first and section.index < 2 %} lazypreload{% endif %}{% endif %}" src="{{ blkSt.image | img_url: '100x' }}" data-srcset="{% render 'lazyload', image: blkSt.image, sizes: '400,760,1200,1600,2000' %}" data-sizes="auto" width="{{ blkSt.image.width }}" height="{{ blkSt.image.height }}" alt="{{ blkSt.image.alt }}" style="--pos:{{imgPos}};" />
+              {% if blkSt.mb_image != blank %}
+                  <img {% if section.index > 2 %} loading="lazy"{% endif %}class="ss_img lazyload js medium-up--hide{% if forloop.first and section.index < 2 %} lazypreload{% endif %}" src="{{ blkSt.mb_image | img_url: '100x' }}" data-srcset="{% render 'lazyload', image: blkSt.mb_image, sizes: '400,760,1200,1600,2000' %}" data-sizes="auto" width="{{ blkSt.mb_image.width }}" height="{{ blkSt.mb_image.height }}" alt="{{ blkSt.mb_image.alt }}" style="--ipos:{{img2Pos}};" />
+          	  {% endif %}
+        {% elsif block.type == 'video' and blkSt.video_url != blank %}
+          {% if blkSt.video_url.type == "youtube" %}
+        		<iframe class="embed-player slide-media" width="980" height="520" src="https://www.youtube.com/embed/{{ blkSt.video_url.id }}?enablejsapi=1&controls=0&fs=0&iv_load_policy=3&rel=0&showinfo=0&loop=1&playlist={{blkSt.video_url.id}}&playsinline=1" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+		  {% elsif blkSt.video_url.type == "vimeo" %}
+        		<iframe class="embed-player slide-media" src="https://player.vimeo.com/video/{{blkSt.video_url.id}}?api=1&byline=0&portrait=0&title=0&background=1&mute=1&loop=1&autoplay=0&id={{blkSt.video_url.id}}" width="980" height="520" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          {% endif %}
+        {% elsif block.type == 'video' and blkSt.mp4url != blank %}
+        	<video class="slide-video slide-media" loop muted preload="metadata" playsinline>
+              <source src="{{blkSt.mp4url}}" type="video/mp4" />
+            </video>
+        {% else %}
+        	<div class="ss_img js">
+                <div class="ph_bg">{% capture current %}{% cycle 1, 2 %}{% endcapture %}{{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            </div>
+        {% endif %}
+        {% if section.settings.ht == '1' %}<div class="ssimgHt">{% endif %}
+            <div class="ss_txt-wrap{% if blkSt.title != blank or blkSt.ss_hd3 != blank %} ss_ol{% endif %} {{ blkSt.text_align }} {{ blkSt.text_align_m }}" style="max-width:{{blkSt.con_width }}px;{% if blkSt.cap_ol %}--stbg:{{ blkSt.cap_ol_cl | color_modify: 'alpha', blkSt.cap_ol_op }};{% endif %}{% if blkSt.cap_ol_mb %}--stbgm:{{ blkSt.cap_ol_cl | color_modify: 'alpha', blkSt.cap_ol_op}};{% endif %}--ovr:{{ blkSt.ss_ol | color_modify: 'alpha', blkSt.ss_ol_op }};">
+              <div class="ss_txt{% if blkSt.text-left %} tl{% else %} tc{% endif %}{% if blkSt.cap_ol %} bg{% endif %}{% if blkSt.cap_ol_mb %} bgm{% endif %}{% if secSt.txtanimation %} anime {{ secSt.animation-style }}{% endif %}">
+                 
+    			  {% unless blkSt.ss_hd1 == blank %}<p class="ss_hd1 tltxt" style="--cl:{{blkSt.hd1_cl}};--fs:{{blkSt.hd1_fs}}px;--fw:{{blkSt.fw1}};--fsm:{{blkSt.hd1_fs_m}}px;--mb:{{blkSt.hd1_mb}}px;--mbm:{{blkSt.hd1_mb_m}}px;--ls:0.0{{ blkSt.hd1_ls}}em">
+    			  {{ blkSt.ss_hd1 }}</p>{% endunless %}
+                  
+    			  {% unless blkSt.title == blank %}<h2 class="ss_hd2 tltxt" style="--ffm:var(--{{ blkSt.ffm }});--cl:{{blkSt.hd2_cl}};--fs:{{blkSt.hd2_fs}}px;--fw:{{blkSt.fw2}};--fsm:{{blkSt.hd2_fs_m}}px;--mb:{{blkSt.hd2_mb}}px;--mbm:{{blkSt.hd2_mb_m}}px;--ls:0.0{{ blkSt.hd2_ls}}em;--flh:{{blkSt.hd2_lh}}">
+    			  {{ blkSt.title  }}</h2>{% endunless %}
+                  
+    			  {% unless blkSt.ss_hd3 == blank %}<div class="ss_hd3 tltxt{% if blkSt.ss_hd3_hide %} small--hide{% endif %}" style="--cl:{{blkSt.hd3_cl}};--fs:{{blkSt.hd3_fs}}px;--fw:{{blkSt.fw3}}px;--fsm:{{blkSt.hd3_fs_m}}px;--mb:{{blkSt.hd3_mb}}px;--mbm:{{blkSt.hd3_mb_m}}px;--ls:0.0{{ blkSt.hd3_ls}}em;--flh:{{blkSt.hd3_lh}}">												 
+    			  {{ blkSt.ss_hd3 }}</div>{% endunless %}
+    			  
+                  {% if blkSt.display_btn %}
+                  	  <div class="btnWrap">
+                        <a class="btn {{blkSt.btn-size}} {{blkSt.btn-style}}" {% if blkSt.newt1 %}target="_blank"{% endif %} href="{{ blkSt.link }}">{{ blkSt.slide_button_text }}</a>
+                        <a class="btn {{blkSt.btn-size}} {{blkSt.btn-style}}" {% if blkSt.newt2 %}target="_blank"{% endif %} href="{{ blkSt.link2 }}">{{ blkSt.slide_button_text_2 }}</a>
+                  	  </div>
+                  {% elsif block.type == 'video' %}
+                	  {% if blkSt.slide_button_text != blank %}<div class="btnWrap"><a class="btn {{blkSt.btn-size}} {{blkSt.btn-style}}" href="{{ blkSt.link }}">{{blkSt.slide_button_text}}</a></div>{% endif %}
+                  {% else %}
+                    {% if blkSt.slide_button_text != blank %}<div class="btnWrap"><span class="btn {{blkSt.btn-size}} {{blkSt.btn-style}}" >{{blkSt.slide_button_text}}</span></div>{% endif %}
+                  {% endif %}            
+              </div>
+            </div>
+        {% if section.settings.ht == '1' %}</div>{% endif %}
+        {% if blkSt.display_btn != true and blkSt.link != blank and block.type != 'video' %}</a>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% if section.blocks.size == 0 %}<div class="placeholder-noblocks">{{ 'homepage.onboarding.no_content' | t }}</div>{% endif %}
+</div>
+{%- endcapture -%}
+{{slideShowSec | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Slideshow",
+    "class": "index-section",
+	"disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings": [
+	 {
+        "type": "paragraph",      
+        "content": "Use this slideshow when you have image + text to display above image."
+      },		  	   
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "none",
+			"info":" This leave space above section",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+	  {
+        "type": "checkbox",
+        "id": "sld",
+        "label": "Hide on Desktop?",
+        "default": false
+      },
+	  {
+        "type": "checkbox",
+        "id": "slm",
+        "label": "Hide on mobile?",
+        "default": false
+      },
+     {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Box Width?",
+		"default": false	
+	  },
+	 {
+        "type": "range",
+        "id": "box-width",
+       	"label":"Set Box Width",
+        "default": 1500,
+        "min": 1200,
+        "max": 2200,
+        "step": 100,
+        "unit": "px"
+      },
+     {
+		"type":"paragraph",
+		"content":"Section Height ==="
+	  },       
+       {
+            "type": "select",
+            "id": "ht",
+            "label": "Section Height ====",
+            "default": "2",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "Adapt to first image"
+                },
+                {
+                    "value": "2",
+                    "label": "Custom as below"
+                }
+            ]
+      },
+      {
+        "type": "range",
+        "id": "ds_height",
+        "label": "Desktop",
+        "default": 700,
+        "min": 200,
+        "max": 1000,
+        "step": 10
+      },
+      {
+        "type": "range",
+        "id": "tb_height",
+        "label": "Tablet",
+        "default": 450,
+        "min": 200,
+        "max": 1000,
+        "step": 10
+      },
+      {
+        "type": "range",
+        "id": "mb_height",
+        "label": "Mobile",
+        "default": 350,
+        "min": 100,
+        "max": 800,
+        "step": 10
+      },       
+	 {
+		"type":"paragraph",
+		"content":"Slider Settings ==="	
+	  },
+      {
+        "type": "select",
+        "id": "slideEf",
+        "label": "Slide Effect",
+        "default": "true",
+        "options": [
+          { "value": "true", "label": "Fade" },
+          { "value": "false", "label": "Slide" }
+        ]
+      },
+	  {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Auto-rotate slides",
+        "default": true
+      },
+	  {
+          "type": "range",
+          "id": "speed",
+          "label": "Change Slides Every",
+          "default": 5,
+          "min": 1,
+          "max": 60,
+          "step": 1,
+          "unit": "sec"
+      },
+	  {
+        "type": "checkbox",
+        "id": "arrow",
+        "label": "Show Next/Previous Arrows?",
+        "default": true
+      },
+		{
+        "type": "checkbox",
+        "id": "arrow_m",
+        "label": "Hide on mobile?",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "ss_arrow",
+        "label": "Arrows Color",
+        "default": "#eee"
+      },
+	  {
+        "type": "checkbox",
+        "id": "dots",
+        "label": "Show Dotted Navigation?",
+        "default": false
+      },
+ 	  {
+        "type": "checkbox",
+        "id": "dots_m",
+        "label": "Hide on mobile?",
+        "default": true
+      },
+        {
+          "type": "color",
+          "id": "ss_dot",
+          "label": "Dots Color",
+          "default": "#eee"
+        },   
+		{
+          "type": "color",
+          "id": "ss_dota",
+          "label": "Active Dot Color",
+          "default": "#eee"
+        },   
+	    {
+        "type": "checkbox",
+        "id": "txtanimation",
+        "label": "Enable Text Animation",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "animation-style",
+        "label": "Text Animation Style",
+        "default": "st1",
+        "options": [
+          {
+            "label": "Style1",
+            "value": "st1"
+          },
+          {
+            "label": "Style2",
+            "value": "st2"
+          },
+		  {
+            "label": "Style3",
+            "value": "st3"
+          },
+ 		  {
+            "label": "Style4",
+            "value": "st4"
+          } 
+        ]
+      }	 
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Desktop Image",
+			"info": "Recommended width 1920px and height as per section height - desktop."
+          },
+		  {
+            "type": "image_picker",
+            "id": "mb_image",
+            "label": "Mobile Image",
+			"info": "Recommended width 750px and height as per section height - mobile. If mobile image is blank, dekstop image will be used."
+          },
+          {
+            "type": "select",
+            "id": "ialign",
+            "label": "Image Alignment",
+            "default": "top",
+            "options": [
+              { "value": "top", "label": "Top" },
+              { "value": "center", "label": "Middle" },
+              { "value": "bottom", "label": "Bottom" }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "ss_ol",
+            "label": "Image Overlay",
+            "default": "#3d4246"
+          },
+          {
+            "type": "range",
+            "id": "ss_ol_op",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Overlay Opacity",
+            "unit": "%",
+            "default": 0
+          },
+          {
+          "type":"header",
+          "content":"Pre Heading"	
+          },
+          {
+            "type": "text",
+            "id": "ss_hd1",
+            "label": "Text",
+            "default": "WE ARE BEYOND IMAGINATION"			
+          },
+          {
+              "type": "color",
+              "id": "hd1_cl",
+              "label": "Color",
+              "default": "#000"
+           },
+          {
+              "type": "range",
+              "id": "hd1_fs",
+              "label": "Font Size",
+              "default": 14,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 
+           {
+            "type": "select",
+            "id": "fw1",
+            "label": "Font Weight",
+            "default": "400",
+              "options": [
+                {
+                  "value": "300",
+                  "label": "Light"
+                },
+                {
+                  "value": "400",
+                  "label": "Regular"
+                },
+                {
+                  "value": "500",
+                  "label": "Medium"
+                },
+                {
+                  "value": "600",
+                  "label": "Semi Bold"
+                },
+                {
+                  "value": "700",
+                  "label": "Bold"
+                }
+             ]
+           },
+            {
+            "type": "range",
+            "id": "hd1_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd1_mb",
+            "label": "Margin Bottom",
+            "default": 5,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd1_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 12,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 			              
+ 		  {
+            "type": "range",
+            "id": "hd1_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 5,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+ 		  {
+            "type":"header",
+            "content":"Big Heading"	
+          },
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Text",
+            "default": "MAKING BRAND VISIBLE"			
+          },
+		  {
+              "type": "color",
+              "id": "hd2_cl",
+              "label": "Color",
+              "default": "#000"
+           },
+          {
+            "type": "select",
+            "id": "ffm",
+            "label": "Font Family",
+            "default": "ft2",
+            "options": [
+              {
+                "value": "ft1",
+                "label": "Font 1"
+              },
+              {
+                "value": "ft2",
+                "label": "Font 2"
+              },
+              {
+                "value": "ft3",
+                "label": "Font 3"
+              }
+            ]
+          },
+          {
+              "type": "range",
+              "id": "hd2_fs",
+              "label": "Font Size",
+              "default": 40,
+              "min": 10,
+              "max": 100,
+              "step": 1,
+              "unit": "px"
+          }, 
+           {
+            "type": "select",
+            "id": "fw2",
+            "label": "Font Weight",
+            "default": "600",
+              "options": [
+                {
+                  "value": "300",
+                  "label": "Light"
+                },
+                {
+                  "value": "400",
+                  "label": "Regular"
+                },
+                {
+                  "value": "500",
+                  "label": "Medium"
+                },
+                {
+                  "value": "600",
+                  "label": "Semi Bold"
+                },
+                {
+                  "value": "700",
+                  "label": "Bold"
+                }
+             ]
+           },
+ 			{
+              "type": "range",
+              "id": "hd2_lh",
+              "label": "Line Height",
+              "default": 1.2,
+              "min": 1.0,
+              "max": 2.0,
+              "step": 0.1,
+              "info": "Space between text lines. Default is set to 1.3"
+          }, 	
+            {
+            "type": "range",
+            "id": "hd2_ls",
+            "label": "Letter Spacing",
+         	"default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd2_mb",
+            "label": "Margin Bottom",
+            "default": 5,
+            "min": 5,
+            "max": 50,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd2_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 25,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 		           
+ 		  {
+            "type": "range",
+            "id": "hd2_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 15,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+ 		{
+            "type":"header",
+            "content":"Detail"	
+          },
+          {
+            "type": "textarea",
+            "id": "ss_hd3",
+            "label": "Text",
+            "default": "I am Optimal, An Intelligent and beautiful shopify themes"			
+          },
+		 {
+            "type": "checkbox",
+            "id": "ss_hd3_hide",
+            "label": "Hide in mobile?",
+            "default": true			
+          },
+		 {
+              "type": "color",
+              "id": "hd3_cl",
+              "label": "Color",
+              "default": "#000"
+           },
+         {
+              "type": "range",
+              "id": "hd3_fs",
+              "label": "Font Size",
+              "default": 18,
+              "min": 10,
+              "max": 100,
+              "step": 1,
+              "unit": "px"
+          }, 
+           {
+            "type": "select",
+            "id": "fw3",
+            "label": "Font Weight",
+            "default": "400",
+              "options": [
+                {
+                  "value": "300",
+                  "label": "Light"
+                },
+                {
+                  "value": "400",
+                  "label": "Regular"
+                },
+                {
+                  "value": "500",
+                  "label": "Medium"
+                },
+                {
+                  "value": "600",
+                  "label": "Semi Bold"
+                },
+                {
+                  "value": "700",
+                  "label": "Bold"
+                }
+             ]
+           },
+ 			{
+              "type": "range",
+              "id": "hd3_lh",
+              "label": "Line Height",
+              "default": 1.6,
+              "min": 1.0,
+              "max": 2.0,
+              "step": 0.1,
+              "info": "Space between text lines. Default is set to 1.6"
+          }, 	
+            {
+            "type": "range",
+            "id": "hd3_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd3_mb",
+            "label": "Margin Bottom",
+            "default": 25,
+            "min": 5,
+            "max": 50,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd3_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 14,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 		            
+ 		  {
+            "type": "range",
+            "id": "hd3_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 15,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+            "type": "header",        
+            "content": "Slide Buttons" 			
+          },		
+		  {
+            "type": "text",
+            "id": "slide_button_text",
+            "label": "Button 1 Text",
+ 			"default":"Shop now"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Button 1 Link"
+          },
+		  {
+            "type": "checkbox",
+            "id": "newt1",
+            "label": "Open in New Tab?",
+ 			"default":false
+          },
+ 		 {
+            "type": "checkbox",
+            "id": "display_btn",
+            "label": "Display 2 buttons?",
+ 			"default":false
+          },
+		{
+            "type": "text",
+            "id": "slide_button_text_2",
+            "label": "Button 2 Text",
+ 			"default":"Shop now"			
+          },
+          {
+            "type": "url",
+            "id": "link2",
+            "label": "Button 2 Link"
+          },
+		 {
+            "type": "checkbox",
+            "id": "newt2",
+            "label": "Open in New Tab?",
+ 			"default":false
+          },
+	   {
+        "type": "select",
+        "id": "btn-style",
+        "label": "Select Button",
+        "default": "btn1",
+        "options": [
+          {
+            "label": "Solid Button 1",
+            "value": "btn1"
+          },
+          {
+            "label": "Solid Button 2",
+            "value": "btn2"
+          },
+		  {
+            "label": "Solid Button 3",
+            "value": "btn3"
+          },
+ 		  {
+            "label": "Border Button 1",
+            "value": "bdr-btn1"
+          },
+ 		{
+            "label": "Border Button 2",
+            "value": "bdr-btn2"
+          } 
+        ]
+      },
+    {
+        "type": "select",
+        "id": "btn-size",
+        "label": "Button Size",
+        "default": "btn-med",
+        "options": [
+          {
+            "label": "Small",
+            "value": "btn-small"
+          },
+          {
+            "label": "Medium",
+            "value": "btn-med"
+          },
+		  {
+            "label": "Large",
+            "value": "btn-large"
+          } 		  
+        ]
+      },
+		 {
+            "type": "header",        
+            "content": "Slide Caption" 			
+          },
+ 		 {
+            "type": "range",
+            "id": "con_width",
+            "min": 1000,
+            "max": 2000,
+            "step": 10,
+            "label": "Container Max Width (desktop)",
+            "unit": "px",
+            "default": 1200
+          },
+		 {
+            "type": "checkbox",
+            "id": "text-left",
+            "label": "Text Align Left?",
+			"default":true
+          },
+          {
+            "type": "select",
+            "id": "text_align",
+            "label": "Position",
+            "default": "f-aic-md f-jcs-md",			
+            "options": [
+ 			  { "label": "Top Left",      "value": "f-ais-md f-jcs-md" },
+  			  { "label": "Top Center",    "value": "f-jcc-md f-ais-md" },
+  			  { "label": "Top Right",     "value": "f-jce-md f-ais-md" },             
+			  { "label": "Left",  		  "value": "f-aic-md f-jcs-md" },
+ 			  { "label": "Center", 		  "value": "f-jcc-md f-aic-md" },
+			  { "label": "Right",  		  "value": "f-jce-md f-aic-md" },
+ 			  { "label": "Bottom Left",   "value": "f-aie-md f-jcs-md" },						 
+              { "label": "Bottom Center", "value": "f-jcc-md f-aie-md" }, 						 
+			  { "label": "Bottom Right",  "value": "f-jce-md f-aie-md" }
+              
+            ]
+          },
+ 		{
+            "type": "select",
+            "id": "text_align_m",
+            "label": "Position (mobile)",
+            "default": "f-aic f-jcs",			
+            "options": [ 			
+			   { "label": "Top Left",     "value": "f-ais f-jcs" },
+  			  { "label": "Top Center",    "value": "f-jcc f-ais" },
+  			  { "label": "Top Right",     "value": "f-jce f-ais" },             
+			  { "label": "Left",  		  "value": "f-aic f-jcs" },
+ 			  { "label": "Center", 		  "value": "f-jcc f-aic" },
+			  { "label": "Right",  		  "value": "f-jce f-aic" },
+ 			  { "label": "Bottom Left",   "value": "f-aie f-jcs" },						 
+              { "label": "Bottom Center", "value": "f-jcc f-aie" }, 						 
+			  { "label": "Bottom Right",  "value": "f-jce f-aie" }			              
+            ],
+			"info":"This option will be useful when you set different image for mobile view"
+          },
+          {
+            "type": "checkbox",
+            "id": "cap_ol",
+            "label": "Display Background?",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "cap_ol_mb",
+            "label": "Display Background (mobile) ?",
+            "default": false
+          },
+          {
+            "type": "color",
+            "id": "cap_ol_cl",
+            "label": "Background",
+            "default": "#fff"
+          },
+          {
+            "type": "range",
+            "id": "cap_ol_op",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background Opacity",
+            "unit": "%",
+            "default": 0.9
+          }
+
+        ]
+      },
+	  {
+        "type": "video",
+        "name": "Video slide",
+        "settings": [
+          {
+                "type": "video_url",
+                "id": "video_url",
+                "label": "YouTube/Vimeo Video link",
+                "accept": ["youtube", "vimeo"],
+                "info":"[How to copy youtube url?](https://optimal-demos.myshopify.com/pages/video-section)"
+          },		        		
+          {
+            "type": "textarea",
+            "id": "mp4url",
+            "label": "Mp4 video link",
+            "info":"[How to get video url?](https://www.adornthemes.com/knowledge-base/how-to-get-mp4-video-link/)"
+          },
+          {
+            "type": "color",
+            "id": "ss_ol",
+            "label": "Image Overlay",
+            "default": "#3d4246"
+          },
+          {
+            "type": "range",
+            "id": "ss_ol_op",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Overlay Opacity",
+            "unit": "%",
+            "default": 0
+          },
+          {
+          "type":"header",
+          "content":"Pre Heading"	
+          },
+          {
+            "type": "text",
+            "id": "ss_hd1",
+            "label": "Text",
+            "default": "Multipurpose"			
+          },
+          {
+              "type": "color",
+              "id": "hd1_cl",
+              "label": "Color",
+              "default": "#000"
+           },
+          {
+              "type": "range",
+              "id": "hd1_fs",
+              "label": "Font Size",
+              "default": 14,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 			  
+            {
+            "type": "range",
+            "id": "hd1_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd1_mb",
+            "label": "Margin Bottom",
+            "default": 5,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd1_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 12,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 			             
+ 		  {
+            "type": "range",
+            "id": "hd1_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 5,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+ 		  {
+            "type":"header",
+            "content":"Big Heading"	
+          },
+          {
+            "type": "textarea",
+            "id": "title",
+            "label": "Text",
+            "default": "Advance Shopify Theme"			
+          },
+		  {
+              "type": "color",
+              "id": "hd2_cl",
+              "label": "Color",
+              "default": "#000"
+           },
+          {
+              "type": "range",
+              "id": "hd2_fs",
+              "label": "Font Size",
+              "default": 40,
+              "min": 10,
+              "max": 100,
+              "step": 1,
+              "unit": "px"
+          }, 
+           {
+            "type": "select",
+            "id": "ffm",
+            "label": "Font Family",
+            "default": "ft2",
+            "options": [
+              {
+                "value": "ft1",
+                "label": "Font 1"
+              },
+              {
+                "value": "ft2",
+                "label": "Font 2"
+              },
+              {
+                "value": "ft3",
+                "label": "Font 3"
+              }
+            ]
+          },
+ 			{
+              "type": "range",
+              "id": "hd2_lh",
+              "label": "Line Height",
+              "default": 1.2,
+              "min": 1.0,
+              "max": 2.0,
+              "step": 0.1,
+              "info": "Space between text lines. Default is set to 1.2."
+          }, 	
+          {
+            "type": "range",
+            "id": "hd2_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd2_mb",
+            "label": "Margin Bottom",
+            "default": 5,
+            "min": 5,
+            "max": 50,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd2_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 25,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 		            
+ 		  {
+            "type": "range",
+            "id": "hd2_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 10,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+ 		{
+            "type":"header",
+            "content":"Detail"	
+          },
+          {
+            "type": "textarea",
+            "id": "ss_hd3",
+            "label": "Text",
+            "default": "I am Optimal, Looks beautiful and sharp"			
+          },
+		 {
+            "type": "checkbox",
+            "id": "ss_hd3_hide",
+            "label": "Hide in mobile?",
+            "default": true			
+          },
+		 {
+              "type": "color",
+              "id": "hd3_cl",
+              "label": "Color",
+              "default": "#000"
+           },
+         {
+              "type": "range",
+              "id": "hd3_fs",
+              "label": "Font Size",
+              "default": 18,
+              "min": 10,
+              "max": 100,
+              "step": 1,
+              "unit": "px"
+          }, 
+ 			{
+              "type": "range",
+              "id": "hd3_lh",
+              "label": "Line Height",
+              "default": 1.6,
+              "min": 1.0,
+              "max": 2.0,
+              "step": 0.1,
+ 			  "info": "Space between text lines. Default is set to 1.6"
+          }, 	
+            {
+            "type": "range",
+            "id": "hd3_ls",
+            "label": "Letter Spacing",
+            "default": 2,
+            "min": 0,
+            "max": 9,
+            "step": 1,
+            "unit": "em",
+			"info": "Space between characters in a text. Default is set to 2em."
+          },
+ 		  {
+            "type": "range",
+            "id": "hd3_mb",
+            "label": "Margin Bottom",
+            "default": 25,
+            "min": 5,
+            "max": 50,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+              "type": "range",
+              "id": "hd3_fs_m",
+              "label": "Font Size (mobile)",
+              "default": 14,
+              "min": 10,
+              "max": 50,
+              "step": 1,
+              "unit": "px"
+          }, 		           
+ 		  {
+            "type": "range",
+            "id": "hd3_mb_m",
+            "label": "Margin Bottom (mobile)",
+            "default": 15,
+            "min": 5,
+            "max": 30,
+            "step": 1,
+            "unit": "px"
+          },
+			{
+            "type": "header",        
+            "content": "Slide Buttons" 			
+          },		
+		  {
+            "type": "text",
+            "id": "slide_button_text",
+            "label": "Button 1 Text",
+ 			"default":"Shop now"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Button 1 Link"
+          },
+ 		 {
+            "type": "checkbox",
+            "id": "display_btn",
+            "label": "Display 2 buttons?",
+ 			"default":false
+          },
+		{
+            "type": "text",
+            "id": "slide_button_text_2",
+            "label": "Button 2 Text",
+ 			"default":"Shop now"			
+          },
+          {
+            "type": "url",
+            "id": "link2",
+            "label": "Button 2 Link"
+          },
+	 {
+        "type": "select",
+        "id": "btn-style",
+        "label": "Select Button",
+        "default": "btn1",
+        "options": [
+          {
+            "label": "Solid Button 1",
+            "value": "btn1"
+          },
+          {
+            "label": "Solid Button 2",
+            "value": "btn2"
+          },
+		  {
+            "label": "Solid Button 3",
+            "value": "btn3"
+          },
+ 		  {
+            "label": "Border Button 1",
+            "value": "bdr-btn1"
+          },
+ 		{
+            "label": "Border Button 2",
+            "value": "bdr-btn2"
+          } 
+        ]
+      },
+    {
+        "type": "select",
+        "id": "btn-size",
+        "label": "Button Size",
+        "default": "btn-large",
+        "options": [
+          {
+            "label": "Small",
+            "value": "btn-small"
+          },
+          {
+            "label": "Medium",
+            "value": "btn-med"
+          },
+		  {
+            "label": "Large",
+            "value": "btn-large"
+          } 		  
+        ]
+      },
+		 {
+            "type": "header",        
+            "content": "Slide Caption" 			
+          },
+ 		 {
+            "type": "range",
+            "id": "con_width",
+            "min": 1000,
+            "max": 2000,
+            "step": 10,
+            "label": "Container Max Width (desktop)",
+            "unit": "px",
+            "default": 1200
+          },
+		 {
+            "type": "checkbox",
+            "id": "text-left",
+            "label": "Text Align Left?",
+			"default":false
+          },
+          {
+            "type": "select",
+            "id": "text_align",
+            "label": "Position",
+            "default": "f-jcc-md f-aie-md",			
+            "options": [
+ 			  {"label": "Top Left",      "value": "f-ais-md f-jcs-md"},
+  			  {"label": "Top Center",    "value": "f-jcc-md f-ais-md"},
+  			  {"label": "Top Right",     "value": "f-jce-md f-ais-md"},             
+			  {"label": "Left",   		 "value": "f-aic-md f-jcs-md"},
+ 			  {"label": "Center", 		 "value": "f-jcc-md f-aic-md"},
+			  {"label": "Right",         "value": "f-jce-md f-aic-md"},
+ 			  {"label": "Bottom Left",   "value": "f-aie-md f-jcs-md"},						 
+              {"label": "Bottom Center", "value": "f-jcc-md f-aie-md"}, 						 
+			  {"label": "Bottom Right",  "value": "f-jce-md f-aie-md"}
+              
+            ]
+          },
+ 		{
+            "type": "select",
+            "id": "text_align_m",
+            "label": "Position (mobile)",
+            "default": "f-jcc f-aic f-asc",			
+            "options": [ 			
+			  { "label": "Top",    "value": "f-jcc f-ais" },
+			  { "label": "Center", "value": "f-jcc f-aic f-asc"},
+              { "label": "Bottom", "value": "f-jcc f-aie" } 			              
+            ]
+          },
+          {
+            "type": "checkbox",
+            "id": "cap_ol",
+            "label": "Display Background?",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "cap_ol_mb",
+            "label": "Display Background (mobile) ?",
+            "default": false
+          },
+          {
+            "type": "color",
+            "id": "cap_ol_cl",
+            "label": "Background",
+            "default": "#fff"
+          },
+          {
+            "type": "range",
+            "id": "cap_ol_op",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "label": "Background Opacity",
+            "unit": "%",
+            "default": 0.9
+          }
+
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "Slideshow",      
+      "settings": {
+        "autoplay": true,
+        "speed": 5
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+		{
+          "type": "image"
+        }
+      ]
+    }]
+  }
+{% endschema %}

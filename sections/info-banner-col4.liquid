@@ -1,0 +1,521 @@
+{%- capture infoBanner -%}
+{% assign secSt = section.settings %}
+<div class="content-indent {{ secSt.top-offeset}}{% if secSt.hide_mobile %} small--hide{% endif %}">
+ 
+ {% if secSt.section_cov %}<div class="section-cover" style="--sbg:{{secSt.sec_bg_clr}};">{% endif %}
+	
+  <div class="{% unless secSt.section_width %} page-width{% endunless %}">
+
+    {% for block in section.blocks limit: section.blocks.size %}        
+    
+    {%- capture image_layout -%}
+   <div class="row_item of_hidden fl fl1 w_100 f-aic jcc grp1 row_img {% if block.settings.layout == 'right' %}order1{% else %}order0{% endif %}">
+      {% if block.settings.image != blank %}
+      		{% if block.settings.button_link != blank %}<a class="db w_100" href="{{ block.settings.button_link}}">{% endif %}
+            <div class="imgWrapper w_100" style="max-width:{{ block.settings.image.width }}px;">
+              <img loading="lazy" class="img_fl lazyload{% if secSt.img_zoom %} zoom{% endif %}" src="{{ block.settings.image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" alt="{{ block.settings.image.alt | escape }}" />
+            </div>
+       	{% if block.settings.button_link != blank %}</a>{% endif%}
+      {% else %}      
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      
+      {% endif %}
+    </div>
+    {%- endcapture -%}
+    
+    {%- capture image_layout2 -%}
+    <div class="row_item of_hidden fl fl1 w_100 f-aic jcc grp2 row_img {% if block.settings.layout2 == 'right' %}order3{% else %}order2{% endif %}">
+      {% if block.settings.image2 != blank %}
+      	{% if block.settings.button_link2 != blank %}<a class="db w_100" href="{{ block.settings.button_link2}}">{% endif %}
+            <div class="imgWrapper" style="max-width:{{ block.settings.image2.width }}px;">
+              <img loading="lazy" class="img_fl lazyload{% if secSt.img_zoom %} zoom{% endif %}" src="{{ block.settings.image2 | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: block.settings.image2, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ block.settings.image2.width }}" height="{{ block.settings.image2.height }}" alt="{{ block.settings.image2.alt | escape }}" />
+            </div>
+       	{% if block.settings.button_link2 != blank %} </a> {% endif %}
+      {% else %}      
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}      
+      {% endif %}
+    </div>
+    {%- endcapture -%}     
+
+    {% assign box-delay = forloop.index | minus:1 %}
+    {% assign delay_time = 50 | times : box-delay %}    
+ 
+    <div class="ft_row fl f-aist f-jcsb w_100 ft_col4 row-{{ block.id }} wow fadeInUp" data-wow-delay="{{delay_time}}ms" style="--ffm:var(--{{secSt.ffm}});--fs:{{secSt.fs}}px;--fw:{{secSt.fw}};--flh:{{secSt.flh}};--fsm:{{secSt.fsm}}px;--dfs:{{secSt.dfs}}px;--dflh:{{secSt.dflh}};--dfsm:{{secSt.dfsm}}px;">        
+      
+      <!-- Column 1 -->      
+      {{ image_layout }}      
+      <div class="row_item of_hidden fl fl1 w_100 f-aic grp1 row_text{% if block.settings.layout == 'right' %} order0{% else %} order1{% endif %}" style="--bg:{{block.settings.text_bg_clr}};--cl:{{block.settings.text_clr}};--mw:{{ block.settings.image.width }}px;">
+        <div class="row-text {{block.settings.text_align}}">
+          {% if block.settings.title != blank %}
+         	 <h3 class="tltxt" style="--mb:15px;--mbm:10px;">{{ block.settings.title }}</h3>
+          {% endif %}
+          {% if block.settings.text != blank %}
+          	<div class="rte dtxt">{{ block.settings.text }}</div>
+          {% endif %}
+          {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+            <a href="{{ block.settings.button_link }}" class="btn {{secSt.btn-size}} {{block.settings.btn-style}} mt20">
+              {{ block.settings.button_label }}
+            </a>
+          {% endif %}
+        </div>
+		</div>           
+      
+       <!-- Column 2 -->        
+     {{ image_layout2 }}
+      <div class="row_item of_hidden fl fl1 w_100 f-aic grp2 row_text{% if block.settings.layout2 == 'right' %} order2{% else %} order3{% endif %}" style="--bg:{{block.settings.text_bg_clr2}}; --cl:{{block.settings.text_clr2}};--mw:{{ block.settings.image2.width }}px;">
+        <div class="row-text {{block.settings.text_align2}}">
+          {% if block.settings.title2 != blank %}
+         	 <h3 class="tltxt" style="--mb:15px;--mbm:10px;">{{ block.settings.title2 }}</h3>
+          {% endif %}
+          {% if block.settings.text2 != blank %}
+          	<div class="rte dtxt">{{ block.settings.text2 }}</div>
+          {% endif %}
+          {% if block.settings.button_label2 != blank and block.settings.button_link2 != blank %}
+            <a href="{{ block.settings.button_link2 }}" class="btn {{secSt.btn-size}} {{block.settings.btn-style2}} mt20">
+              {{ block.settings.button_label2 }}
+            </a>
+          {% endif %}
+        </div>
+      </div>           
+    </div>   	
+	    
+    {% endfor %}  
+
+  </div>
+  {% if secSt.section_cov %}</div> {% endif%}
+</div>
+{%- endcapture -%}
+{{infoBanner | strip_newlines | remove: "  " | remove: "	" }}
+{% schema %}
+  {
+    "name": "Image & Text(4 Columns)",
+    "class": "index-section image-with-text",
+	 "disabled_on": {
+    "groups": ["header", "footer"]
+    },
+    "settings": [	  	 
+	  {
+            "type": "select",
+            "id": "top-offeset",
+            "label": "Top OffSet",
+            "default": "default",
+            "options": [
+              {
+                "value": "default",
+                "label": "Default"
+              },
+              {
+                "value": "small",
+                "label": "Small"
+              },
+			  {
+                "value": "none",
+                "label": "None"
+              }
+			]
+        },
+		{
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	
+		{
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": true
+	  },
+		 {
+        "type": "checkbox",
+        "id": "section_cov",
+        "label": "Add Background?",
+        "default": false
+      },
+	  {
+        "type": "color",
+        "id": "sec_bg_clr",
+        "label": "Background",
+		"default":"#fafafa",
+		"info":"select light color"
+	  },            
+      {
+        "type": "select",
+        "id": "ffm",
+        "label": "Title Font",
+        "default": "ft1",
+        "options": [
+          {
+            "value": "ft1",
+            "label": "Font 1"
+          },
+          {
+            "value": "ft2",
+            "label": "Font 2"
+          },
+          {
+            "value": "ft3",
+            "label": "Font 3"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "fw",
+        "label": "Font Weight",
+        "default": "600",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semi Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "fs",
+        "label": "Title Font Size",
+        "default": 18,
+        "min": 12,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "flh",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Default is set to 1.6"
+      },
+      {
+        "type": "range",
+        "id": "fsm",
+        "label": "Title Font (mobile)",
+        "default": 16,
+        "min": 12,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "dfs",
+        "label": "Detail Font Size",
+        "default": 13,
+        "min": 12,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "dflh",
+        "label": "Line Height",
+        "default": 1.6,
+        "min": 1.0,
+        "max": 2.0,
+        "step": 0.1,
+        "info": "Default is set to 1.6"
+      },
+      {
+        "type": "range",
+        "id": "dfsm",
+        "label": "Detail Font (mobile)",
+        "default": 12,
+        "min": 12,
+        "max": 30,
+        "step": 1,
+        "unit": "px"
+      },
+	   {
+        "type": "select",
+        "id": "btn-size",
+        "label": "Button Size",
+        "default": "btn-small",
+        "options": [
+          {
+            "label": "Small",
+            "value": "btn-small"
+          },
+          {
+            "label": "Medium",
+            "value": "btn-med"
+          },
+		  {
+            "label": "Large",
+            "value": "btn-large"
+          } 		  
+        ]
+      },
+       {
+		"type":"checkbox",
+		"id":"img_zoom",
+		"label":"Enable Image Zoom On Hover?",
+		"default": true
+	 }
+    ],
+	 "blocks": [
+      {
+        "type": "image_with_text",
+        "name": "Block",
+        "settings": [
+			{
+            "type": "header",
+            "content": "Column 1 Image"            
+            },
+           {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+            },  
+          {
+              "type": "select",
+              "id": "layout",
+              "label":"Image alignment",
+              "default": "left",
+              "options": [
+              { "value": "left","label":"Left"},
+              { "value": "right","label":"Right"}
+              ]
+          },
+			{
+            "type": "header",
+            "content": "Column 2 Text"            
+            },
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "SS 2022"		
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post.</p>"
+		
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button label",
+		"default": "Shop Now"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link",
+		"default": "/"
+      },
+ 	  {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text Align",
+            "default": "tl",
+            "options": [
+              {
+                "value": "tl",
+                "label": "Left"
+              },
+              {
+                "value": "tc",
+                "label": "Center"
+              },
+              {
+                "value": "tr",
+                "label": "Right"
+              }
+            ]
+      },
+	 {
+        "type": "header",
+        "content": "Appearance"
+      },
+      {
+        "type": "color",
+        "id": "text_clr",
+        "label": "Text Color",
+        "default": "#000"
+      },
+	 {
+        "type": "color",
+        "id": "text_bg_clr",
+        "label": "Background Color",
+        "default": "#eee"
+      },
+	  {
+            "type": "select",
+            "id": "btn-style",
+            "label": "Select Button",
+            "default": "bdr-btn1",
+            "options": [
+              {
+                "label": "Solid Button 1",
+                "value": "btn1"
+              },
+              {
+                "label": "Solid Button 2",
+                "value": "btn2"
+              },
+              {
+                "label": "Solid Button 3",
+                "value": "btn3"
+              },
+              {
+                "label": "Border Button 1",
+                "value": "bdr-btn1"
+              },
+              {
+                "label": "Border Button 2",
+                "value": "bdr-btn2"
+              }
+            ]
+          },	
+	      {
+            "type": "header",
+            "content": "Column 3 Image"            
+            },
+           {
+            "type": "image_picker",
+            "id": "image2",
+            "label": "Image"
+            },  
+          {
+              "type": "select",
+              "id": "layout2",
+              "label":"Image alignment",
+              "default": "left",
+              "options": [
+              { "value": "left","label":"Left"},
+              { "value": "right","label":"Right"}
+              ]
+          },
+			{
+            "type": "header",
+            "content": "Column 4 Text"            
+            },
+      {
+        "type": "textarea",
+        "id": "title2",
+        "label": "Heading",
+        "default": "SS New Arrival",
+		"info":"Use <strong>text here</strong> to make it bold"
+      },
+      {
+        "type": "richtext",
+        "id": "text2",
+        "label": "Text",
+        "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post.</p>"
+		
+      },
+      {
+        "type": "text",
+        "id": "button_label2",
+        "label": "Button label",
+		"default": "Shop Now"
+      },
+      {
+        "type": "url",
+        "id": "button_link2",
+        "label": "Button link",
+		"default": "/"
+      },
+ 	  {
+            "type": "select",
+            "id": "text_align2",
+            "label": "Text Align",
+            "default": "tl",
+            "options": [
+              {
+                "value": "tl",
+                "label": "Left"
+              },
+              {
+                "value": "tc",
+                "label": "Center"
+              },
+              {
+                "value": "tr",
+                "label": "Right"
+              }
+            ]
+      },
+	 {
+        "type": "header",
+        "content": "Appearance"
+      },
+      {
+        "type": "color",
+        "id": "text_clr2",
+        "label": "Text Color",
+        "default": "#000"
+      },
+	 {
+        "type": "color",
+        "id": "text_bg_clr2",
+        "label": "Background Color",
+        "default": "#eee"
+      },
+	  {
+            "type": "select",
+            "id": "btn-style2",
+            "label": "Select Button",
+            "default": "bdr-btn1",
+            "options": [
+              {
+                "label": "Solid Button 1",
+                "value": "btn1"
+              },
+              {
+                "label": "Solid Button 2",
+                "value": "btn2"
+              },
+              {
+                "label": "Solid Button 3",
+                "value": "btn3"
+              },
+              {
+                "label": "Border Button 1",
+                "value": "bdr-btn1"
+              },
+              {
+                "label": "Border Button 2",
+                "value": "bdr-btn2"
+              }
+            ]
+         }	
+        ]
+     }
+   ],
+    "presets": [
+      {
+        "name": "Image & Text (4 Columns)",       
+		"blocks": [
+          {
+            "type": "image_with_text"
+          }		  
+        ]
+      }
+    ]
+  }
+{% endschema %}
