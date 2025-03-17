@@ -1,0 +1,16 @@
+{%- if link != blank -%}<a href="{{link}}">{%- endif -%}
+{%- if image != blank -%}
+    <img loading="lazy" class="img_fl lazyload" src="{{ image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ image.width }}" height="{{ image.height }}" alt="{{ image.alt }}" />
+{%- else -%}
+    {{ 'https://dummyimage.com/' | append: imgSize | append: '/F4F4F4/ccc' | img_tag }}
+{%- endif -%}
+{%- if text1 != blank or text2 != blank or text3 != blank %}
+<div class="fl grid_btxtwrap {{pos}} {% if text_a %}tl{% else %}tc{% endif %}">
+<div class="dib pr grid_btxt {{txt_size}} of_hidden">
+  {%- if text1 != blank -%}<span class="text1 db {% if hidetxt1 %}small--hide{% endif %}">{{text1}}</span>{%- endif -%}
+  {%- if text2 != blank -%}<span class="text2 db {% if hidetxt2 %}small--hide{% endif %}">{{text2}}</span>{%- endif -%}
+  {%- if text3 != blank -%}<span class="text3 db {% if hidetxt3 %}small--hide{% endif %}">{{text3}}</span>{%- endif -%}
+</div>
+</div>
+{%- endif -%}
+{%- if link != blank -%}</a>{%- endif -%}

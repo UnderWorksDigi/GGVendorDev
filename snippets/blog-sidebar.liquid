@@ -1,0 +1,74 @@
+{% assign secSt = section.settings %}
+{% if secSt.show_category %}
+  {% if blog.all_tags.size > 0 %}
+    <div class="sb_widget">
+     <div class="widget_ttl">
+        {{ secSt.category_box_title }}
+      </div>
+      <div class="widget_con">  
+        <ul class="blog-category">
+          {% for tag in blog.all_tags %}
+          {% if current_tags contains tag %}
+          <li>{{ tag }}</li>
+          {% else %}
+          <li>{{ tag | link_to_tag: tag }}</li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+{% endif %} 
+
+{% if secSt.show_recent_posts %}
+<div class="sb_widget">
+ <div class="widget_ttl">
+    {{ secSt.recent_posts_title }}
+  </div>
+  <div class="widget_con"> 
+    <ul class="blog_posts">
+      {% for article in blogs[blog.handle].articles limit:5 %}
+      <li class="post fl clearfix">
+          <a href="{{ article.url }}" class="post_img">
+              <img class="lazyload" data-src="{{ article | img_url: '150x150',crop:'top' }}" width="70" height="70" alt="{{ article.title | escap }}">
+          </a>
+          <div class="article-detail fl1"> <a href="{{ article.url }}" class="post_name">{{ article.title }}</a> <span class="post_date"> {{ article.published_at | time_tag: format: 'month_day_year' }} </span> </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %} 
+
+{% if secSt.show_banner_ad %}
+{% if secSt.sidebar_banner == blank %}
+<p>Please upload banner from store admin blog pages</p>
+{% else %}		
+<p class="mb25"> 
+  {% if secSt.banner_link != blank %}<a href="{{ secSt.banner_link }}">{% endif %}
+    <img loading="lazy" class="img_fl lazyload" src="{{ secSt.sidebar_banner | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: secSt.sidebar_banner, sizes: '360,560,760' %}" data-sizes="auto" width="{{ secSt.sidebar_banner.width }}" height="{{ secSt.sidebar_banner.height }}" alt="{{ secSt.sidebar_banner.alt | escape }}" />
+  {% if secSt.banner_link != blank %}</a>{% endif %}
+</p>
+{% endif %} 
+{% endif %} 
+
+{% if secSt.show_products %}
+<div class="sb_widget">
+  <div class="widget_ttl">
+    {{ secSt.collection_title }}
+  </div>
+  <div class="widget_con"> 
+    {% if secSt.sidebar_collection != blank %}   
+      <div class="grid">
+        {% for product in collections[secSt.sidebar_collection].products limit:secSt.number_of_prodcut %}
+         <div class="grid__item">{% render 'product-card-grid-columns', product:product %}</div>         
+        {% endfor %}
+      </div>			    
+    {% else %}
+    <p>Please select collection from store admin blog pages</p>
+    {% endif %} 
+  </div>
+</div>
+{% endif %} 
+
+

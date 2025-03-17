@@ -1,0 +1,41 @@
+{%  assign collection_image = blkSt.image | default:collection.image %}
+{%- assign alTxt = collection_image.alt | default:collection.title | escape -%}
+{% capture styles %}
+    {% if blkCss %}
+        --cl:{{ blkSt.cl }};--bg:{{ blkSt.bg | color_modify: 'alpha', blkSt.op }};--bgm:{{ blkSt.bgm }};--wd:{{ blkSt.box-width }}%;--tlbg:{{ blkSt.tlbg }};
+        --fs:{{ blkSt.fs }}px;--fsm:{{ blkSt.fsm }}px;--fw:{{ blkSt.fw }};--flh:{{ blkSt.flh }};
+        --dfs:{{ blkSt.dfs }}px;--dflh:{{ blkSt.dflh }};--dfsm:{{ blkSt.dfsm }}px;
+    {% endif %}
+{%- endcapture -%}
+<div class="cl_item{% if section.settings.enable_zoom %} zoom_hov{% endif%}">
+	<a href="{{ blkSt.url | default: collection.url }}" class="cl_item_link">            
+      <div class="img pr of_hidden">
+         {%- if collection_image != blank -%}
+            <img loading="lazy" class="img_fl lazyload" src="{{ collection_image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: collection_image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ collection_image.width }}" height="{{ collection_image.height }}" alt="{{ alTxt }}" />
+         {% else %} 
+        	{% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}{{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}    
+         {% endif %}
+      </div>      
+     	{% if masonary %} <div class="fl cl_txt_pos {{ blkSt.text_pos}} {{ blkSt.text_posm}}"> {% endif %}
+          {%  if blkSt.title != blank or  blkSt.detail != blank or blkSt.collection_btn != blank %} 
+            <div class="details bdr_rd{{ blkSt.bdr_rad}} {{ blkSt.text-align}} {{ blkSt.box-pad}}{% if section.settings.tlleft %} lside{% endif %}"
+                 style="{{ styles }}">
+             
+				{% if blkSt.title != blank %}<div class="tltxt m0">{{ blkSt.title }}</div>{% endif %}
+				
+              {% if blkSt.detail != blank %}<p class="dtxt mt10 mb0{% if blkSt.detail_hide %} small--hide{% endif %}">{{ blkSt.detail }}</p>{% endif %}
+              {% if section.settings.product_count %}<span class="counts">{{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}</span>{% endif %}                        
+
+              {% if  blkSt.collection_btn != blank %}         	
+                {% if blkSt.collection_btn_link %}
+                    <button class="btn--link{% if blkSt.hide_btn %} small--hide{% endif %}" type="button">{{ blkSt.collection_btn}}</button>
+                {% else %}
+                    <button class="btn {{section.settings.btn-size}} {{section.settings.btn-style}} mt15{% if blkSt.hide_btn %} small--hide{% endif %}" type="button">{{ blkSt.collection_btn}}</button>
+                {% endif %}
+              {% endif %}   
+				
+            </div>
+          {% endif %}
+        {% if masonary %}</div> {% endif %}
+  </a>
+</div>

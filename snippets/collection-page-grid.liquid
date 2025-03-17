@@ -1,0 +1,23 @@
+{%  assign collection_image = blkSt.image | default:collection.image %}
+<div class="cl_item">
+ <a href="{{ blkSt.url | default:collection.url }}" class="cl_item_link">   
+    <div class="img pr of_hidden">
+         {%- if collection_image != blank -%}
+        	<img loading="lazy" class="img_fl lazyload" src="{{ collection_image | img_url: '50x' }}" data-srcset="{% render 'lazyload', image: collection_image, sizes: '160,360,560,860,1200' %}" data-sizes="auto" width="{{ collection_image.width }}" height="{{ collection_image.height }}" alt="{{ alTxt }}" />
+         {% else %} 
+        	{% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+      		{% capture plClass %}placeholder-svg svgcl{{current}}{% endcapture %}
+      		{{ 'collection-' | append: current | placeholder_svg_tag: plClass }}
+         {% endif %}
+    </div> 
+    <div class="details {% if secSt.txt-left %}txt-left{% endif %}" style="--cl:{{secSt.cl}};--bg:{{secSt.bg | color_modify: 'alpha', secSt.op}};">
+      	{% comment %} This is for sub collection list page {% endcomment %}
+      	{% if subcollection %}<h3 class="tltxt m0 fwr"  style="--fs:{{secSt.tfs}}px;--fsm:{{secSt.tfsm}}px;--fc:{{secSt.tfc}};--fw:{{secSt.tfw}};">{{ collection.title }}</h3>{% endif %} 
+        {% if blkSt.title != blank %}<h3 class="tltxt m0 fwr" style="--fs:{{secSt.tfs}}px;--fsm:{{secSt.tfsm}}px;--fc:{{secSt.tfc}};--fw:{{secSt.tfw}};"> {{ blkSt.title }}</h3>{% endif %} 
+        {% if secSt.product_count %}<span class="counts mt5">{{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}</span>{% endif %}            
+        {% if blkSt.collection_btn != blank %}
+      		<button class="btn {{secSt.btn-size}} {{secSt.btn-style}} mt15" type="button">{{blkSt.collection_btn}}</button>
+      	{% endif %}
+    </div>
+  </a>
+</div>

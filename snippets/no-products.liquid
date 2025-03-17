@@ -1,0 +1,12 @@
+<div class="grid__item {{ grid_mb }} {{ grid_tb }} {{grid_ds}}">
+  <div class="grid_bx">
+    <a href="#" class="grid_lnk">
+      <div class="grid_img_wr">{% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}{% capture plClass %}placeholder-svg svgcl{{current}}{% endcapture %}{{ 'product-' | append: current | placeholder_svg_tag: plClass }}</div>
+      <br/>
+      <div class="h4 grid_title">{{ 'homepage.onboarding.product_title' | t }}</div> 
+      <div class="grid_meta">
+        {% render 'product-price' %}
+      </div>                            
+    </a>
+  </div>
+</div>

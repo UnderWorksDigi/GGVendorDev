@@ -1,0 +1,25 @@
+{% if settings.newsletter_code != blank %}
+	{{settings.newsletter_code}}
+{% elsif settings.mailChimp_url != blank %}
+	<form role="form" action="{{ settings.mailChimp_url | replace: '/post?u', '/post-json?u' | append: "&c=?" }}" class="mcnewsbox newsl_frm" method="post">
+		<div class="input-group{% if block.settings.newltr_align %} f-aic{% endif %}">
+			<input type="email" class="input-group__field newstxt" name="EMAIL" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}" required>
+			<span class="input-group__btn"><button type="submit" class="btn newsl_btn mcNsBtn" name="commit">{{ 'general.newsletter_form.submit' | t }}</button></span>
+		</div>
+		<p class="form--success input-group" style="display:none;">{{ 'general.newsletter_form.mailChimp_confirmation' | t }}</p>
+		<p class="errors input-group" style="display:none;">{{ 'general.newsletter_form.mailChimp_error' | t }}</p>
+	</form>
+{% else %}
+	{% form 'customer', id: formId, novalidate: 'novalidate', class: 'newsl_frm form-single-field' %}
+		{{ form.errors | default_errors }}
+		{%- if form.posted_successfully? -%}
+			<p class="form--success input-group">{{ 'general.newsletter_form.confirmation' | t }}</p>
+		{%- else -%}
+			<div class="nwfrm {% unless formStyle == 'verticle' %}input-group{% endunless %}{% if block.settings.newltr_align %} f-aic{% endif %}">
+				<input type="hidden" name="contact[tags]" value="newsletter">
+				<input type="email" name="contact[email]" id="Email-{{formId}}" class="{% unless formStyle == 'verticle' %}input-group__field{% else %}w_100{% endunless %} newstxt" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}" autocorrect="off" autocapitalize="off">
+              	<span class="{% unless formStyle == 'verticle' %}input-group__btn{% else %}w_100 db{% endunless %}"><button type="submit" class="btn newsl_btn w_100" name="commit" id="Subscribe{{formId}}" title="{{ 'general.newsletter_form.submit' | t }}">{% if isicon %}<i class="at at-envelope-l"></i>{% else %}{{ 'general.newsletter_form.submit' | t }}{% endif %}</button></span>
+			</div>
+		{%- endif -%}
+	{% endform %}
+{% endif %}

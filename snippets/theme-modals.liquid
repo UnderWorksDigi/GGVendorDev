@@ -1,0 +1,175 @@
+{% capture themeModels %}
+<div class="loadingBox"><i class="at at-spinner4 at-spin"></i></div>
+<div class="modalOverly"></div>
+
+{%- unless settings.catalog-mode -%}
+    {%- if settings.ajax_cart and template != 'cart' -%}{%- render 'cart-drawer' -%}{%- endif -%}
+{%- endunless -%}
+
+{% comment %} newsletter popup {% endcomment %}
+{% capture showNlPage %}{% if settings.nl-index %}index,{% endif %}{% if settings.nl-product %}product,{% endif %}{% if settings.nl-collection %}collection,{% endif %}{% if settings.nl-article %}article,{% endif %}{% if settings.nl-blog %}blog,{% endif %}{% if settings.nl-cart %}cart,{% endif %}{% if settings.nl-page %}page{% endif %}{% endcapture %}
+{% if settings.newsletter_popup and showNlPage contains request.page_type %}
+<div id="newsl_pp" class="{{settings.newsltr-style}} mfp-hide mfp-with-anim bgImg lazyload" 
+     {% if settings.newsltr-style == "style3" or settings.newsltr-style == "style4" and settings.newsletter_img != blank %}
+     	data-bgset="{% render 'bgset', image: settings.newsletter_img %}" data-sizes="auto" data-parent-fit="contain"
+     {% endif %}>
+  {% if settings.newsltr-style == "style2" %}<div class="fl f-jcc f-aic">{% endif %}
+    {% if settings.newsletter_img != blank %}
+      {% if settings.newsltr-style != "style3" and settings.newsltr-style != "style4" %}
+       <div class="newsl_img{% if settings.newsltr-style == "style2" %} one-half{% endif %}">
+         <div class="bgImg lazyload" data-bgset="{% render 'prgrid-img', image: settings.newsletter_img,, sizes:'150,350,550,750,950' %}" data-sizes="auto" data-parent-fit="contain" style="padding-bottom:{{ 1 | divided_by: settings.newsletter_img.aspect_ratio | times: 100}}%;"></div>
+       </div>
+      {% endif %}
+    {% endif %}
+  <div class="newsl_txt tc fl1">				
+    <div class="wraptext">
+      <h2>{{settings.newsletter_popup_title }}</h2>
+      <p class="sub-text mb25">{{settings.newsletter_popup_subtitle }} </p>                        
+      
+      {%- assign frstyle = 'horizontal' -%}
+      {% if settings.newsltr-style == "style2" or settings.newsltr-style == "style3" %}
+      	{%- assign frstyle = 'verticle' -%}
+      {% endif %}
+      {%- assign formId = 'newsletterPopup' -%}
+      {% if settings.show_form %}{% render 'newsletter-form', formStyle: frstyle, isicon: settings.submitIc %}{% endif %}
+           
+      {% if settings.cta_url != blank and settings.cta_text != blank %}<a class="btn cta mb20" href="{{settings.cta_url}}" title="{{cta_text}}">{{settings.cta_text}}</a>{% endif %}
+      
+      {% if settings.show_social_icons %}{% render 'social-media' %}{% endif %}           
+
+      <p class="checkboxlink fl f-jcc f-aic{% if settings.c_msg == blank %} hide{% endif %}"><input type="checkbox" id="dontshow" checked /> <label for="dontshow">{{ settings.c_msg }}</label></p>
+      
+      {% if settings.g_note != blank %}<p>{{ settings.g_note}}</p>{% endif %}
+      
+    </div>		
+  </div>	
+  {% if settings.newsltr-style == "style2" %} </div> {% endif %}
+</div>
+{% endif %}
+
+{% comment %} product notification {% endcomment %}
+{%- assign ntCollection = collections[settings.notify_collection] -%}
+{%- if settings.show_notification and ntCollection.products.size > 0 -%}
+{%- assign colections = ntCollection.products -%}
+{%- assign randomNumber = "now" | date: "%N" | modulo: colections.size | plus: 0 -%}
+{%- assign fake_location = settings.notify_location | replace: ' | ', '|' | replace: ' |', '|' | replace: '| ', '|' | split: '|' -%}
+<div id="prodNotify" class="customized{% if settings.hide_notification_mb %} small--hide{% endif %}">
+  <span class="closeNotify cpoint"><i class="at at-times-l" aria-hidden="true"></i></span>
+  <a href="{{ntCollection.products[randomNumber].url}}" class="imgLink"><img class="img_fl pImg" src="{{ntCollection.products[randomNumber] | img_url: '160x'}}" width="100" height="100" alt="{{ntCollection.products[randomNumber].title}}" /></a>
+  <div class="details">
+    {%- if settings.notify_msg != blank -%}<p class="mb5 mr15">{{settings.notify_msg}}</p>{%- endif -%}
+    <p class="pname mb15">
+      <a href="{{ntCollection.products[randomNumber].url}}">{{ntCollection.products[randomNumber].title}}</a>
+    </p>
+    <p class="timelocation">{%- if settings.fake_time -%}<span class="time">10</span> {{settings.time_msg}} {%- endif -%}{%- if settings.notify_location != blank -%}{{settings.location_msg}} <span class="location">{{ fake_location[3] }}</span>{%- endif -%}</p>
+  </div>
+</div>
+{% endif %}
+
+<script>
+window.accessibilityStrings = {
+  recipientFormExpanded: `{{ 'recipient.form.expanded' | t }}`,
+  recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
+};
+window.addEventListener('DOMContentLoaded',function(){
+	$(document).ready(function(){
+      	{%- if settings.terms_checkbox -%}
+            $(document).on('change', '#cartDWtearm', function(e){
+                if(this.checked == true){ $('#DrawerCheckout').removeAttr("disabled"); } else { $('#DrawerCheckout').attr("disabled", "disabled"); }
+            });
+        {%- endif -%}
+
+      	{%- if settings.show_notification and ntCollection.products.size > 0 -%}
+        	if ((typeof Shopify) === 'undefined') { Shopify = {}; }
+			Shopify.pnProduct = function(handle, callback) {
+				$.ajax({ url:'/products/' + handle + '.js', dataType:'json', success:function(data){ callback(data); }, cache:true, timeout:{{settings.notify_display | plus:200}} });
+			};
+    		function productNotify(){
+                var productsArray = {{ colections | map:'handle' | json }},
+                	curproductIndex = Math.floor((Math.random() * productsArray.length - 1) + 1);
+      			$('#prodNotify').removeClass("active");
+				setTimeout(function(){
+            		Shopify.pnProduct(productsArray[curproductIndex],function(data){
+						var fakeTimeOrder = Math.floor((Math.random() * 60) + 1),
+                            {%- if settings.notify_location != blank -%}fklocations = {{ fake_location | json }},rand = Math.floor(Math.random() *{{fake_location.size}}),{% endif %}
+                            pimg = data.featured_image,
+             	 			pimg_path = pimg.replace(/(\.[^\.]*$|$)/, '_160x' + '$&');
+						$('#prodNotify .pname a').html(data.title).attr('href','/collections/{{ntCollection.handle}}'+data.url);
+                        $('#prodNotify .imgLink').attr('href','/collections/{{ntCollection.handle}}'+data.url);
+                        $('#prodNotify img').attr( { src:pimg_path, alt:data.title } );
+                        $('#prodNotify .time').html(fakeTimeOrder);
+                        {%- if settings.notify_location != blank -%}$('#prodNotify .location').html(fklocations[rand]);{%- endif -%}
+                        $('#prodNotify').addClass("active");
+					});
+				}, {{settings.notify_display}});
+			}
+			setInterval(productNotify, {{ settings.notify_display | plus: settings.notify_delay | plus: 200}});
+            productNotify();
+            $('.closeNotify').click(function(){ $('#prodNotify').remove(); });
+		{%- endif -%}
+        
+		{% if settings.newsletter_popup and showNlPage contains request.page_type %}
+        var cookieSignup = "cookieSignup",
+            date = new Date();
+        if($.cookie(cookieSignup) != 'true' && window.location.href.indexOf("challenge#newsletterPopup") <= -1){
+            setTimeout( function(){
+               if($('#newsl_pp').length){
+                  $.magnificPopup.open({
+                     items: { src:'#newsl_pp' },
+                     type:'inline', 
+                     removalDelay:300, 
+                     mainClass: 'mfp-zoom-in' 
+                  });
+               }
+            }, {{settings.newsletter_popup_time}});
+        }
+        $.magnificPopup.instance.close = function(){
+            nwCookie();
+            $.magnificPopup.proto.close.call(this);
+        };
+        $("#newsl_pp form").submit(function(){nwCookie()});
+        {%- endif -%}
+        $("#newsl_pp .cta").click(function(){nwCookie()});
+        function nwCookie(){
+            if($("#dontshow").prop("checked") == true){
+                $.cookie(cookieSignup, 'true', {expires:1, path:"/;SameSite=None", secure: true});
+            }
+        }
+          
+		{%- if settings.mailChimp_url != blank -%}
+            $(".mcnewsbox").submit(function(e) {
+                  var $form = $(this);
+                  e.preventDefault();
+                  $.ajax({
+                      type: 'GET',
+                      url: $(this).attr('action'),
+                      data: $(this).serialize(),
+                      cache: false,
+                      dataType: 'json',
+                      contentType: "application/json; charset=utf-8",
+                      error: function(err) { alert("Could not connect to the registration server. Please try again later."); },
+                      success: function(data) {
+                          if (data.result == "success"){
+                              $($form).find(".form--success").html(data.msg).show();
+                              $($form).find(".errors").hide();
+                          } else {
+                              $($form).find(".errors").html(data.msg).show();
+                          }
+                      }
+                  });
+            });
+        {%- endif -%}
+          
+        {% if settings.prevent_copy %}
+          document.addEventListener("contextmenu", function(event) {var notInput = (event.target || event.srcElement).tagName.toLowerCase() !== "input" && (event.target || event.srcElement).tagName.toLowerCase() !== "textarea";if (notInput && (event.target || event.srcElement).innerText) {event.preventDefault();} });
+          document.addEventListener("mousedown", function(event) { if ((event.target || event.srcElement).tagName.toLowerCase() === "img"){ if (event.which == 2) { event.preventDefault();}}});
+          document.addEventListener("contextmenu", function(event) { if ((event.target || event.srcElement).tagName.toLowerCase() === "img") { event.preventDefault(); } });
+          const disableDragAndDrop = function(){document.body.setAttribute("ondragstart", "return false;");document.body.setAttribute("ondrop", "return false;");};
+          if (document.readyState === "complete") {disableDragAndDrop();} else {document.addEventListener("DOMContentLoaded", disableDragAndDrop);}
+          document.addEventListener("contextmenu", function(event) { if ((event.target || event.srcElement).style.backgroundImage) { event.preventDefault(); } });
+        {% endif %}
+	});
+});
+</script>
+{% endcapture %}
+{{themeModels | strip_newlines | remove: "  " | remove: "	" }}

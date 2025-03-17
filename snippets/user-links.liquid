@@ -1,0 +1,10 @@
+<ul class="user-links {% if settings.cl_Style %}classic{% endif%}">	
+{% if customer %}
+	<li><a href="{{routes.account_logout_url }}"> {{ 'customer.account.logout' | t }}</a> </li>
+    <li><a href="{{routes.account_url}}"> {{ 'customer.account.title' | t }}</a> </li>
+{% else %}		
+	<li><a href="{{routes.account_login_url }}">{{ 'customer.login.form_title_and_header_popup_link' | t }}</a></li>
+    <li><a href="{{ routes.account_register_url}}" class="register">{{ 'customer.register.header_popup_link' | t }}</a></li>
+{% endif %}
+{% if settings.enable_wishlist %}<li><a href="{{pages[settings.wishlist_page].url}}">{{ 'products.wishlist.header_popup_link' | t }}</a></li>{% endif %}
+</ul>

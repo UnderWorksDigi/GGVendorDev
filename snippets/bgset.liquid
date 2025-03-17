@@ -1,0 +1,26 @@
+{%- if image != blank -%}
+	{%- if sizes == blank -%}{% assign sizes = '375,540,780,1080,1296,1512,2000,2450,3000,3600' %}{%- endif -%}
+	{%- assign imgsizes = sizes | split: ',' -%}
+	{%- for size in imgsizes -%}
+		{%- assign width = size | append: 'x' -%}
+		{%- assign lsize = size | plus: 0 -%}
+		{%- if image.width >= lsize -%}{{ image | img_url: width }} {{size}}w {{ size | divided_by: image.aspect_ratio | round }}h,{%- endif -%}
+	{%- endfor -%}
+	{{ image | img_url: 'master' }} {{ image.width }}w {{ image.height }}h
+{%- endif -%}
+{% comment %}
+{%- if image != blank -%}
+{%- if image.width > 375 -%}{{ image | img_url: '375x' }} 375w {{ 375 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 540 -%}{{ image | img_url: '540x' }} 540w {{ 540 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 720 -%}{{ image | img_url: '720x' }} 720w {{ 720 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 1080 -%}{{ image | img_url: '1080x' }} 1080w {{ 1080 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 1296 -%}{{ image | img_url: '1296x' }} 1296w {{ 1296 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 1512 -%}{{ image | img_url: '1512x' }} 1512w {{ 1512 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 2000 -%}{{ image | img_url: '2000x' }} 2000w {{ 2000 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 2450 -%}{{ image | img_url: '2450x' }} 2450w {{ 2450 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 3000 -%}{{ image | img_url: '3000x' }} 3000w {{ 3000 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 3500 -%}{{ image | img_url: '3500x' }} 3500w {{ 3500 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{%- if image.width > 4100 -%}{{ image | img_url: '4100x' }} 4100w {{ 4100 | divided_by: image.aspect_ratio | round }}h,{%-endif -%}
+{{ image | img_url: 'master' }} {{ image.width }}w {{ image.height }}h
+{%- endif -%}
+{% endcomment %}

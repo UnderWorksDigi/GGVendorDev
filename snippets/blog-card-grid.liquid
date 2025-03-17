@@ -1,0 +1,30 @@
+<div class="wrap-blog tl">
+    {% if article.image %}
+        <a href="{{ article.url }}" class="article_grid_img bgImg db mb20 lazyload" style="padding-bottom:{{secSt.img_ratio}}%" title="{{ article.title }}"
+            data-bgset="{% render 'prgrid-img', image: article.image, sizes: sizes %}" data-sizes="auto" data-parent-fit="contain" style="padding-bottom:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;"></a>
+    {% endif %}
+    <div class="mb30{% if article.image %} article_grid_has_image{% endif %}">
+        <div class="wrap-blog-inner {{ secSt.blog_align }}">
+            <h4 class="mb10"><a href="{{ article.url }}">{{ article.title }}</a></h4>
+            {% if secSt.blog_show_date or secSt.blog_show_author or secSt.show_comment %}
+                <ul class="fl f-wrap lr_light mb20{% if secSt.blog_align == "tc" %} f-jcc{% endif %} publish-detail">            	
+                    {% if secSt.blog_show_date %}<li class="mr10"><span class="article__date">{{ article.published_at | time_tag: format: 'month_day_year' }}</span></li>{% endif %}
+                    {% if secSt.blog_show_author %}<li class="mr10"><span> {{ 'blogs.article.by_author' | t }} <span class="clr_body">{{article.author}}</span></span></li>{% endif %}
+                    {% if secSt.show_comment and blog.comments_enabled? and article.comments_count > 0 %}
+                        <li class="article_comment"><i class="at at-comments-l" aria-hidden="true"></i> <a href="{{ article.url }}#comments" class="btn-link">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            {% if secSt.show_mini_des %}
+                <div class="rte mb25">
+                    {% if article.excerpt.size > 0 %}
+                        {{ article.excerpt }}
+                    {% else %}
+                        {{ article.content | strip_html | truncate: 150 }}
+                    {% endif %}
+                </div>
+            {% endif %}     
+            <a href="{{ article.url }}" class="btn {{secSt.btn-size}} {{secSt.btn-style}}" title="{{ article.title }}">{{ 'blogs.article.read_more' | t }}</a>          
+        </div>
+    </div>
+</div>
